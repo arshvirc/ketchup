@@ -1,28 +1,27 @@
-class TodoList(name: string, description: string) {
-    val list = mutableListOf</*TodoItem*/>()
+class TodoList(name: String, description: String) {
+    private val list = mutableListOf<ToDoItem>()
 
-    fun setName(newName:string) {
-        name = newName
-    }
-
-    fun setDescription(newDescription: string) {
-        description = newDescription
-    }
-
-    fun add(item: /*TodoItem*/) {
+    fun add(item: ToDoItem) {
         list.add(item)
     }
 
-    fun remove(item: /*TodoItem*/) {
+    fun remove(item: ToDoItem) {
         list.remove(item)
     }
 
-    fun complete(item: /*TodoItem*/) {
-        // list[list.indexOf(item)].complete()
+    fun complete(item: ToDoItem) {
+         list[list.indexOf(item)].completeTask()
     }
 
-    fun edit(oldItem: /*TodoItem*/, newItem: /*TodoItem*/) {
-        // list[list.indexOf(oldItem)] = newItem
+    fun edit(oldItem: ToDoItem, newItem: ToDoItem) {
+         list[list.indexOf(oldItem)] = newItem
+    }
+
+    fun displayList() {
+        for(i in list) {
+            i.printItem()
+            println('\n')
+        }
     }
 
     // fun sort()
