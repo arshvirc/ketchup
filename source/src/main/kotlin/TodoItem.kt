@@ -1,16 +1,24 @@
 import java.util.Date
-import javax.lang.model.type.NullType
 
-class ToDoItem() {
-    private var title : String = ""
-    private var description : String = ""
-    private val timestamp : Date = Date(System.currentTimeMillis())
-    private var deadline : Date? = null
-    private var priority : Int = 0
-    private var tags = mutableSetOf<String>()
-    private var completion : Boolean = false;
+class TodoItem() {
+    var id : Int = 0
+        private set
+    var title : String = ""
+        private set
+    var description : String = ""
+        private set
+    val timestamp : Date = Date(System.currentTimeMillis())
+    var deadline : Date? = null
+        private set
+    var priority : Int = 0
+        private set
+    var tags = mutableSetOf<String>()
+        private set
+    var completion : Boolean = false
+        private set
 
-    constructor(title :  String, description : String, deadline : Date? = null, priority : Int=0) : this() {
+    constructor(title :  String = "", description : String = "", deadline : Date? = null, priority : Int = 0, id : Int = 0) : this() {
+        this.id = id
         this.title = title
         this.description = description
         this.deadline = deadline

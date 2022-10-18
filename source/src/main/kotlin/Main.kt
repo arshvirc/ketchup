@@ -1,20 +1,20 @@
 fun main(args: Array<String>) {
     // data stored in a list internally
     // but saved in a file on exit
-    val list = mutableListOf<Item>()
+    val list = TodoList()
     val filename = "data.json"
 
     // load previous to-do list
-    list.restore(filename)
+    // list.restore(filename)
 
 
     var command = ""
     while(command != "quit") {
         command = readLine()!!
-        var commands = command.trim().split("\\s+".toRegex()).toTypedArray()
+        var commands = command.trim().split("\\s+".toRegex())
         var newCommand = CommandFactory.createFromArgs(commands);
         newCommand.execute(list);
-        list.save(filename);
+        // list.save(filename);
     }
 
 

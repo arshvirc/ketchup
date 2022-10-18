@@ -1,28 +1,60 @@
-class TodoList(name: string, description: string) {
-    val list = mutableListOf</*TodoItem*/>()
+import java.util.*
 
-    fun setName(newName:string) {
-        name = newName
-    }
+class TodoList() {
+    var maxItemID = 0
+    private var list = mutableListOf<TodoItem>()
+    // Not sure if we want to introduce mappings between IDs and indices
 
-    fun setDescription(newDescription: string) {
-        description = newDescription
-    }
-
-    fun add(item: /*TodoItem*/) {
+    fun add(item: TodoItem) {
         list.add(item)
     }
 
-    fun remove(item: /*TodoItem*/) {
-        list.remove(item)
+    fun add(title : String, description : String = "", deadline : Date? = null, priority : Int = 0) {
+        list.add(TodoItem(id = maxItemID, title = title, description = description,
+                deadline = deadline, priority = priority))
+        maxItemID++
     }
 
-    fun complete(item: /*TodoItem*/) {
-        // list[list.indexOf(item)].complete()
+    // Remove item i from the list iff removeCondition(i) == true
+    fun removeIf(removeCondition : (TodoItem) -> Boolean ) {
+        for (item in list) {
+            if (removeCondition(item)) {
+                list.remove(item)
+            }
+        }
     }
 
-    fun edit(oldItem: /*TodoItem*/, newItem: /*TodoItem*/) {
-        // list[list.indexOf(oldItem)] = newItem
+    fun complete(item: TodoItem) {
+         list[list.indexOf(item)].completeTask()
+    }
+
+    // Complete item i in the list iff completeCondition(i) == true
+    fun completeIf(completeCondition : (TodoItem) -> Boolean ) {
+        for (item in list) {
+            if (completeCondition(item)) {
+                item.completeTask()
+            }
+        }
+    }
+
+    fun edit(oldItem: TodoItem, newItem: TodoItem) {
+         list[list.indexOf(oldItem)] = newItem
+    }
+
+    fun editIf(editCondition: (TodoItem) -> Boolean, newItem: TodoItem) {
+        for (item in list) {
+            if (editCondition(item)) {
+                list[list.indexOf(item)] = newItem
+                break
+            }
+        }
+    }
+
+    fun displayList() {
+        for(i in list) {
+            i.printItem()
+            println('\n')
+        }
     }
 
     // fun sort()
