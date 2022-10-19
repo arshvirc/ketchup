@@ -4,8 +4,4 @@ out/
 .gradle
 .DS_Store
 www/public
-<<<<<<< HEAD
 .idea
-=======
-.idea
->>>>>>> eee0026 (TodoList class framework)
