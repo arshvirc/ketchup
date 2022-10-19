@@ -5,6 +5,17 @@ class TodoList() {
     private var list = mutableListOf<TodoItem>()
     // Not sure if we want to introduce mappings between IDs and indices
 
+    constructor(list: TodoList) : this() {
+        var maxIdSeen = 0;
+        for(i in list.list) {
+            if(i.id > maxIdSeen) {
+                maxIdSeen = i.id;
+            }
+            this.list.add(i)
+        }
+        maxItemID = maxIdSeen + 1;
+    }
+
     fun add(item: TodoItem) {
         var newItem = TodoItem(id = maxItemID, title = item.title, description = item.description,
             deadline = item.deadline, priority = item.priority);
@@ -25,10 +36,6 @@ class TodoList() {
                 list.remove(item)
             }
         }
-    }
-
-    fun complete(item: TodoItem) {
-         list[list.indexOf(item)].completeTask()
     }
 
     // Complete item i in the list iff completeCondition(i) == true
@@ -70,6 +77,20 @@ class TodoList() {
         }
     }
 
-    // fun sort()
+    private fun sortByDeadline() {
+        list.sortWith(compareBy(nullsLast()) { it.deadline })
+    }
+
+    private fun sortByPriority() {
+        list.sortWith(compareByDescending { it.priority })
+    }
+
+     fun sort(flag: String) {
+        when(flag) {
+            "p", "priority" -> sortByPriority()
+            "due", "duedate", "deadline" -> sortByDeadline()
+        }
+     }
+
     // fun filter()
 }

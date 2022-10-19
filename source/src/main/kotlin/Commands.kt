@@ -161,7 +161,26 @@ class DelCommand(val args: List<String>) : Command {
 
 class ListCommand(val args: List<String>) : Command {
     override fun execute(items: TodoList) {
-        items.displayList()
+        if(args.size == 1) {
+            items.displayList()
+        } else {
+            try {
+                if(args.size > 2) {
+                    throw CommandParseException("too many arguments for list. Type 'help list'")
+                }
+                val flag:String = args[1];
+                val acceptedFlags = listOf<String>("p", "priority", "due", "duedate", "deadline")
+                if(flag[0] != '-' || flag.substring(1) !in acceptedFlags) {
+                    throw CommandParseException("Flag not recognized. Type 'help list'")
+                }
+
+                val temp = TodoList(items)
+                temp.sort(flag.substring(1))
+                temp.displayList()
+            } catch (c: CommandParseException) {
+                println(c.message)
+            }
+        }
     }
 }
 
