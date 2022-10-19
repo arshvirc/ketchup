@@ -6,7 +6,10 @@ class TodoList() {
     // Not sure if we want to introduce mappings between IDs and indices
 
     fun add(item: TodoItem) {
-        list.add(item)
+        var newItem = TodoItem(id = maxItemID, title = item.title, description = item.description,
+            deadline = item.deadline, priority = item.priority);
+        maxItemID++;
+        list.add(newItem)
     }
 
     fun add(title : String, description : String = "", deadline : Date? = null, priority : Int = 0) {
@@ -38,7 +41,7 @@ class TodoList() {
     }
 
     fun edit(oldItem: TodoItem, newItem: TodoItem) {
-         list[list.indexOf(oldItem)] = newItem
+        list[list.indexOf(oldItem)] = newItem
     }
 
     fun editIf(editCondition: (TodoItem) -> Boolean, newItem: TodoItem) {
@@ -48,6 +51,16 @@ class TodoList() {
                 break
             }
         }
+    }
+
+    fun getById(id: Int): TodoItem? {
+        for(item in list) {
+            if(item.id == id) {
+                return item
+            }
+        }
+
+        return null
     }
 
     fun displayList() {

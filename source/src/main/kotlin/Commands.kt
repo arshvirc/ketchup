@@ -45,6 +45,7 @@ interface Command {
     // Parse flags (basic flag parsing for now)
     fun tryFlagParse (args: List<String>, item : TodoItem) : TodoItem {
 
+        var id : Int = item.id
         var title : String = item.title
         var description : String = item.description
         var deadline : Date? = item.deadline
@@ -77,6 +78,7 @@ interface Command {
                         }
                     }
                     null -> {
+                        println(args)
                         throw CommandParseException("unable to parse command")
                     }
                     else -> {
@@ -91,7 +93,7 @@ interface Command {
         } else if (title == "") {
             throw CommandParseException("an item must have a title")
         }
-        return TodoItem(title, description, deadline, priority)
+        return TodoItem(title, description, deadline, priority, id)
     }
 }
 
@@ -118,6 +120,23 @@ class EditCommand(val args: List<String>) : Command {
             println("Error: specify a search query for the item you want to edit.")
             return
         }
+        try {
+            val itemId = args[1].toInt()
+            val item = items.getById(itemId)
+            val newArgs:MutableList<String> = args as MutableList<String>;
+            newArgs.removeAt(1);
+
+            val newItem = item?.let { tryFlagParse(newArgs, it) };
+
+
+            if (item != null) {
+                if (newItem != null) {
+                    items.edit(item, newItem)
+                }
+            };
+        } catch (c: CommandParseException) {
+            println(c.message)
+        }
         // IMPLEMENT
     }
 }
@@ -134,6 +153,7 @@ class DelCommand(val args: List<String>) : Command {
             items.removeIf { it.id == toDeleteID }
         } catch (e : Exception) {
             // Then it's a string, so we're searching by title
+            println()
             items.removeIf { it.title == args[1] }
         }
     }
@@ -149,17 +169,21 @@ class HelpCommand(val args: List<String>) : Command {
     override fun execute(items: TodoList) {
         if (args.size == 1) {
             // Should probably be more detailed
-            println("Usage: todo [add|del|list|quit]. Type \"help [command name] for detailed options.\"")
+            println("Usage: [add|del|list|quit]. Type \"help [command name] for detailed options.\"")
             return
         }
         println(when (args[1]) {
-            "a", "add" -> "FILL THIS IN"
-            "c", "complete" -> "FILL THIS IN"
-            "d", "del", "delete" -> "FILL THIS IN"
-            "e", "edit" -> "FILL THIS IN"
-            "h", "help" -> "FILL THIS IN"
-            "l", "list" -> "FILL THIS IN"
-            "q", "quit" -> "FILL THIS IN"
+            "a", "add" -> "Usage: a/add \n\t-title/t [title]\n\t-desc/description [description]\n\t-due/duedate/deadline [date]\n\t-priority/p [priority]"
+            "c", "complete" -> "Usage: c/complete [id]"
+            "d", "del", "delete" -> "Usage: d/del/delete [id] \n"
+            "e", "edit" -> "Usage: e/edit [id] \n"+
+                    "\t-title/t [title]\n" +
+                    "\t-desc/description [description]\n" +
+                    "\t-due/duedate/deadline [date]\n" +
+                    "\t-priority/p [priority]"
+            "h", "help" -> "Usage: h/help [add/complete/delete/edit/list/help/list/quit]"
+            "l", "list" -> "Usage: l/list"
+            "q", "quit" -> "Usage: q/quit"
             else -> "Undefined command \"${args[1]}."
         })
     }
