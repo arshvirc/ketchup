@@ -1,16 +1,18 @@
 import java.util.Date
-import javax.lang.model.type.NullType
 
-class ToDoItem() {
-    private var title : String = ""
-    private var description : String = ""
-    private val timestamp : Date = Date(System.currentTimeMillis())
-    private var deadline : Date? = null
-    private var priority : Int = 0
-    private var tags = mutableSetOf<String>()
-    private var completion : Boolean = false;
+class TodoItem() {
+    var id : Int = 0
+        private set
+    var title : String = ""
+    var description : String = ""
+    val timestamp : Date = Date(System.currentTimeMillis())
+    var deadline : Date? = null
+    var priority : Int = 0
+    var tags = mutableSetOf<String>()
+    var completion : Boolean = false
 
-    constructor(title :  String, description : String, deadline : Date? = null, priority : Int=0) : this() {
+    constructor(title :  String = "", description : String = "", deadline : Date? = null, priority : Int = 0, id : Int = 0) : this() {
+        this.id = id
         this.title = title
         this.description = description
         this.deadline = deadline
@@ -32,13 +34,14 @@ class ToDoItem() {
     }
 
     fun printItem() {
+        println("ID: $id")
         println("Title: $title")
         println("Description: $description")
         println("Timestamp: $timestamp")
         println("Deadline: $deadline")
         println("Priority: $priority")
         print("Tags: ")
-        println(tags.joinToString(prefix = "[\"", postfix = "\"]", separator = "\", \""))
+//        println(tags.joinToString(prefix = "[\"", postfix = "\"]", separator = "\", \""))
     }
 }
 
