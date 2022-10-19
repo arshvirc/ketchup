@@ -201,7 +201,7 @@ class HelpCommand(val args: List<String>) : Command {
                     "\t-due/duedate/deadline [date]\n" +
                     "\t-priority/p [priority]"
             "h", "help" -> "Usage: h/help [add/complete/delete/edit/list/help/list/quit]"
-            "l", "list" -> "Usage: l/list"
+            "l", "list" -> "Usage: l/list (one of -p/priority or -due/duedate/deadline)"
             "q", "quit" -> "Usage: q/quit"
             else -> "Undefined command \"${args[1]}."
         })
