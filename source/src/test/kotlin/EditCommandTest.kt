@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions.*
 internal class EditCommandTest {
     @Test
     fun execute() {
-
         // Arrange
         val testItem1 = TodoItem("Write Tests", "For Add, Edit, Del")
         val expectedItem1 = TodoItem("Write Tests", "For Add, Edit, Del")
@@ -25,7 +24,6 @@ internal class EditCommandTest {
 
         // Assert
         assertTrue( expectedList1.assertEqualList(testList1) )
-
 
         // Arrange
         val firstSharedItem2 = TodoItem("Prepare for Demo", "Converse with group members", priority = 4)

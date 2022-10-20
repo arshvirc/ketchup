@@ -47,7 +47,11 @@ class TodoItem() {
 
     fun assertEqualItem(otherItem: TodoItem?): Boolean {
         if ( otherItem == null ) return false
-        return ( title == otherItem.title && description == otherItem.description && timestamp == otherItem.timestamp &&  deadline == otherItem.deadline && priority == otherItem.priority && completion == otherItem.completion)
+        return ( title == otherItem.title &&
+                description == otherItem.description &&
+                deadline == otherItem.deadline &&
+                priority == otherItem.priority &&
+                completion == otherItem.completion)
     }
 }
 
