@@ -45,7 +45,12 @@ class TodoList() {
     }
 
     fun edit(oldItem: TodoItem, newItem: TodoItem) {
-        list[list.indexOf(oldItem)] = newItem
+        //list[list.indexOf(oldItem)] = newItem
+        val oldId = oldItem.id;
+        val index = list.indexOfFirst { it.id == oldId }
+        list[index] = newItem
+
+
     }
 
     fun editIf(editCondition: (TodoItem) -> Boolean, newItem: TodoItem) {
