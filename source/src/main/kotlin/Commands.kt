@@ -1,5 +1,6 @@
 import java.text.SimpleDateFormat
 import java.util.Date
+import kotlin.reflect.typeOf
 
 val supportedDateFormatStrings = listOf<String>("d/M/y", "d-M-y", "yyyy/M/d", "yyyy-M-d")
 
@@ -123,7 +124,7 @@ class EditCommand(val args: List<String>) : Command {
         try {
             val itemId = args[1].toInt()
             val item = items.getById(itemId)
-            val newArgs:MutableList<String> = args as MutableList<String>;
+            val newArgs:MutableList<String> = args.toMutableList<String>();
             newArgs.removeAt(1);
 
             val newItem = item?.let { tryFlagParse(newArgs, it) };

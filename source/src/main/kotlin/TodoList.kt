@@ -3,6 +3,7 @@ import java.util.*
 class TodoList() {
     var maxItemID = 0
     private var list = mutableListOf<TodoItem>()
+    var size = 0
     // Not sure if we want to introduce mappings between IDs and indices
 
     constructor(list: TodoList) : this() {
@@ -20,6 +21,7 @@ class TodoList() {
         var newItem = TodoItem(id = maxItemID, title = item.title, description = item.description,
             deadline = item.deadline, priority = item.priority);
         maxItemID++;
+        size++;
         list.add(newItem)
     }
 
@@ -27,6 +29,7 @@ class TodoList() {
         list.add(TodoItem(id = maxItemID, title = title, description = description,
                 deadline = deadline, priority = priority))
         maxItemID++
+        size++;
     }
 
     // Remove item i from the list iff removeCondition(i) == true
@@ -34,6 +37,7 @@ class TodoList() {
         for (item in list) {
             if (removeCondition(item)) {
                 list.remove(item)
+                size--;
             }
         }
     }
@@ -48,7 +52,12 @@ class TodoList() {
     }
 
     fun edit(oldItem: TodoItem, newItem: TodoItem) {
-        list[list.indexOf(oldItem)] = newItem
+        //list[list.indexOf(oldItem)] = newItem
+        val oldId = oldItem.id;
+        val index = list.indexOfFirst { it.id == oldId }
+        list[index] = newItem
+
+
     }
 
     fun editIf(editCondition: (TodoItem) -> Boolean, newItem: TodoItem) {
@@ -92,5 +101,24 @@ class TodoList() {
         }
      }
 
+    fun assertEqualList(otherList: TodoList): Boolean {
+        if ( size != otherList.size ) {
+            return false
+        } else if ( size == 0 ) {
+            return true;
+        }
+        for ( i in 0 until size ) {
+            var item = list[i]
+            var itemID = item.id
+            var otherItem = otherList.getById(itemID)
+            if ( ! item.assertEqualItem(otherItem) ) {
+                return false
+            }
+        }
+        return true
+    }
+
+
+    // fun sort()
     // fun filter()
 }
