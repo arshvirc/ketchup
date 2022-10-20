@@ -7,7 +7,7 @@ internal class EditCommandTest {
 
         // Arrange
         val testItem1 = TodoItem("Write Tests", "For Add, Edit, Del")
-        val expectedItem1 = TodoItem("Write Tests", "For Add, Del")
+        val expectedItem1 = TodoItem("Write Tests", "For Add, Edit, Del")
 
         var testList1 = TodoList()
         testList1.add(testItem1)
@@ -26,14 +26,14 @@ internal class EditCommandTest {
         // Assert
         assertTrue( expectedList1.assertEqualList(testList1) )
 
-        /*
+
         // Arrange
         val firstSharedItem2 = TodoItem("Prepare for Demo", "Converse with group members", priority = 4)
         val testItem2 = TodoItem("Finish writing unit testing", priority = 5)
         val expectedItem2 = TodoItem("Finish writing unit testing", "By Midnight", priority = 5)
 
         var testList2 = TodoList()
-        testList2.add(firstTestItem2)
+        testList2.add(firstSharedItem2)
         testList2.add(testItem2)
 
         var expectedList2 = TodoList()
@@ -53,7 +53,6 @@ internal class EditCommandTest {
 
 
         // Arrange
-        var testList3 = TodoList()
         val firstSharedItem3 = TodoItem("Morning Chores", "Walk your dog", priority = 5)
         val secondSharedItem3 = TodoItem("Grocery Shopping", priority = 5)
         val testItem3 =  TodoItem("Meal Prep", "Make pasta", priority = 5)
@@ -82,6 +81,5 @@ internal class EditCommandTest {
 
         // Assert
         assertTrue( expectedList3.assertEqualList(testList3) )
-         */
     }
 }
