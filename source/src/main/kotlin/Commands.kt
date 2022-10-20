@@ -161,7 +161,26 @@ class DelCommand(val args: List<String>) : Command {
 
 class ListCommand(val args: List<String>) : Command {
     override fun execute(items: TodoList) {
-        items.displayList()
+        if(args.size == 1) {
+            items.displayList()
+        } else {
+            try {
+                if(args.size > 2) {
+                    throw CommandParseException("too many arguments for list. Type 'help list'")
+                }
+                val flag:String = args[1];
+                val acceptedFlags = listOf<String>("p", "priority", "due", "duedate", "deadline")
+                if(flag[0] != '-' || flag.substring(1) !in acceptedFlags) {
+                    throw CommandParseException("Flag not recognized. Type 'help list'")
+                }
+
+                val temp = TodoList(items)
+                temp.sort(flag.substring(1))
+                temp.displayList()
+            } catch (c: CommandParseException) {
+                println(c.message)
+            }
+        }
     }
 }
 
@@ -182,7 +201,7 @@ class HelpCommand(val args: List<String>) : Command {
                     "\t-due/duedate/deadline [date]\n" +
                     "\t-priority/p [priority]"
             "h", "help" -> "Usage: h/help [add/complete/delete/edit/list/help/list/quit]"
-            "l", "list" -> "Usage: l/list"
+            "l", "list" -> "Usage: l/list (one of -p/priority or -due/duedate/deadline)"
             "q", "quit" -> "Usage: q/quit"
             else -> "Undefined command \"${args[1]}."
         })
