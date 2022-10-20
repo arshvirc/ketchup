@@ -22,7 +22,9 @@ before_script:
 
 build:
   stage: build
-  script: source/gradlew --build-cache assemble
+  script: 
+    - cd source
+    - ./gradlew --build-cache assemble
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
