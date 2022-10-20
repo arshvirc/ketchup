@@ -40,8 +40,14 @@ class TodoItem() {
         println("Timestamp: $timestamp")
         println("Deadline: $deadline")
         println("Priority: $priority")
+        println("Completion: $completion")
         print("Tags: ")
 //        println(tags.joinToString(prefix = "[\"", postfix = "\"]", separator = "\", \""))
+    }
+
+    fun assertEqualItem(otherItem: TodoItem?): Boolean {
+        if ( otherItem == null ) return false
+        return ( title == otherItem.title && description == otherItem.description && timestamp == otherItem.timestamp &&  deadline == otherItem.deadline && priority == otherItem.priority && completion == otherItem.completion)
     }
 }
 
