@@ -1,11 +1,19 @@
+import kotlinx.serialization.*
+import kotlinx.serialization.descriptors.*
+import kotlinx.serialization.encoding.*
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.Date
 
+@Serializable
 class TodoItem() {
     var id : Int = 0
         private set
     var title : String = ""
     var description : String = ""
+    @Serializable(with = DateSerializer::class)
     val timestamp : Date = Date(System.currentTimeMillis())
+    @Serializable(with = DateSerializer::class)
     var deadline : Date? = null
     var priority : Int = 0
     var tags = mutableSetOf<String>()
@@ -55,3 +63,18 @@ class TodoItem() {
     }
 }
 
+@OptIn(ExperimentalSerializationApi::class)
+@Serializer(forClass = Date::class)
+object DateSerializer: KSerializer<Date> {
+    private val df: DateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS")
+
+    override fun serialize(encoder: Encoder, value: Date) {
+        encoder.encodeString(df.format(value))
+    }
+
+    override fun deserialize(decoder : Decoder): Date {
+        return df.parse(decoder.decodeString())
+    }
+
+    override val descriptor : SerialDescriptor = PrimitiveSerialDescriptor("Date", PrimitiveKind.STRING)
+}

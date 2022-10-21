@@ -1,5 +1,7 @@
+import kotlinx.serialization.Serializable
 import java.util.*
 
+@Serializable
 class TodoList() {
     var maxItemID = 0
     private var list = mutableListOf<TodoItem>()
@@ -80,7 +82,10 @@ class TodoList() {
     }
 
     fun displayList() {
-        for(i in list) {
+        if (list.isEmpty()) {
+            println("No tasks to display.")
+        }
+        for (i in list) {
             i.printItem()
             println('\n')
         }

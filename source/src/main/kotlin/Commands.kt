@@ -2,7 +2,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import kotlin.reflect.typeOf
 
-val supportedDateFormatStrings = listOf<String>("d/M/y", "d-M-y", "yyyy/M/d", "yyyy-M-d")
+val supportedDateFormatStrings = listOf<String>("dd/MM/yyyy", "dd-MM-yyyy")
 
 // Factory pattern
 // generate a command based on the arguments passed in
@@ -188,21 +188,27 @@ class ListCommand(val args: List<String>) : Command {
 class HelpCommand(val args: List<String>) : Command {
     override fun execute(items: TodoList) {
         if (args.size == 1) {
-            // Should probably be more detailed
-            println("Usage: [add|del|list|quit]. Type \"help [command name] for detailed options.\"")
+            println("Type \"help [command name]\" for detailed options. Available commands:")
+            println("add:       add a new item to the to-do list")
+            println("complete:  mark a task as complete")
+            println("delete:    delete a task from the to-do list")
+            println("edit:      edit an existing task")
+            println("help:      show help menu")
+            println("list:      display all tasks")
+            println("quit:      exit the application")
             return
         }
         println(when (args[1]) {
             "a", "add" -> "Usage: a/add \n\t-title/t [title]\n\t-desc/description [description]\n\t-due/duedate/deadline [date]\n\t-priority/p [priority]"
             "c", "complete" -> "Usage: c/complete [id]"
-            "d", "del", "delete" -> "Usage: d/del/delete [id] \n"
+            "d", "del", "delete" -> "Usage: d/del/delete [id]"
             "e", "edit" -> "Usage: e/edit [id] \n"+
                     "\t-title/t [title]\n" +
                     "\t-desc/description [description]\n" +
                     "\t-due/duedate/deadline [date]\n" +
                     "\t-priority/p [priority]"
             "h", "help" -> "Usage: h/help [add/complete/delete/edit/list/help/list/quit]"
-            "l", "list" -> "Usage: l/list (one of -p/priority or -due/duedate/deadline)"
+            "l", "list" -> "Usage: l/list (one of -p/priority or -due/duedate/deadline to sort by either field)"
             "q", "quit" -> "Usage: q/quit"
             else -> "Undefined command \"${args[1]}."
         })
