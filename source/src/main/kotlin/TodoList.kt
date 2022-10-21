@@ -62,15 +62,6 @@ class TodoList() {
 
     }
 
-    fun editIf(editCondition: (TodoItem) -> Boolean, newItem: TodoItem) {
-        for (item in list) {
-            if (editCondition(item)) {
-                list[list.indexOf(item)] = newItem
-                break
-            }
-        }
-    }
-
     fun getById(id: Int): TodoItem? {
         for(item in list) {
             if(item.id == id) {
