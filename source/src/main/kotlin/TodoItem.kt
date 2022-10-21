@@ -27,8 +27,6 @@ class TodoItem() {
         this.priority = priority
         //println("TimeStamp: $timestamp")
     }
-
-    fun hasTag(tag : String) = tags.contains(tag)
     fun addTag(tag: String) {
         this.tags.add(tag)
     }
@@ -36,6 +34,8 @@ class TodoItem() {
     fun removeTag(tag: String) {
         this.tags.remove(tag)
     }
+
+    fun hasTag(tag : String) = tags.contains(tag)
 
     fun completeTask() {
         this.completion = true
