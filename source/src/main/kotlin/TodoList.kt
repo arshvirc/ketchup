@@ -82,7 +82,10 @@ class TodoList() {
     }
 
     fun displayList() {
-        for(i in list) {
+        if (list.isEmpty()) {
+            println("No tasks to display.")
+        }
+        for (i in list) {
             i.printItem()
             println('\n')
         }
