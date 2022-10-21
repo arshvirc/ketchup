@@ -1,3 +1,4 @@
+import java.lang.NumberFormatException
 import java.text.SimpleDateFormat
 import java.util.Date
 import kotlin.reflect.typeOf
@@ -134,11 +135,16 @@ class EditCommand(val args: List<String>) : Command {
                 if (newItem != null) {
                     items.edit(item, newItem)
                 }
+            } else {
+                println("Item not found.")
             }
         } catch (c: CommandParseException) {
             println(c.message)
+        } catch (e : NumberFormatException) {
+            println("Specify the ID of the item you want to edit.")
+        } catch (e : Exception) {
+            println("Unknown error.")
         }
-        // IMPLEMENT
     }
 }
 
