@@ -46,7 +46,7 @@ interface Command {
     // Parse flags (basic flag parsing for now)
     fun tryFlagParse (args: List<String>, item : TodoItem) : TodoItem {
 
-        var id : Int = item.id
+        val id : Int = item.id
         var title : String = item.title
         var description : String = item.description
         var deadline : Date? = item.deadline
@@ -124,17 +124,17 @@ class EditCommand(val args: List<String>) : Command {
         try {
             val itemId = args[1].toInt()
             val item = items.getById(itemId)
-            val newArgs:MutableList<String> = args.toMutableList<String>();
-            newArgs.removeAt(1);
+            val newArgs:MutableList<String> = args.toMutableList<String>()
+            newArgs.removeAt(1)
 
-            val newItem = item?.let { tryFlagParse(newArgs, it) };
+            val newItem = item?.let { tryFlagParse(newArgs, it) }
 
 
             if (item != null) {
                 if (newItem != null) {
                     items.edit(item, newItem)
                 }
-            };
+            }
         } catch (c: CommandParseException) {
             println(c.message)
         }
@@ -169,7 +169,7 @@ class ListCommand(val args: List<String>) : Command {
                 if(args.size > 2) {
                     throw CommandParseException("too many arguments for list. Type 'help list'")
                 }
-                val flag:String = args[1];
+                val flag:String = args[1]
                 val acceptedFlags = listOf<String>("p", "priority", "due", "duedate", "deadline")
                 if(flag[0] != '-' || flag.substring(1) !in acceptedFlags) {
                     throw CommandParseException("Flag not recognized. Type 'help list'")
@@ -233,12 +233,16 @@ class CompleteCommand(val args : List<String>) : Command {
 
 class UndefinedCommand(val args : List<String>) : Command {
     override fun execute(items: TodoList) {
-        println("Undefined command: \"${args[1]}\". Try \"help\".")
+        if(args.isEmpty()) {
+            println("Undefined command: Try \"help\"")
+        } else {
+            println("Undefined command: \"${args[0]}\". Try \"help\".")
+        }
     }
 }
 
 class QuitCommand() : Command {
     override fun execute(items: TodoList) {
-        println("See you next time!");
+        println("See you next time!")
     }
 }
