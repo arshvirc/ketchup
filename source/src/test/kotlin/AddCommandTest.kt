@@ -63,5 +63,16 @@ internal class AddCommandTest {
 
         // Assert
         assertTrue( expectedList3.assertEqualList(testList3) )
+
+        // Arrange
+        var testList4 = TodoList();
+        var args4 = listOf("a", "-t", "Bad Priority", "-p", "4")
+        val command4 = CommandFactory.createFromArgs(args4);
+        // Act
+
+        command4.execute(testList4)
+
+        // Assert
+        assertEquals(testList4.size, 0)
     }
 }
