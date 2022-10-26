@@ -26,9 +26,9 @@ internal class EditCommandTest {
         assertTrue( expectedList1.assertEqualList(testList1) )
 
         // Arrange
-        val firstSharedItem2 = TodoItem("Prepare for Demo", "Converse with group members", priority = 4)
-        val testItem2 = TodoItem("Finish writing unit testing", priority = 5)
-        val expectedItem2 = TodoItem("Finish writing unit testing", "By Midnight", priority = 5)
+        val firstSharedItem2 = TodoItem("Prepare for Demo", "Converse with group members", priority = 2)
+        val testItem2 = TodoItem("Finish writing unit testing", priority = 3)
+        val expectedItem2 = TodoItem("Finish writing unit testing", "By Midnight", priority = 3)
 
         var testList2 = TodoList()
         testList2.add(firstSharedItem2)
@@ -51,11 +51,11 @@ internal class EditCommandTest {
 
 
         // Arrange
-        val firstSharedItem3 = TodoItem("Morning Chores", "Walk your dog", priority = 5)
-        val secondSharedItem3 = TodoItem("Grocery Shopping", priority = 5)
-        val testItem3 =  TodoItem("Meal Prep", "Make pasta", priority = 5)
-        val expectedItem3 =  TodoItem("Meal Prep", "Make pasta, rice, salads", priority = 10)
-        val thirdSharedItem3 =  TodoItem("Buy Coffee Beans", "Make sure its ethical.", priority = 5)
+        val firstSharedItem3 = TodoItem("Morning Chores", "Walk your dog", priority = 1)
+        val secondSharedItem3 = TodoItem("Grocery Shopping", priority = 2)
+        val testItem3 =  TodoItem("Meal Prep", "Make pasta", priority = 0)
+        val expectedItem3 =  TodoItem("Meal Prep", "Make pasta, rice, salads", priority = 3)
+        val thirdSharedItem3 =  TodoItem("Buy Coffee Beans", "Make sure its ethical.", priority = 3)
 
         var testList3 = TodoList()
         testList3.add(firstSharedItem3)
@@ -69,7 +69,7 @@ internal class EditCommandTest {
         expectedList3.add(expectedItem3)
         expectedList3.add(thirdSharedItem3)
 
-        val args3 = listOf("e", "2", "-desc", "Make pasta, rice, salads", "-p", "10" )
+        val args3 = listOf("e", "2", "-desc", "Make pasta, rice, salads", "-p", "3" )
         val command3 = CommandFactory.createFromArgs(args3)
 
         // Act

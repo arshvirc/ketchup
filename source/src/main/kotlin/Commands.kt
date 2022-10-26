@@ -29,6 +29,7 @@ object CommandFactory {
 // any functionality for a given command should be contained in that class
 
 class CommandParseException(message : String) : Exception("Command Parsing Error: $message.")
+class InvalidPriorityException(message: String) : Exception("Invalid Priority Error: $message." )
 interface Command {
     fun execute(items : TodoList)
 
@@ -42,6 +43,14 @@ interface Command {
             }
         }
         return null
+    }
+
+    fun priorityParse(priority : Int): Int {
+        if(priority > 3 || priority < 0) {
+            throw InvalidPriorityException("priority must be 0, 1, or 2")
+        }
+
+        return priority
     }
 
     // Parse flags (basic flag parsing for now)
@@ -75,6 +84,9 @@ interface Command {
                     "-p", "-priority" -> {
                         try {
                             priority = arg.toInt()
+                            priority = priorityParse(priority)
+                        } catch(pex: InvalidPriorityException) {
+                            throw CommandParseException("priority must be 0 (no priority), 1 (low), 2 (medium), or 3 (high).")
                         } catch (ex : Exception) {
                             throw CommandParseException("invalid/missing priority value (must be an integer)")
                         }
@@ -160,7 +172,6 @@ class DelCommand(val args: List<String>) : Command {
             items.removeIf { it.id == toDeleteID }
         } catch (e : Exception) {
             // Then it's a string, so we're searching by title
-            println()
             items.removeIf { it.title == args[1] }
         }
     }
