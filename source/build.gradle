@@ -32,6 +32,7 @@ ext {
 dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0"
     implementation "org.junit.jupiter:junit-jupiter:${junitVersion}"
+    implementation "org.xerial:sqlite-jdbc:3.39.3.0"
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
