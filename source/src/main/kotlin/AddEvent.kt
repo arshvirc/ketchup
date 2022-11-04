@@ -22,17 +22,13 @@ class AddEvent {
         this.dueDate = newDueDate
     }
 
-//    constructor(dueDate: LocalDate, title: String) {
-//        this.setTitle(title)
-//        this.setDueDate(dueDate)
-//    }
-constructor(title: String) {
-    this.setTitle(title)
-}
+    constructor(title: String, date: LocalDate) {
+        this.setTitle(title)
+        this.setDueDate(date)
+    }
      //@Override
      override fun toString() : String {
-         return this.getTitle()
-         //return "At: " this.getDueDate() + this.getTitle()
+         return "At: " + this.getDueDate() + " " + this.getTitle()
      }
 
 

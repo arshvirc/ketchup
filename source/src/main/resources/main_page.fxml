@@ -82,7 +82,7 @@
                         <Font size="10.0" />
                      </font>
                   </Button>
-                  <DatePicker fx:id="dataPicker" layoutX="69.0" layoutY="5.0" prefHeight="25.0" prefWidth="130.0" style="-fx-background-color: #f5d7d7; -fx-background-radius: 10;" stylesheets="@datepicker.css" />
+                  <DatePicker fx:id="dueDatePicker" layoutX="69.0" layoutY="5.0" prefHeight="25.0" prefWidth="130.0" style="-fx-background-color: #f5d7d7; -fx-background-radius: 10;" stylesheets="@datepicker.css" />
                   <TextField fx:id="titleText" layoutX="207.0" layoutY="5.0" prefHeight="26.0" prefWidth="223.0" promptText="Enter Title" style="-fx-background-color: #f5d7d7; -fx-background-radius: 10; -fx-font-size: 10;">
                      <font>
                         <Font size="10.0" />

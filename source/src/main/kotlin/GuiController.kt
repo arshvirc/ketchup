@@ -10,7 +10,7 @@ class GuiController {
     private lateinit var addTask : Button
 
     @FXML
-    private lateinit var datePicker : DatePicker
+    private lateinit var dueDatePicker : DatePicker
 
     @FXML
     private lateinit var titleText : TextField
@@ -20,18 +20,16 @@ class GuiController {
 
     @FXML
     private fun refresh() {
-        datePicker.value = LocalDate.now()
+        dueDatePicker.value = LocalDate.now()
         titleText.text = null
     }
 
     @FXML
     private fun addEvent() {
-
-        //val anEventDate = datePicker.value //datePicker.setValue(datePicker.value)
-        //val formattedDate = anEventDate.format(DateTimeFormatter. ofPattern("dd-MMM-yy"))
-        val anEventTitle = titleText.text
-        val anAddedEvent = AddEvent(anEventTitle)
-        //val anAddedEvent = AddEvent(datePicker.getValue(), titleText.getText())
+        val eventDate = dueDatePicker.value
+        print(eventDate)
+        val eventTitle = titleText.text
+        val anAddedEvent = AddEvent(eventTitle, eventDate)
         taskList.items.add(anAddedEvent)
         refresh()
     }
