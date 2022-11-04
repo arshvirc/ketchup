@@ -19,7 +19,7 @@ class TodoItem() {
     var tags : MutableList<String> = mutableListOf()
     var completion : Boolean = false
 
-    constructor(title:  String = "", description: String = "", deadline: Date? = null, priority: Int = 0, id: Int = 0, tags: MutableList<String> = mutableListOf()) : this() {
+    constructor(title:  String = "", description: String = "", deadline: Date? = null, priority: Int = 0, id: Int = 0, tags: MutableList<String> = mutableListOf(), timestamp: Date = Date(System.currentTimeMillis())) : this() {
         this.id = id
         this.title = title
         this.description = description
@@ -28,6 +28,7 @@ class TodoItem() {
         for (tag in tags) {
             this.addTag(tag.trim())
         }
+        this.timestamp = timestamp
         //println("TimeStamp: $timestamp")
     }
     fun addTag(tag: String) {
