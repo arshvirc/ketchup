@@ -1,11 +1,13 @@
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
+import kotlin.math.exp
+import kotlin.test.expect
 
 internal class ListCommandTest {
 
     @Test
-    fun execute() {
+    fun sortTest() {
         // TESTING SORT BY PRIORITY
         // Arrange
         val testList1 = TodoList()
@@ -58,7 +60,30 @@ internal class ListCommandTest {
         // Assert
         assertEquals(testList2.getById(0)!!.deadline, expectedList2.getById(1)!!.deadline)
         assertEquals(testList2.getById(1)!!.deadline, expectedList2.getById(0)!!.deadline)
+    }
 
+    @Test
+    fun filterTest() {
+        // TESTING FILTERING BASED ON TAGS
+        // Arrange
+        val testList3 = TodoList()
+        val expectedList3 = TodoList()
 
+        val args1 = listOf("add", "-t", "item1", "-tags", "\"1,2,3\"")
+        val args2 = listOf("add", "-t", "item2", "-tags", "\"4,5,2\"")
+        val command1 = CommandFactory.createFromArgs(args1)
+        val command2 = CommandFactory.createFromArgs(args2)
+        command2.execute(testList3)
+        command1.execute(testList3)
+
+        command1.execute(expectedList3);
+
+        val tags = listOf<String>("3")
+        testList3.filter(tags);
+
+        testList3.displayList()
+        expectedList3.displayList()
+
+        assertEquals(testList3.getById(1)?.title ?: 0, expectedList3.getById(0)?.title ?: 0)
     }
 }

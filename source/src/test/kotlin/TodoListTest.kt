@@ -28,7 +28,8 @@ internal class TodoListTest {
     fun checkAdd() {
         // arrange
         var testList = TodoList()
-        var expectedItem = TodoItem(id = 0, title = "Test", description = "Test description",
+        var expectedItem = TodoItem(
+            id = 0, title = "Test", description = "Test description",
                 deadline = Date(2001,12,24), priority = 1)
 
 
@@ -45,9 +46,11 @@ internal class TodoListTest {
         // arrange
         var testList = TodoList()
         var expectedList = TodoList()
-        var item1 = TodoItem(id = 0, title = "Test1", description = "Test description 1",
+        var item1 = TodoItem(
+            id = 0, title = "Test1", description = "Test description 1",
                 deadline = Date(2001,12,24), priority = 1)
-        var item2 = TodoItem(id = 1, title = "Test2", description = "Test description 2",
+        var item2 = TodoItem(
+            id = 1, title = "Test2", description = "Test description 2",
                 deadline = Date(2002,2,12), priority = 3)
         testList.add(item1)
         testList.add(item2)
@@ -65,7 +68,8 @@ internal class TodoListTest {
         // arrange
         var testList = TodoList()
         var expectedList = TodoList()
-        var item1 = TodoItem(id = 0, title = "Test1", description = "Test description 1",
+        var item1 = TodoItem(
+            id = 0, title = "Test1", description = "Test description 1",
                 deadline = Date(2001,12,24), priority = 1)
         testList.add(item1)
         expectedList.add(item1)
@@ -82,9 +86,11 @@ internal class TodoListTest {
         // arrange
         var testList = TodoList()
         var expectedList = TodoList()
-        var item1 = TodoItem(id = 0, title = "Test1", description = "Test description 1",
+        var item1 = TodoItem(
+            id = 0, title = "Test1", description = "Test description 1",
                 deadline = Date(2001,12,24), priority = 1)
-        var item2 = TodoItem(id = 0, title = "Test2", description = "Test description 2",
+        var item2 = TodoItem(
+            id = 0, title = "Test2", description = "Test description 2",
                 deadline = Date(2002,2,12), priority = 3)
         testList.add(item1)
         expectedList.add(item2)
@@ -101,9 +107,11 @@ internal class TodoListTest {
     fun checkGetById_true() {
         // arrange
         var testList = TodoList()
-        var item1 = TodoItem(id = 0, title = "Test1", description = "Test description 1",
+        var item1 = TodoItem(
+            id = 0, title = "Test1", description = "Test description 1",
                 deadline = Date(2001,12,24), priority = 1)
-        var item2 = TodoItem(id = 1, title = "Test2", description = "Test description 2",
+        var item2 = TodoItem(
+            id = 1, title = "Test2", description = "Test description 2",
                 deadline = Date(2002,2,12), priority = 3)
         testList.add(item1)
         testList.add(item2)
@@ -121,9 +129,11 @@ internal class TodoListTest {
     fun checkGetById_false() {
         // arrange
         var testList = TodoList()
-        var item1 = TodoItem(id = 0, title = "Test1", description = "Test description 1",
+        var item1 = TodoItem(
+            id = 0, title = "Test1", description = "Test description 1",
                 deadline = Date(2001,12,24), priority = 1)
-        var item2 = TodoItem(id = 1, title = "Test2", description = "Test description 2",
+        var item2 = TodoItem(
+            id = 1, title = "Test2", description = "Test description 2",
                 deadline = Date(2002,2,12), priority = 3)
         testList.add(item1)
         testList.add(item2)
@@ -139,7 +149,8 @@ internal class TodoListTest {
     fun checkDisplayList() {
         // arrange
         var testList = TodoList()
-        var item1 = TodoItem(id = 0, title = "Test1", description = "Test description 1",
+        var item1 = TodoItem(
+            id = 0, title = "Test1", description = "Test description 1",
                 deadline = Date(2001,12,24), priority = 1)
         testList.add(item1)
 

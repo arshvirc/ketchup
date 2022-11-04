@@ -16,16 +16,18 @@ class TodoItem() {
     @Serializable(with = DateSerializer::class)
     var deadline : Date? = null
     var priority : Int = 0
-    var tags = mutableSetOf<String>()
+    var tags : MutableList<String> = mutableListOf()
     var completion : Boolean = false
 
-    constructor(title :  String = "", description : String = "", deadline : Date? = null, priority : Int = 0, id : Int = 0,
-                timestamp: Date = Date(System.currentTimeMillis())) : this() {
+    constructor(title:  String = "", description: String = "", deadline: Date? = null, priority: Int = 0, id: Int = 0, tags: MutableList<String> = mutableListOf(), timestamp: Date = Date(System.currentTimeMillis())) : this() {
         this.id = id
         this.title = title
         this.description = description
         this.deadline = deadline
         this.priority = priority
+        for (tag in tags) {
+            this.addTag(tag.trim())
+        }
         this.timestamp = timestamp
         //println("TimeStamp: $timestamp")
     }
@@ -52,7 +54,7 @@ class TodoItem() {
         println("Priority: $priority")
         println("Completion: $completion")
         print("Tags: ")
-//        println(tags.joinToString(prefix = "[\"", postfix = "\"]", separator = "\", \""))
+        println(tags)
     }
 
     fun assertEqualItem(otherItem: TodoItem?): Boolean {

@@ -21,16 +21,18 @@ class TodoList() {
     }
 
     fun add(item: TodoItem) {
-        var newItem = TodoItem(id = maxItemID, title = item.title, description = item.description,
-            deadline = item.deadline, priority = item.priority);
+        var newItem = TodoItem(
+            id = maxItemID, title = item.title, description = item.description,
+            deadline = item.deadline, priority = item.priority, tags = item.tags);
         maxItemID++;
         size++;
         list.add(newItem)
     }
 
-    fun add(title : String, description : String = "", deadline : Date? = null, priority : Int = 0) {
-        list.add(TodoItem(id = maxItemID, title = title, description = description,
-                deadline = deadline, priority = priority))
+    fun add(title : String, description : String = "", deadline : Date? = null, priority : Int = 0, tags: MutableList<String> = mutableListOf()) {
+        list.add(TodoItem(
+            id = maxItemID, title = title, description = description,
+                deadline = deadline, priority = priority, tags = tags))
         maxItemID++
         size++;
     }
@@ -97,6 +99,15 @@ class TodoList() {
             "due", "duedate", "deadline" -> sortByDeadline()
         }
      }
+
+    fun filter(arg: List<String>) {
+//        print(arg)
+//        for(i in list) {
+//            println(arg.toSet().intersect(i.tags.toSet()).isNotEmpty())
+//        }
+        list = list.filter { it.tags.toSet().intersect(arg.toSet()).isNotEmpty() } as MutableList<TodoItem>
+    }
+
 
     fun assertEqualList(otherList: TodoList): Boolean {
         if ( size != otherList.size ) {

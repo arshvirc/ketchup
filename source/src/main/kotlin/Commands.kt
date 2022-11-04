@@ -1,7 +1,6 @@
 import java.lang.NumberFormatException
 import java.text.SimpleDateFormat
 import java.util.Date
-import kotlin.reflect.typeOf
 
 val supportedDateFormatStrings = listOf<String>("dd/MM/yyyy", "dd-MM-yyyy")
 
@@ -62,6 +61,7 @@ interface Command {
         var deadline : Date? = item.deadline
         var priority : Int = item.priority
         var flag : String? = null
+        var tags: MutableList<String> = mutableListOf()
 
         for (arg in args.subList(1, args.size)) {
 
@@ -91,6 +91,29 @@ interface Command {
                             throw CommandParseException("invalid/missing priority value (must be an integer)")
                         }
                     }
+                    "-tags" -> {
+                        try {
+                            var valid: Boolean = true;
+                            if (arg[0] != '"' || arg[arg.length - 1] != '"') {
+                                valid = false;
+                            }
+
+                            if (!valid) {
+                                throw CommandParseException("")
+                            }
+
+                            var parsed = arg.substring(1, arg.length - 1).split(',');
+
+                            for(item in parsed) {
+                                tags.add(item.trim())
+                            }
+
+                        } catch (cmd: CommandParseException) {
+                            throw CommandParseException("tags must be wrapped in double quotes, seperated by chars. ex. -tags \"tag1, tag2\"")
+                        } catch(ex: Exception) {
+                            throw CommandParseException("Cannot parse tags.")
+                        }
+                    }
                     null -> {
                         println(args)
                         throw CommandParseException("unable to parse command")
@@ -107,7 +130,7 @@ interface Command {
         } else if (title == "") {
             throw CommandParseException("an item must have a title")
         }
-        return TodoItem(title, description, deadline, priority, id)
+        return TodoItem(title, description, deadline, priority, id, tags)
     }
 }
 
@@ -183,18 +206,42 @@ class ListCommand(val args: List<String>) : Command {
             items.displayList()
         } else {
             try {
-                if(args.size > 2) {
-                    throw CommandParseException("too many arguments for list. Type 'help list'")
-                }
-                val flag:String = args[1]
-                val acceptedFlags = listOf<String>("p", "priority", "due", "duedate", "deadline")
-                if(flag[0] != '-' || flag.substring(1) !in acceptedFlags) {
-                    throw CommandParseException("Flag not recognized. Type 'help list'")
-                }
+                if(args.size == 2) {
+                    val flag:String = args[1]
+                    val sortFlags = listOf<String>("p", "priority", "due", "duedate", "deadline")
+                    if(flag[0] != '-' || flag.substring(1) !in sortFlags) {
+                        throw CommandParseException("Flag not recognized. Type 'help list'")
+                    }
+                    val temp = TodoList(items)
+                    temp.sort(flag.substring(1))
+                    temp.displayList()
+                } else if(args.size == 3) {
+                    val flag:String = args[1]
+                    val filterFlags = listOf<String>("f", "filter")
+                    if(flag[0] != '-' || flag.substring(1) !in filterFlags) {
+                        throw CommandParseException("Flag not recognized. Type 'help list'")
+                    }
 
-                val temp = TodoList(items)
-                temp.sort(flag.substring(1))
-                temp.displayList()
+                    val tags = args[2]
+
+                    var valid: Boolean = true;
+                    if (tags[0] != '"' || tags[tags.length - 1] != '"') {
+                        valid = false;
+                    }
+
+                    if (!valid) {
+                        throw CommandParseException("tags must be wrapped in double quotes, seperated by chars. ex. list -f \"tag1, tag2\"")
+                    }
+
+                    var parsed: MutableList<String> = tags.substring(1, tags.length - 1).split(',').map { it.trim() } as MutableList<String>;
+
+
+                    val temp = TodoList(items)
+                    temp.filter(parsed)
+                    temp.displayList()
+                } else {
+                    throw CommandParseException("too many arguments. Type 'help list'")
+                }
             } catch (c: CommandParseException) {
                 println(c.message)
             }
