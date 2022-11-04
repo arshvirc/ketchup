@@ -12,19 +12,21 @@ class TodoItem() {
     var title : String = ""
     var description : String = ""
     @Serializable(with = DateSerializer::class)
-    val timestamp : Date = Date(System.currentTimeMillis())
+    var timestamp : Date = Date(System.currentTimeMillis())
     @Serializable(with = DateSerializer::class)
     var deadline : Date? = null
     var priority : Int = 0
     var tags = mutableSetOf<String>()
     var completion : Boolean = false
 
-    constructor(title :  String = "", description : String = "", deadline : Date? = null, priority : Int = 0, id : Int = 0) : this() {
+    constructor(title :  String = "", description : String = "", deadline : Date? = null, priority : Int = 0, id : Int = 0,
+                timestamp: Date = Date(System.currentTimeMillis())) : this() {
         this.id = id
         this.title = title
         this.description = description
         this.deadline = deadline
         this.priority = priority
+        this.timestamp = timestamp
         //println("TimeStamp: $timestamp")
     }
     fun addTag(tag: String) {

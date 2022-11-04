@@ -6,6 +6,7 @@ class TodoList() {
     var maxItemID = 0
     private var list = mutableListOf<TodoItem>()
     var size = 0
+    val id = 0
     // Not sure if we want to introduce mappings between IDs and indices
 
     constructor(list: TodoList) : this() {
