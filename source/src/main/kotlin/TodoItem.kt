@@ -12,7 +12,7 @@ class TodoItem() {
     var title : String = ""
     var description : String = ""
     @Serializable(with = DateSerializer::class)
-    val timestamp : Date = Date(System.currentTimeMillis())
+    var timestamp : Date = Date(System.currentTimeMillis())
     @Serializable(with = DateSerializer::class)
     var deadline : Date? = null
     var priority : Int = 0
