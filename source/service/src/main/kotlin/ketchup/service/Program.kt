@@ -198,10 +198,12 @@ class Program(private var dbURL: String = "jdbc:sqlite:data.db") {
     }
     */
 
-    fun run(args: Array<String>) {
+    fun run(): Connection? {
         setupDB()
-        load()
-        save()
+        return conn;
+    }
+
+    fun close() {
         conn?.close()
     }
 }
