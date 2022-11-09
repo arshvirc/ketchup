@@ -43,10 +43,10 @@ class Program(private var dbURL: String = "jdbc:sqlite:data.db") {
         // Create Tags table
         // Initialize TodoLists and Program table
         val queryStrings = listOf<String>(
-            "CREATE TABLE TodoLists(list_id int PRIMARY KEY, maxItemID int);",
+            "CREATE TABLE TodoLists(list_id INTEGER PRIMARY KEY AUTOINCREMENT, title varchar(255));",
             "CREATE TABLE Program(list_id int, FOREIGN KEY(list_id) REFERENCES TodoLists(list_id));",
             "CREATE TABLE TodoItems(" +
-                    "item_id int PRIMARY KEY," +
+                    "item_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "title TEXT," +
                     "description TEXT," +
                     "timestamp DATETIME," +
@@ -63,7 +63,7 @@ class Program(private var dbURL: String = "jdbc:sqlite:data.db") {
                     "FOREIGN KEY(item_id) REFERENCES TodoItems(item_id)" +
                     "FOREIGN KEY(tag) REFERENCES Tags(name)" +
                     ");",
-            "INSERT INTO TodoLists(list_id, maxItemID) VALUES (\"0\", \"0\")",
+            "INSERT INTO TodoLists(list_id, title) VALUES (\"0\", \"Main List\")",
             "INSERT INTO Program(list_id) VALUES (\"0\")"
         )
 
