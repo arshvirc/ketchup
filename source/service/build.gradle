@@ -6,8 +6,23 @@ plugins {
     id 'ketchup.kotlin-library-conventions'
 }
 
+ext {
+    ktor_version="2.0.0-beta-1"
+    logback_version="1.2.3"
+    kotlin_version="1.6.10"
+}
+
+
 dependencies {
     implementation project(":console")
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0"
     implementation "org.xerial:sqlite-jdbc:3.39.3.0"
+    implementation "io.ktor:ktor-server-core-jvm:$ktor_version"
+    implementation "io.ktor:ktor-server-content-negotiation-jvm:$ktor_version"
+    implementation "io.ktor:ktor-serialization-jackson-jvm:$ktor_version"
+    implementation "io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version"
+    implementation "io.ktor:ktor-server-netty-jvm:$ktor_version"
+    implementation "ch.qos.logback:logback-classic:$logback_version"
+    testImplementation "io.ktor:ktor-server-tests-jvm:$ktor_version"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 }
