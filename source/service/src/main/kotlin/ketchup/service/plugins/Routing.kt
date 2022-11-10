@@ -4,12 +4,20 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import ketchup.service.controllers.ListController
 import java.sql.Connection
 
-fun Application.configureRouting() {
+data class ListName(val name: String)
+
+fun Application.configureRouting(conn: Connection) {
 
 
     routing {
+        route("/"){
+            get {
+                call.respondText("Hello World!");
+            }
+        }
         route("/api/lists") {
             get {
                 // return all lists as JSON
@@ -21,6 +29,19 @@ fun Application.configureRouting() {
 
             delete("{id?}") {
                 // delete list with id
+            }
+
+            post {
+                // create a new list
+                val name = call.receive<ListName>().name;
+                val controller = ListController(conn)
+                val success = controller.createList(name)
+
+                if(success) {
+                    call.respondText("success")
+                } else {
+                    call.respondText("failure")
+                }
             }
         }
 
