@@ -31,7 +31,6 @@ class TodoItem() {
             this.addTag(tag.trim())
         }
         this.timestamp = timestamp
-        //println("TimeStamp: $timestamp")
     }
     fun addTag(tag: String) {
         this.tags.add(tag)

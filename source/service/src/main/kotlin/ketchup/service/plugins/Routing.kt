@@ -6,6 +6,8 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import ketchup.service.controllers.ListController
 import java.sql.Connection
+import ketchup.console.TodoItem
+import ketchup.service.controllers.ItemController
 
 data class ListName(val name: String)
 
@@ -60,6 +62,17 @@ fun Application.configureRouting(conn: Connection) {
 
             post {
                 // create item
+                val item = call.receive<TodoItem>()
+                val controller = ItemController(conn)
+                val success = controller.addItem(item)
+//                println(item.completion)
+
+
+                if(success) {
+                    call.respondText("success")
+                } else {
+                    call.respondText("failure")
+                }
             }
         }
     }
