@@ -6,9 +6,9 @@ import java.util.*
 @Serializable
 class TodoList() {
     var maxItemID = 0
-    private var list = mutableListOf<TodoItem>()
+    var list = mutableListOf<TodoItem>()
     var size = 0
-    val id = 0
+    var id = 0
     // Not sure if we want to introduce mappings between IDs and indices
 
     constructor(list: TodoList) : this() {
@@ -22,6 +22,10 @@ class TodoList() {
         maxItemID = maxIdSeen + 1
     }
 
+    constructor(id: Int) : this() {
+        this.id = id
+    }
+
     fun add(item: TodoItem) {
         var newItem = TodoItem(
             id = maxItemID, title = item.title, description = item.description,
@@ -29,6 +33,11 @@ class TodoList() {
         maxItemID++
         size++
         list.add(newItem)
+    }
+
+    fun addItem(item: TodoItem) {
+        list.add(item)
+        size++
     }
 
     fun add(title : String, description : String = "", deadline : Date? = null, priority : Int = 0, tags: MutableList<String> = mutableListOf()) {
