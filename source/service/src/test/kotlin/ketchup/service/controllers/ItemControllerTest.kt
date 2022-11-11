@@ -41,7 +41,7 @@ internal class ItemControllerTest {
         if(controller != null) {
             val itemTitle = "my first task"
             val item = TodoItem(title = itemTitle)
-            controller.addItem(item)
+            controller.addItem(item, 0)
 
             val testQueryString = "SELECT * FROM TodoItems WHERE title='my first task'"
             val query = conn!!.createStatement()
@@ -73,7 +73,7 @@ internal class ItemControllerTest {
                 item.addTag(tag)
             }
 
-            controller.addItem(item)
+            controller.addItem(item, 0)
 
             val query = conn!!.createStatement()
             val itemFinderQueryString = "SELECT * FROM TodoItems WHERE title='my first task'"

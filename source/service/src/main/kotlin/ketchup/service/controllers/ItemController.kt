@@ -23,7 +23,7 @@ class ItemController(connection: Connection) {
         }
     }
 
-    fun addItem(item: TodoItem): Boolean {
+    fun addItem(item: TodoItem, listId: Int): Boolean {
         try {
             if (conn != null) {
                 val newId = getTodoCount();
@@ -38,7 +38,7 @@ class ItemController(connection: Connection) {
                         "\"${item.timestamp}\"," +
                         "\"${item.deadline.toString()}\", " +
                         "\"${item.priority}\", " +
-                        "\"0\"," +
+                        "\"$listId\"," +
                         "\"${item.completion}\");"
                 query.execute(addItemQueryString)
                 // Add tags
