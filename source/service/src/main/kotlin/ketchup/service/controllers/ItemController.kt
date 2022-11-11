@@ -63,4 +63,53 @@ class ItemController(connection: Connection) {
             return false
         }
     }
+
+    fun editItem(item: TodoItem) : Boolean {
+        try {
+            if (conn != null) {
+                // Procedure:
+                // 1) Update the item itself
+                // 2) Remove all tags associated with item (clean up any old tags)
+                // 3) Add all tags associated with item
+
+                val query = conn!!.createStatement()
+                // Update the item itself
+
+                val editItemQueryString = "UPDATE TodoItems SET " +
+                        "title = \"${item.title}\", " +
+                        "description = \"{item.description}\", " +
+                        "timestamp = \"${item.timestamp}\", " +
+                        "deadline = \"${item.deadline.toString()}\", " +
+                        "priority = \"${item.priority}\", " +
+                        "completion = \"${item.completion}\" " +
+                        "WHERE item_id = ${item.id};"
+                query.executeQuery(editItemQueryString)
+
+                // Remove old item-tag associations
+                val removeOldTagsQueryString = "DELETE FROM ItemTags WHERE item_id = ${item.id}"
+                query.executeQuery(removeOldTagsQueryString)
+
+                // Add tags
+                for (tag in item.tags) {
+                    // Search for the tag in the tags table.
+                    // If it exists, just attach the item to the tag.
+                    // If it doesn't exist, add it to the tags table.
+                    val searchTagQueryString = "SELECT name FROM Tags WHERE name=\"${tag}\";"
+                    val result = query.executeQuery(searchTagQueryString)
+                    if (result.next() == false) { // if the tag doesn't exist, add it
+                        val addTagQueryString = "INSERT INTO Tags(name, color) VALUES (\"${tag}\", \"0\");" // 0 as the "color" for now
+                        query.execute(addTagQueryString)
+                    }
+                    // Add item-tag pairing
+                    val addPairQueryString = "INSERT INTO ItemTags(item_id, tag) VALUES (\"${item.id}\", \"${tag}\");"
+                    query.execute(addPairQueryString)
+                }
+            }
+            return true
+        } catch (ex : SQLException) {
+            println(ex.message)
+            return false
+        }
+
+    }
 }

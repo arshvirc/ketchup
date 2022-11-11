@@ -16,7 +16,6 @@ data class ListResponse(val listId: Int, val size: Int, val list: MutableList<To
 data class ListsResponse(val lists: MutableList<TodoList>)
 data class AddItemRequest(val listId: Int, val item: TodoItem)
 
-
 fun Application.configureRouting(conn: Connection) {
 
 
@@ -40,7 +39,7 @@ fun Application.configureRouting(conn: Connection) {
 
             get("{id}") {
                 val id: Int = call.parameters["id"]?.toInt() ?: 0
-                println(id)
+                // println(id)
                 val controller = ListController(conn)
 
                 val list = controller.getList(id)
@@ -74,6 +73,14 @@ fun Application.configureRouting(conn: Connection) {
 
             put("{id?}") {
                 // edit todo item with specific id
+                val item = call.receive<TodoItem>()
+                val controller = ItemController(conn)
+                val success = controller.editItem(item)
+                if (success) {
+                    call.respondText("success")
+                } else {
+                    call.respondText("failure")
+                }
             }
 
             delete("{id?}") {
@@ -86,7 +93,7 @@ fun Application.configureRouting(conn: Connection) {
                 val controller = ItemController(conn)
                 val success = controller.addItem(item.item, item.listId)
 
-                if(success) {
+                if (success) {
                     call.respondText("success")
                 } else {
                     call.respondText("failure")
