@@ -1,5 +1,6 @@
 package ketchup.service.controllers
 
+import ketchup.console.TodoItem
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -44,5 +45,37 @@ internal class ListControllerTest {
         }
 
         deleteFile("./listTest.db")
+    }
+
+    @Test
+    fun getAllListsTest() {
+        var dbUrl = "jdbc:sqlite:./getList.db"
+        var prog = Program(dbUrl)
+        createFile("./getList.db")
+        val conn = prog.run()
+
+        val controller = conn?.let{ListController(it)}
+
+        if(controller != null) {
+            controller.createList("new list")
+            controller.createList("another list")
+
+            var itemController = conn?.let{ItemController(it)}
+
+            var itemOne = TodoItem("hello", "hi", null, 3, 4)
+            var itemTwo = TodoItem("hello", "bye", null, 3, 4)
+
+            itemController.addItem(itemOne, 0)
+            itemController.addItem(itemTwo, 1)
+
+            val lists = controller.getAllLists()
+            assertEquals(lists[0].id, 0)
+            assertEquals(lists[1].id, 1)
+
+            assertEquals(lists[0].list[0].title, "hello")
+            assertEquals(lists[1].list[0].description, "bye")
+
+        }
+        deleteFile("./getList.db")
     }
 }
