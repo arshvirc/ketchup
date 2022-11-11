@@ -78,4 +78,38 @@ internal class ListControllerTest {
         }
         deleteFile("./getList.db")
     }
+
+    @Test
+    fun deleteListTest() {
+        var dbUrl = "jdbc:sqlite:./deleteList.db"
+        var prog = Program(dbUrl)
+        createFile("./deleteList.db")
+
+        val conn = prog.run()
+
+        val controller = conn?.let{ListController(it)}
+
+        if(controller != null) {
+           controller.createList("new list")
+
+           // at this point, listId 0 == Main List
+           // listId 1 == new list
+
+            var itemController = conn?.let { ItemController(conn) }
+            var itemOne = TodoItem("hello", "hi", null)
+            var itemTwo = TodoItem("hello", "bye", null)
+
+            itemController.addItem(itemOne, 0)
+            itemController.addItem(itemTwo, 1)
+
+            controller.deleteList(0)
+
+            val lists = controller.getAllLists()
+
+            assertEquals(lists.size, 1)
+            assertEquals(lists[0].id, 1)
+
+        }
+        deleteFile("./deleteList.db")
+    }
 }
