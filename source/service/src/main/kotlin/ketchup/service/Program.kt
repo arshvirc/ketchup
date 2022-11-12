@@ -49,8 +49,8 @@ class Program(private var dbURL: String = "jdbc:sqlite:data.db") {
                     "item_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "title TEXT," +
                     "description TEXT," +
-                    "timestamp DATETIME," +
-                    "deadline DATETIME," +
+                    "timestamp TEXT," +
+                    "deadline TEXT," +
                     "priority int," +
                     "list_id int," +
                     "completion BIT," +
