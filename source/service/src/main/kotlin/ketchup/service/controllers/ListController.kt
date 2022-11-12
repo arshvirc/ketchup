@@ -118,4 +118,30 @@ class ListController(connection: Connection) {
             return list
         }
     }
+
+    fun deleteList(listId: Int): Boolean {
+        try {
+            if(conn != null) {
+                val query = conn!!.createStatement()
+                val deleteItemsQuery = "DELETE FROM TodoItems WHERE list_id=\"$listId\""
+                query.executeUpdate(deleteItemsQuery)
+
+                val listQuery = conn!!.createStatement()
+                val deleteListQuery = "DELETE FROM TodoLists WHERE list_id=\"$listId\""
+                listQuery.executeUpdate(deleteListQuery)
+
+                return true
+            } else {
+                throw Exception("sql connection is undefined or null.")
+                return false
+            }
+        } catch (ex: SQLException) {
+            println(ex.message)
+            return false
+        } catch (ex: Exception) {
+            println(ex.message)
+            return false
+        }
+
+    }
 }

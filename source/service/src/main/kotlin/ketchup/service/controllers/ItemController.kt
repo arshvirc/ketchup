@@ -23,6 +23,34 @@ class ItemController(connection: Connection) {
         }
     }
 
+    fun deleteItem(itemId: Int): Boolean {
+        if(itemId == -1) {
+            return false
+        }
+
+        try {
+            return if(conn != null) {
+                val query = conn!!.createStatement()
+                val deleteItemQuery = "DELETE FROM TodoItems WHERE item_id=\"$itemId\""
+                query.executeUpdate(deleteItemQuery)
+
+                val tagQuery = conn!!.createStatement()
+                val deleteTagsQuery = "DELETE FROM ItemTags WHERE item_id=\"$itemId\""
+                tagQuery.executeUpdate(deleteTagsQuery)
+
+                true
+
+            } else {
+                false
+            }
+        } catch (ex: SQLException) {
+            println(ex.message)
+            return false
+        } catch (ex: Exception) {
+            return false
+        }
+    }
+
     fun addItem(item: TodoItem, listId: Int): Boolean {
         try {
             if (conn != null) {

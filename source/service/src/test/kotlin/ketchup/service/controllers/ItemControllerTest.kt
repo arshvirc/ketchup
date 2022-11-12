@@ -139,4 +139,54 @@ internal class ItemControllerTest {
         prog.close()
     }
 
+    @Test
+    fun deleteItemTest() {
+        val dbUrl = "jdbc:sqlite:./deleteItem.db"
+        val prog = Program(dbUrl)
+        val dbFile = File("./deleteItem.db")
+        createBlankFile(dbFile)
+
+        val conn = prog.run()
+
+        val controller = conn?.let { ItemController(it) }
+
+        if(controller != null) {
+            val itemTitle = "my first task"
+            val item = TodoItem(title = itemTitle)
+
+
+            val tags = listOf("cs 346", "blue", "cs 350")
+            for (tag in tags) {
+                item.addTag(tag)
+            }
+
+            val item2 = TodoItem(title="my second title")
+
+
+            controller.addItem(item, 0)
+            // itemId == 1
+            controller.addItem(item2, 0)
+            // itemId == 2
+
+            controller.deleteItem(1)
+
+            val listController = conn?.let { ListController(it) }
+
+            if(listController != null) {
+                val list = listController.getAllLists()
+                assertEquals(list.size, 1)
+                assertEquals(list[0].list[0].id, 2)
+            }
+
+            controller.deleteItem(2)
+
+            if(listController != null) {
+                val list = listController.getAllLists()
+                assertEquals(list.size, 0)
+            }
+        }
+
+        deleteFile("./deleteItem.db")
+        prog.close()
+    }
 }
