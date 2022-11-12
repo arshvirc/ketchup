@@ -1,0 +1,52 @@
+/* CSS for the general application
+ */
+* {
+    primary-color: #DB8A8A; /* Reduce Opacity */
+    secondary-color: #DB8A8A;
+    contrast-color: #5B2525;
+    light-grey-color: #d1d1d1;
+    /*-fx-font-family: Helvetica;*/
+}
+
+#container {
+    -fx-font-size: 32px;
+}
+
+#sidebar-container
+{
+    -fx-background-color: primary-color;
+    -fx-font-size: 18px;
+
+}
+
+#sidebar-container .button {
+    -fx-background-color: primary-color;
+}
+
+#sidebar-container .button:hover {
+    -fx-background-color: light-grey-color;
+}
+
+
+#center-container
+{
+    -fx-background-color: white;
+    -fx-font-size: 0.5em;
+}
+
+#center-container .button
+{
+    -fx-background-color: primary-color;
+    -fx-background-radius: 10;
+}
+
+#center-container .vbox {
+    -fx-background-color: white;
+}
+
+
+.item {
+    -fx-background-color: primary-color;
+}
+
+
