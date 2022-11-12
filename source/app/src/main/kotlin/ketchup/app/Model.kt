@@ -44,7 +44,7 @@ class Model {
         var details = TextArea()
         details.prefHeight = 20.0
         details.prefWidth = 331.0
-        if (details.text == "") {
+        if (item.detail == "") {
             details.promptText = "Enter Details"
         } else {
             details.text = item.detail
@@ -107,10 +107,19 @@ class Model {
         priorityBox.children.add(priorityOptions)
         // deadlineBox end
 
+        var buttonBar = ButtonBar()
+        buttonBar.prefHeight = 40.0
+        buttonBar.prefWidth = 200.0
+
+        var button = Button()
+        button.text = "Trash"
+        buttonBar.buttons.add(button)
+
 
         vbox.children.add(tagsBox)
         vbox.children.add(deadlineBox)
         vbox.children.add(priorityBox)
+        vbox.children.add(buttonBar)
 
         return vbox
     }
