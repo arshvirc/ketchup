@@ -40,6 +40,7 @@ fun Application.configureRouting(conn: Connection) {
 
             get("{id}") {
                 val id: Int = call.parameters["id"]?.toInt() ?: 0
+                // println(id)
                 val controller = ListController(conn)
 
                 val list = controller.getList(id)
@@ -82,6 +83,15 @@ fun Application.configureRouting(conn: Connection) {
 
             put("{id?}") {
                 // edit todo item with specific id
+                val itemId = call.parameters["id"]?.toInt() ?: -1
+                var item = call.receive<TodoItem>()
+                val controller = ItemController(conn)
+                val success = controller.editItem(item, itemId)
+                if (success) {
+                    call.respondText("success")
+                } else {
+                    call.respondText("failure")
+                }
             }
 
             delete("{id?}") {
@@ -103,10 +113,10 @@ fun Application.configureRouting(conn: Connection) {
                 // create item
                 val item = call.receive<AddItemRequest>()
                 val controller = ItemController(conn)
-                val success = controller.addItem(item.item, item.listId)
+                val new_id = controller.addItem(item.item, item.listId)
 
-                if(success) {
-                    call.respondText("success")
+                if (new_id != controller.INVALID_ITEM_ID) {
+                    call.respond<Int>(new_id) // maybe an HTTP status code here
                 } else {
                     call.respondText("failure")
                 }
