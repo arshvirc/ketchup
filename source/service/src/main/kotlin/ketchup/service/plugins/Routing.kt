@@ -15,6 +15,7 @@ data class ListName(val name: String)
 data class ListResponse(val listId: Int, val size: Int, val list: MutableList<TodoItem>)
 data class ListsResponse(val lists: MutableList<TodoList>)
 data class AddItemRequest(val listId: Int, val item: TodoItem)
+data class GetItemResponse(val listId: Int, val item: TodoItem)
 
 
 fun Application.configureRouting(conn: Connection) {
@@ -78,6 +79,15 @@ fun Application.configureRouting(conn: Connection) {
 
         route("/api/todo") {
             get("{id?}") {
+                val id: Int = call.parameters["id"]?.toInt() ?: -1
+                val controller = ItemController(conn)
+
+                val response = controller.getTodoItem(id)
+                if(response != null) {
+                    call.respond(response)
+                } else {
+                    call.respondText("Item not found.")
+                }
                 // return todo item with specific id
             }
 
@@ -113,10 +123,10 @@ fun Application.configureRouting(conn: Connection) {
                 // create item
                 val item = call.receive<AddItemRequest>()
                 val controller = ItemController(conn)
-                val new_id = controller.addItem(item.item, item.listId)
+                val newId = controller.addItem(item.item, item.listId)
 
-                if (new_id != controller.INVALID_ITEM_ID) {
-                    call.respond<Int>(new_id) // maybe an HTTP status code here
+                if (newId != controller.INVALID_ITEM_ID) {
+                    call.respond<Int>(newId) // maybe an HTTP status code here
                 } else {
                     call.respondText("failure")
                 }

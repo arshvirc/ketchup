@@ -10,7 +10,6 @@ import java.util.Date
 @Serializable
 class TodoItem() {
     var id : Int = 0
-        private set
     var title : String = ""
     var description : String = ""
     @Serializable(with = DateSerializer::class)
