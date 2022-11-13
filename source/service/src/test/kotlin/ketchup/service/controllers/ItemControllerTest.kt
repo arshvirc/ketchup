@@ -299,4 +299,34 @@ internal class ItemControllerTest {
         deleteFile("./deleteItem.db")
         prog.close()
     }
+
+    @Test
+    fun getItemTest() {
+        val dbUrl = "jdbc:sqlite:./getItem.db"
+        val prog = Program(dbUrl)
+        val dbFile = File("./getItem.db")
+        createBlankFile(dbFile)
+
+        val conn = prog.run()
+
+        val controller = conn?.let { ItemController(it) }
+
+        if(controller != null) {
+            val itemTitle = "my first task"
+            val item = TodoItem(title = itemTitle)
+            var id = controller.addItem(item, 0)
+
+            val getItemResponse = controller.getTodoItem(id)
+
+            val getItem = getItemResponse?.item
+
+            if (getItem != null) {
+                assertEquals(getItem.title, itemTitle)
+                assertEquals(getItem.id,id)
+            }
+        }
+
+        deleteFile("./getItem.db")
+        prog.close()
+    }
 }
