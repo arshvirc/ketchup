@@ -28,9 +28,12 @@ class Model {
     }
 
     fun addItemToList(item: GuiItem) {
-        val fxmlLoader = FXMLLoader(App::class.java.getResource("fxml/itemComponent.fxml"))
-        var itemUI = fxmlLoader.load<TitledPane>()
-        itemUI.text = item.title
+        val fxmlLoader1 = FXMLLoader(App::class.java.getResource("fxml/itemTitleBar.fxml"))
+        var top = fxmlLoader1.load<HBox>()
+        val fxmlLoader2 = FXMLLoader(App::class.java.getResource("fxml/itemComponent.fxml"))
+        var bottom = fxmlLoader2.load<VBox>()
+        var itemUI = TitledPane()
+        itemUI.graphic = top
         itemUI.content = updatedVBox(item)
         this.toDoList.add(itemUI)
 
