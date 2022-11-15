@@ -6,10 +6,12 @@ import java.util.*
 import java.util.*
 import ketchup.console.TodoItem
 import ketchup.service.plugins.GetItemResponse
+import java.text.SimpleDateFormat
 
 class ItemController(connection: Connection) {
     val INVALID_ITEM_ID = -1
     private val conn: Connection = connection
+    val df = SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy")
 
     fun getTodoCount(): Int {
         return try {
@@ -28,7 +30,7 @@ class ItemController(connection: Connection) {
     }
 
     fun deleteItem(itemId: Int): Boolean {
-        if (itemId == -1) {
+        if (itemId == INVALID_ITEM_ID) {
             return false
         }
 
@@ -60,7 +62,7 @@ class ItemController(connection: Connection) {
             var itemId = item.id
             if (conn != null) {
                 val newId = getTodoCount()
-                if (newId != -1) {
+                if (newId != INVALID_ITEM_ID) {
                     itemId = newId + 1
                 }
 
@@ -73,7 +75,7 @@ class ItemController(connection: Connection) {
                                 "\"${item.title}\", " +
                                 "\"${item.description}\", " +
                                 "\"${item.timestamp}\"," +
-                                "\"${item.deadline.toString()}\", " +
+                                "\"${if (item.deadline == null) "NULL" else item.deadline.toString()}\", " +
                                 "\"${item.priority}\", " +
                                 "\"$listId\"," +
                                 "\"${item.completion}\");"
@@ -121,7 +123,7 @@ class ItemController(connection: Connection) {
                                 "title = \"${item.title}\", " +
                                 "description = \"${item.description}\", " +
                                 "timestamp = \"${item.timestamp}\", " +
-                                "deadline = \"${item.deadline.toString()}\", " +
+                                "deadline = \"${if (item.deadline == null) "NULL" else item.deadline.toString()}\", " +
                                 "priority = \"${item.priority}\", " +
                                 "completion = \"${item.completion}\" " +
                                 "WHERE item_id = ${id};"
@@ -168,8 +170,6 @@ class ItemController(connection: Connection) {
                 val getItemQuery = "SELECT * FROM TodoItems WHERE item_id=\"$itemId\""
                 val itemResult = query.executeQuery(getItemQuery)
 
-
-
                 if(itemResult.next()) {
                     val tags = mutableListOf<String>()
                     val tagQuery = conn!!.createStatement()
@@ -179,17 +179,17 @@ class ItemController(connection: Connection) {
                     while (tagResult.next()) {
                         tags.add(tagResult.getString("tag"))
                     }
+                    val deadlineStr = itemResult.getString("deadline")
+                    val timestampStr = itemResult.getString("timestamp")
 
                     var item = TodoItem()
                     item.title = itemResult.getString("title")
                     item.description = itemResult.getString("description")
-                    // TODO: parse deadline properly
-                    item.deadline = Date(System.currentTimeMillis())
+                    item.deadline = if (deadlineStr != "NULL") df.parse(deadlineStr) else null
                     item.priority = itemResult.getInt("priority")
                     item.id = itemId
                     item.tags = tags
-                    // TODO: parse date properly
-                    item.timestamp = Date(System.currentTimeMillis())
+                    item.timestamp = df.parse(timestampStr)
 
                     val listId = itemResult.getInt("list_id")
 

@@ -6,25 +6,9 @@ import org.junit.jupiter.api.Test
 import java.io.File
 import java.io.PrintWriter
 import ketchup.service.Program
+import java.util.*
 
-
-internal class ListControllerTest {
-    private fun createFile(filename: String) {
-        var file = File(filename)
-        file.createNewFile()
-        val writer = PrintWriter(file)
-        writer.print("")
-        writer.close()
-    }
-    private fun deleteFile(filename: String) {
-        val file = File(filename);
-        val result = file.delete()
-        if(result) {
-            println("$filename deleted!")
-        } else {
-            println("Error deleting $filename")
-        }
-    }
+internal class ListControllerTest : AbstractTest() {
 
     @Test
     fun createNewListTest() {
@@ -43,7 +27,7 @@ internal class ListControllerTest {
             assertTrue(result.next())
             assertFalse(result.next())
         }
-
+        prog.close()
         deleteFile("./listTest.db")
     }
 
@@ -76,6 +60,7 @@ internal class ListControllerTest {
             assertEquals(lists[1].list[0].description, "bye")
 
         }
+        prog.close()
         deleteFile("./getList.db")
     }
 
@@ -110,6 +95,7 @@ internal class ListControllerTest {
             assertEquals(lists[0].id, 1)
 
         }
+        prog.close()
         deleteFile("./deleteList.db")
     }
 }
