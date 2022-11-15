@@ -4,11 +4,13 @@ import ketchup.console.TodoItem
 import ketchup.console.TodoList
 import java.sql.Connection
 import java.sql.SQLException
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 class ListController(connection: Connection) {
     private val conn: Connection = connection
+    val df = SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy")
 
     fun createList(name: String): Boolean {
         return try {
@@ -37,16 +39,17 @@ class ListController(connection: Connection) {
                     tags.add(tagResult.getString("tag"))
                 }
 
+                val deadlineStr = result.getString("deadline")
+                val timestampStr = result.getString("timestamp")
+
                 val item = TodoItem(
                     result.getString("title"),
                     result.getString("description"),
-                    // TODO: figure out how to parse deadline
-                    Date(System.currentTimeMillis()),
+                    if (deadlineStr != "NULL") df.parse(deadlineStr) else null,
                     result.getInt("priority"),
                     result.getInt("item_id"),
                     tags,
-                    // TODO: figure out how to parse timestamp (will be same as deadline)
-                    Date(System.currentTimeMillis())
+                    df.parse(timestampStr)
                 )
                 list.addItem(item)
             }
@@ -68,7 +71,7 @@ class ListController(connection: Connection) {
             val listIdQuery = "SELECT DISTINCT list_id FROM TodoItems"
             val result = query.executeQuery(listIdQuery)
             val listIds = mutableListOf<Int>()
-            while(result.next()) {
+            while (result.next()) {
                 listIds.add(result.getInt("list_id"))
             }
 
@@ -76,12 +79,11 @@ class ListController(connection: Connection) {
                 list.add(TodoList(i))
             }
 
-
             var listQuery = conn!!.createStatement()
             val allListQuery = "SELECT * FROM TodoItems ORDER BY list_id"
             val listResult = listQuery.executeQuery(allListQuery)
 
-            while(listResult.next()) {
+            while (listResult.next()) {
                 val tags = mutableListOf<String>()
                 val id = listResult.getInt("item_id")
                 val tagConn = conn!!.createStatement()
@@ -91,16 +93,17 @@ class ListController(connection: Connection) {
                     tags.add(tagResult.getString("tag"))
                 }
 
+                val deadlineStr = listResult.getString("deadline")
+                val timestampStr = listResult.getString("timestamp")
+
                 val item = TodoItem(
                     listResult.getString("title"),
                     listResult.getString("description"),
-                    // TODO: figure out how to parse deadline
-                    Date(System.currentTimeMillis()),
+                    if (deadlineStr != "NULL") df.parse(deadlineStr) else null,
                     listResult.getInt("priority"),
                     listResult.getInt("item_id"),
                     tags,
-                    // TODO: figure out how to parse timestamp (will be same as deadline)
-                    Date(System.currentTimeMillis())
+                    df.parse(timestampStr)
                 )
 //
                 val listId = listResult.getInt("list_id")

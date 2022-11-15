@@ -88,11 +88,11 @@ fun Application.configureRouting(conn: Connection) {
                 } else {
                     call.respondText("Item not found.")
                 }
-                // return todo item with specific id
+                // return item with specific id
             }
 
             put("{id?}") {
-                // edit todo item with specific id
+                // edit item with specific id
                 val itemId = call.parameters["id"]?.toInt() ?: -1
                 var item = call.receive<TodoItem>()
                 val controller = ItemController(conn)
@@ -105,7 +105,7 @@ fun Application.configureRouting(conn: Connection) {
             }
 
             delete("{id?}") {
-                // delete todo item with specific id
+                // delete item with specific id
 
                 val itemId = call.parameters["id"]?.toInt() ?: -1
                 val controller = ItemController(conn)

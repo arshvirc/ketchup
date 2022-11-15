@@ -11,25 +11,7 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 
-internal class ItemControllerTest {
-    private fun createBlankFile(f : File) {
-        f.createNewFile()
-        // clear file contents
-        val writer = PrintWriter(f)
-        writer.print("")
-        writer.close()
-    }
-
-    private fun deleteFile(filename: String) {
-        val file = File(filename);
-        val result = file.delete()
-        if(result) {
-            println("$filename deleted!")
-        } else {
-            println("Error deleting $filename")
-        }
-    }
-
+internal class ItemControllerTest : AbstractTest() {
     @Test
     fun addControllerTestOneItemNoTags() {
         val dbURL = "jdbc:sqlite:./AddControllerTest.db"
@@ -60,8 +42,8 @@ internal class ItemControllerTest {
             assertFalse(result.next()) // should be one row
         }
 
-        deleteFile("./AddControllerTest.db")
         prog.close()
+        deleteFile("./AddControllerTest.db")
     }
 
     @Test
@@ -103,54 +85,44 @@ internal class ItemControllerTest {
             }
             assertTrue(i == tags.size)
         }
-
-        deleteFile("./AddControllerTest.db")
         prog.close()
+        deleteFile("./AddControllerTest.db")
     }
 
     @Test
-    fun editControllerTestOneItemNoTags() {
-        val dbURL = "jdbc:sqlite:./EditControllerTest.db"
+    fun addControllerTestOneItemNoTagsNullDeadline() {
+        val dbURL = "jdbc:sqlite:./AddControllerTest.db"
         val prog = Program(dbURL)
-        val dbFile = File("./EditControllerTest.db")
+        val dbFile = File("./AddControllerTest.db")
         createBlankFile(dbFile)
 
         val conn = prog.run()
-        val controller = conn?.let{ ItemController(it) }
 
-        if (controller != null) {
-            val query = conn!!.createStatement()
+        val controller = conn?.let{ ItemController(it)}
 
-            // add item
-            val itemTitle = "my first task"
-            val itemDescription = "a cool task that's not annoying at all"
-            val itemDeadline = Date( 	1672019403)
-            val itemPriority = 3
-            val item = TodoItem(itemTitle, itemDescription, itemDeadline, itemPriority)
+        if(controller != null) {
+            val title = "my first task"
+            val desc = "a description"
+            val deadline = null
+            val priority = 2
+            val item = TodoItem(title, desc, deadline, priority)
             val id = controller.addItem(item, 0)
 
-            // second item to replace
-            val newTitle = "NEW TITLE"
-            val newDesc = "NEW DESCRIPTION"
-            val newDeadline = Date(1672019404)
-            val newPriority = 2
-            val newItem = TodoItem(newTitle, newDesc, newDeadline, newPriority, id = id)
-
-            controller.editItem(newItem)
-            // find new item
-            val findItemQueryString = "SELECT * FROM TodoItems WHERE item_id = ${id}"
-            val result = query.executeQuery(findItemQueryString)
-
-            result.next()
-            assertTrue(result.getString("title") == newTitle)
-            assertTrue(result.getString("description") == newDesc)
-            assertTrue(result.getString("deadline") == newDeadline.toString())
-            assertTrue(result.getInt("priority") == newPriority)
+            val testQueryString = "SELECT * FROM TodoItems WHERE item_id = ${id}"
+            val query = conn!!.createStatement()
+            val result = query.executeQuery(testQueryString)
+            assertTrue(result.next())
+            assertTrue(result.getString("title") == title)
+            assertTrue(result.getString("description") == desc)
+            assertTrue(result.getString("deadline") == "NULL")
+            assertTrue(result.getInt("priority") == priority)
+            assertFalse(result.next()) // should be one row
         }
 
-        deleteFile("./EditControllerTest.db")
         prog.close()
+        deleteFile("./AddControllerTest.db")
     }
+
 
     @Test
     fun editControllerTestOneItemRemoveTags() {
@@ -191,9 +163,8 @@ internal class ItemControllerTest {
 
             assertFalse(result.next()) // should be no more tags
         }
-
-        deleteFile("./EditControllerTest.db")
         prog.close()
+        deleteFile("./EditControllerTest.db")
     }
 
     @Test
@@ -244,9 +215,8 @@ internal class ItemControllerTest {
             }
             assertTrue(i == newTags.size)
         }
-
-        deleteFile("./EditControllerTest.db")
         prog.close()
+        deleteFile("./EditControllerTest.db")
     }
 
     @Test
@@ -295,9 +265,8 @@ internal class ItemControllerTest {
                 assertEquals(list.size, 0)
             }
         }
-
-        deleteFile("./deleteItem.db")
         prog.close()
+        deleteFile("./deleteItem.db")
     }
 
     @Test
@@ -325,8 +294,7 @@ internal class ItemControllerTest {
                 assertEquals(getItem.id,id)
             }
         }
-
-        deleteFile("./getItem.db")
         prog.close()
+        deleteFile("./getItem.db")
     }
 }

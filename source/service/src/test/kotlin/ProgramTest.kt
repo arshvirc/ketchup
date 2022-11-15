@@ -5,26 +5,10 @@ import java.io.PrintWriter
 import java.sql.DriverManager
 import ketchup.service.Program
 import ketchup.console.TodoItem
+import ketchup.service.controllers.AbstractTest
 
-class ProgramTest {
+class ProgramTest : AbstractTest() {
     // Creates a new empty file
-    private fun createBlankFile(f : File) {
-        f.createNewFile()
-        // clear file contents
-        val writer = PrintWriter(f)
-        writer.print("")
-        writer.close()
-    }
-
-    private fun deleteFile(filename: String) {
-        val file = File(filename);
-        val result = file.delete()
-        if(result) {
-            println("$filename deleted!")
-        } else {
-            println("Error deleting $filename")
-        }
-    }
 
     @Test
     // Testing setting up an empty DB
@@ -48,6 +32,7 @@ class ProgramTest {
             val result = query.executeQuery(q)
             assertTrue(result.next())
         }
+        prog.close()
         deleteFile("./setupDBTest.db")
     }
 }
