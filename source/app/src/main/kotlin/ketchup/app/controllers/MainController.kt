@@ -7,6 +7,7 @@ import javafx.scene.Node
 import javafx.scene.Scene
 import javafx.scene.control.Button
 import javafx.scene.control.TextArea
+import javafx.scene.control.TextField
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import javafx.stage.StageStyle
@@ -14,9 +15,12 @@ import java.net.URL
 import java.util.ResourceBundle
 import java.io.IOException
 
-class GuiController: Initializable {
+class MainController: Initializable {
 
     private lateinit var model: Model
+
+    @FXML
+    private lateinit var title: TextField
 
     @FXML
     private lateinit var allTasksListButton: Button
@@ -50,7 +54,8 @@ class GuiController: Initializable {
     @FXML
     private fun updateDisplayView( list: ObservableList<Node>) {
         for ( item in list ) {
-            displayView.children.add(item)
+            displayView.children.removeAll()
+            displayView.children.addAll(model.uiListOfAllItems)
         }
     }
 
@@ -80,8 +85,4 @@ class GuiController: Initializable {
             e.printStackTrace()
         }
     }
-
-
-
-
 }

@@ -1,11 +1,9 @@
-/* CSS for the general application
- */
+/* CSS for the general application */
 * {
     primary-color: #DB8A8A; /* Reduce Opacity */
     secondary-color: #DB8A8A;
     contrast-color: #5B2525;
     light-grey-color: #d1d1d1;
-    /*-fx-font-family: Helvetica;*/
 }
 
 #container {

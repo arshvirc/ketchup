@@ -3,6 +3,7 @@ import javafx.fxml.FXML
 import javafx.scene.Node
 import javafx.scene.control.*
 import javafx.stage.Stage
+import ketchup.console.TodoItem
 
 class AddController {
     private lateinit var model: Model
@@ -30,8 +31,8 @@ class AddController {
 
     fun setModel(m: Model) {
         this.model = m
-        inputTags.items.addAll(m.getListOfTags())
-        inputPriority.items.addAll(m.getListOfPriorities())
+        inputTags.items.addAll(m.listOfTags)
+        inputPriority.items.addAll(m.listOfPriorities)
     }
 
     @FXML
@@ -43,12 +44,10 @@ class AddController {
                 println("You must have a title!")
                 return
             }
-            val item = GuiItem(
-                inputTitle.text,
-                inputDetail.text,
-                inputTags.value ?: "",
-                inputDeadline.value ,
-                inputPriority.value ?: "0"
+            val item = TodoItem(
+                title = inputTitle.text,
+                description = inputDetail.text,
+                id = model.num,
             )
             model.addItemToList(item)
         }
