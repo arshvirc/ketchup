@@ -7,7 +7,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 
-<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" styleClass="container" stylesheets="@../css/itemTitleBar.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Button alignment="CENTER" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" HBox.hgrow="ALWAYS">
          <graphic>
@@ -18,7 +18,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <TextField maxHeight="30.0" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="-Infinity" prefHeight="30.0" prefWidth="102.0" styleClass="title" text="Enter Title" />
+      <TextField maxHeight="30.0" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="-Infinity" prefHeight="30.0" prefWidth="102.0" text="Enter Title" />
       <ButtonBar buttonMinWidth="30.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="30.0" prefHeight="30.0" prefWidth="200.0">
         <buttons>
             <Button alignment="CENTER" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0">

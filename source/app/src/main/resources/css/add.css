@@ -1,0 +1,13 @@
+* {
+    primary-color: #DB8A8A; /* Reduce Opacity */
+    secondary-color: #DB8A8A;
+    contrast-color: #5B2525;
+    light-grey-color: #d1d1d1;
+    -fx-font-family: Helvetica;
+}
+
+.container {
+    -fx-border-radius: 10;
+    -fx-background-color: 10;
+    -fx-background-color: primary-color;
+}

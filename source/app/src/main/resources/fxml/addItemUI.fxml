@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="5.0" style="-fx-border-color: #DB8A8A;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AddController">
+<VBox spacing="5.0" styleClass="container" stylesheets="@../css/add.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AddController">
    <children>
       <TextArea fx:id="inputTitle" maxHeight="50.0" maxWidth="500.0" minHeight="50.0" minWidth="450.0" prefHeight="50.0" prefWidth="500.0" promptText="Enter Title" style="-fx-background-color: #DB8A8A;" />
       <Separator prefHeight="7.0" prefWidth="463.0" />
