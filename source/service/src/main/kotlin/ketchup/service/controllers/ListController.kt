@@ -19,6 +19,7 @@ class ListController(connection: Connection) {
             query.execute(queryString);
             true
         } catch (ex: SQLException) {
+            println(ex.message)
             false
         }
     }
@@ -53,6 +54,13 @@ class ListController(connection: Connection) {
                 )
                 list.addItem(item)
             }
+
+            val newQuery = conn!!.createStatement()
+            val nameQuery = "SELECT * FROM TodoLists WHERE list_id=\"$id\""
+            val nameResult = newQuery.executeQuery(nameQuery)
+
+            val listName = nameResult.getString("title")
+            list.name = listName
 
             return list
         } catch (ex: SQLException) {
@@ -111,6 +119,20 @@ class ListController(connection: Connection) {
                 if(listIndex != -1) {
                     list[listIndex].addItem(item)
                 }
+            }
+
+            for(i in 0 until list.size) {
+                val id = list[i].id
+
+                val newQuery = conn!!.createStatement()
+                val nameQuery = "SELECT * FROM TodoLists WHERE list_id=\"$id\""
+                val nameResult = newQuery.executeQuery(nameQuery)
+
+                val listName = nameResult.getString("title")
+
+                println(listName)
+
+                list[i].name = listName
             }
 
             return list

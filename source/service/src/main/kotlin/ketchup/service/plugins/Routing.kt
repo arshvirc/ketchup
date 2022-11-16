@@ -10,16 +10,21 @@ import java.sql.Connection
 import ketchup.console.TodoItem
 import ketchup.console.TodoList
 import ketchup.service.controllers.ItemController
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 
 data class ListName(val name: String)
-data class ListResponse(val listId: Int, val size: Int, val list: MutableList<TodoItem>)
+data class TodoItemRequest(val id: Int, val title: String, val description: String, val timestamp: String, val deadline: String?,
+                           val priority: Int, val tags: MutableList<String>?, val completion: Boolean)
+data class ListResponse(val listId: Int, val size: Int, val list: MutableList<TodoItem>, val name: String)
 data class ListsResponse(val lists: MutableList<TodoList>)
-data class AddItemRequest(val listId: Int, val item: TodoItem)
+data class AddItemRequest(val listId: Int, val item: TodoItemRequest)
 data class GetItemResponse(val listId: Int, val item: TodoItem)
 
 
 fun Application.configureRouting(conn: Connection) {
 
+    val df: DateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS")
 
     routing {
         route("/"){
@@ -45,7 +50,7 @@ fun Application.configureRouting(conn: Connection) {
                 val controller = ListController(conn)
 
                 val list = controller.getList(id)
-                val response = ListResponse(id, list.size, list.list)
+                val response = ListResponse(id, list.size, list.list, list.name)
 
                 call.respond(HttpStatusCode.Accepted, response)
             }
@@ -94,9 +99,18 @@ fun Application.configureRouting(conn: Connection) {
             put("{id?}") {
                 // edit item with specific id
                 val itemId = call.parameters["id"]?.toInt() ?: -1
-                var item = call.receive<TodoItem>()
+                var todoItem = call.receive<TodoItemRequest>()
+
+                val parsedDeadline = if(todoItem.deadline != null) df.parse(todoItem.deadline) else null
+                val parsedTimestamp = df.parse(todoItem.timestamp)
+
+                val tags = todoItem.tags ?: mutableListOf<String>()
+
+                val newItem: TodoItem = TodoItem(todoItem.title, todoItem.description, parsedDeadline,
+                    todoItem.priority, todoItem.id, tags, parsedTimestamp)
+
                 val controller = ItemController(conn)
-                val success = controller.editItem(item, itemId)
+                val success = controller.editItem(newItem, itemId)
                 if (success) {
                     call.respondText("success")
                 } else {
@@ -123,7 +137,18 @@ fun Application.configureRouting(conn: Connection) {
                 // create item
                 val item = call.receive<AddItemRequest>()
                 val controller = ItemController(conn)
-                val newId = controller.addItem(item.item, item.listId)
+
+                val todoItem = item.item
+
+                val parsedDeadline = if(todoItem.deadline != null) df.parse(todoItem.deadline) else null
+                val parsedTimestamp = df.parse(todoItem.timestamp)
+
+                val tags = todoItem.tags ?: mutableListOf<String>()
+
+                val newItem: TodoItem = TodoItem(todoItem.title, todoItem.description, parsedDeadline,
+                    todoItem.priority, todoItem.id, tags, parsedTimestamp)
+
+                val newId = controller.addItem(newItem, item.listId)
 
                 if (newId != controller.INVALID_ITEM_ID) {
                     call.respond<Int>(newId) // maybe an HTTP status code here
@@ -134,3 +159,5 @@ fun Application.configureRouting(conn: Connection) {
         }
     }
 }
+
+

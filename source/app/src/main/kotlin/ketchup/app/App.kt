@@ -2,6 +2,16 @@ import javafx.application.Application
 import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.stage.Stage
+import ketchup.app.ktorclient.Client
+
+
+/*
+To run the server locally, go into service module and run Main.kt
+Then, the service will be running at http://127.0.0.1:8080/
+Once this happens, you may start using the client.
+Whenever you use the client you may see a prompt that asks you to use the 'suspend' keyword.
+Click accept. API requests are asynchronous so we need this suspend keyword to have normal functionality.
+ */
 
 class App(): Application() {
     override fun start(primaryStage: Stage) {
