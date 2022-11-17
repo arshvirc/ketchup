@@ -1,4 +1,3 @@
-/* CSS for the general application */
 * {
     primary-color: #DB8A8A; /* Reduce Opacity */
     secondary-color: #DB8A8A;
@@ -10,11 +9,9 @@
     -fx-font-size: 32px;
 }
 
-#sidebar-container
-{
+#sidebar-container {
     -fx-background-color: primary-color;
     -fx-font-size: 18px;
-
 }
 
 #sidebar-container .button {
@@ -32,8 +29,7 @@
     -fx-font-size: 0.5em;
 }
 
-#center-container .button
-{
+#center-container .button {
     -fx-background-color: primary-color;
     -fx-background-radius: 10;
 }
@@ -42,9 +38,143 @@
     -fx-background-color: white;
 }
 
+.titled-pane .text-field {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-background-color: secondary-color;
+}
+
+titled-pane .text-field .scroll-pane {
+    -fx-background-color: transparent;
+}
+titled-pane .text-field .scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+titled-pane .text-field .scroll-pane .content{
+    -fx-background-color: transparent;
+}
+
 
 .item {
     -fx-background-color: primary-color;
 }
+
+.titled-pane {
+    -fx-font-size: 0.75em;
+}
+
+.titled-pane *.content {
+    -fx-background-color: white;
+}
+
+.titled-pane .label {
+    -fx-border-color: white;
+    -fx-background-color: white;
+    -fx-font-weight: bold;
+    -fx-font-style: oblique;
+    -fx-font-family: Arial;
+}
+
+
+.titled-pane .title
+{
+    -fx-background-color: primary-color;
+}
+
+.titled-pane:collapsed .title
+{
+    -fx-background-color: primary-color;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: primary-color;
+    -fx-font-size: 16px;
+}
+
+.titled-pane:expanded .title
+{
+    -fx-background-radius: 5 5 0 0, 4 4 0 0, 3 3 0 0;
+    -fx-padding: 0.166667em 0.833333em 0.25em 0.833333em; /* 2 10 3 10 */
+    -fx-font-size: 16px;
+}
+
+.titled-pane:expanded .content
+{
+    -fx-background-radius: 10;
+    -fx-font-size: 14px;
+}
+
+.titled-pane .title .arrow-button .arrow
+{
+    -fx-background-color: primary-color; /* hides the arrow*/
+    -fx-effect: none;
+}
+
+
+
+
+/*
+.titled-pane .content {
+    -fx-background-color: white;
+}
+
+.titled-pane .text-field {
+    -fx-border-color: white;
+    -fx-background-color: white;
+}
+
+.titled-pane .label {
+    -fx-border-color: white;
+    -fx-background-color: white;
+    -fx-font-weight: bold;
+    -fx-font-style: oblique;
+    -fx-font-family: Arial;
+}
+
+
+.titled-pane .title
+{
+    -fx-background-color: primary-color;
+}
+*/
+/*
+.titled-pane:collapsed .title
+{
+    -fx-background-color: primary-color;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: primary-color;
+    -fx-font-size: 16px;
+}
+
+.titled-pane:expanded .title
+{
+    -fx-background-radius: 5 5 0 0, 4 4 0 0, 3 3 0 0;
+    -fx-padding: 0.166667em 0.833333em 0.25em 0.833333em;
+    -fx-font-size: 16px;
+}
+
+.titled-pane:expanded .content
+{
+    -fx-background-radius: 10;
+    -fx-font-size: 14px;
+}
+*/
+
+/*
+.titled-pane .title .arrow-button .arrow
+{
+    -fx-background-color: primary-color;
+    -fx-effect: none;
+}
+*/
+
+/*
+* {
+    primary-color: #DB8A8A;
+    secondary-color: #DB8A8A;
+    contrast-color: #5B2525;
+    light-grey-color: #d1d1d1;
+}
+ */
 
 
