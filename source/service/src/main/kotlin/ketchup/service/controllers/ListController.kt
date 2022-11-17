@@ -4,22 +4,25 @@ import ketchup.console.TodoItem
 import ketchup.console.TodoList
 import java.sql.Connection
 import java.sql.SQLException
-import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
 
 class ListController(connection: Connection) {
     private val conn: Connection = connection
     val df = SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy")
 
-    fun createList(name: String): Boolean {
+    fun createList(name: String): Int {
         return try {
             val query = conn!!.createStatement()
             val queryString = "INSERT INTO TodoLists(title) VALUES(\"$name\")"
-            query.execute(queryString);
-            true
+            query.executeUpdate(queryString);
+            val getIdQuery = conn!!.createStatement()
+            val getIdString = "SELECT * FROM TodoLists WHERE title=\"$name\""
+            val result = getIdQuery.executeQuery(getIdString)
+
+            return result.getInt("list_id")
         } catch (ex: SQLException) {
-            false
+            println(ex.message)
+            return -1
         }
     }
 
@@ -49,10 +52,18 @@ class ListController(connection: Connection) {
                     result.getInt("priority"),
                     result.getInt("item_id"),
                     tags,
-                    df.parse(timestampStr)
+                    df.parse(timestampStr),
+                    result.getString("completion").toBooleanStrict()
                 )
                 list.addItem(item)
             }
+
+            val newQuery = conn!!.createStatement()
+            val nameQuery = "SELECT * FROM TodoLists WHERE list_id=\"$id\""
+            val nameResult = newQuery.executeQuery(nameQuery)
+
+            val listName = nameResult.getString("title")
+            list.name = listName
 
             return list
         } catch (ex: SQLException) {
@@ -103,7 +114,8 @@ class ListController(connection: Connection) {
                     listResult.getInt("priority"),
                     listResult.getInt("item_id"),
                     tags,
-                    df.parse(timestampStr)
+                    df.parse(timestampStr),
+                    listResult.getString("completion").toBooleanStrict()
                 )
 //
                 val listId = listResult.getInt("list_id")
@@ -111,6 +123,18 @@ class ListController(connection: Connection) {
                 if(listIndex != -1) {
                     list[listIndex].addItem(item)
                 }
+            }
+
+            for(i in 0 until list.size) {
+                val id = list[i].id
+
+                val newQuery = conn!!.createStatement()
+                val nameQuery = "SELECT * FROM TodoLists WHERE list_id=\"$id\""
+                val nameResult = newQuery.executeQuery(nameQuery)
+
+                val listName = nameResult.getString("title")
+
+                list[i].name = listName
             }
 
             return list

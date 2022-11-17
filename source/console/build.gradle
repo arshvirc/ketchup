@@ -5,6 +5,7 @@
 plugins {
     id 'java'
     id 'ketchup.kotlin-library-conventions'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.10'
 }
 
 ext {

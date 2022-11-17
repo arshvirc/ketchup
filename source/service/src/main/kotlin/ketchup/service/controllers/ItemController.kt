@@ -190,6 +190,7 @@ class ItemController(connection: Connection) {
                     item.id = itemId
                     item.tags = tags
                     item.timestamp = df.parse(timestampStr)
+                    item.completion = itemResult.getString("completion").toBooleanStrict()
 
                     val listId = itemResult.getInt("list_id")
 
