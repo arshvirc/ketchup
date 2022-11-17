@@ -1,6 +1,6 @@
 * {
     primary-color: #DB8A8A; /* Reduce Opacity */
-    secondary-color: #DB8A8A;
+    secondary-color: #F7C3C3;
     contrast-color: #5B2525;
     light-grey-color: #d1d1d1;
 }
@@ -177,4 +177,8 @@ titled-pane .text-field .scroll-pane .content{
 }
  */
 
+.separator .line{
+    -fx-background-color: black;
+    -fx-border-color: black;
+}
 
