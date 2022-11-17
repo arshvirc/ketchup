@@ -134,8 +134,6 @@ class ListController(connection: Connection) {
 
                 val listName = nameResult.getString("title")
 
-                println(listName)
-
                 list[i].name = listName
             }
 
