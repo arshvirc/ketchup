@@ -12,19 +12,19 @@ import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 
 @Serializable
-data class TodoItemResponse(val id: Int, val title: String, val description: String, val timestamp: String, val deadline: String,
-                            val priority: Int, val tags: List<String>, val completion: Boolean)
+data class TodoItemResponse(val id: Int, val title: String, val description: String, val timestamp: String, val deadline: String?,
+                            val priority: Int, val tags: MutableList<String>?, val completion: Boolean)
 @Serializable
-data class GetItemResponse(val listId: Int, val item: TodoItem)
+data class GetItemResponse(val listId: Int, val item: TodoItemResponse)
 
 @Serializable
-data class ListsResponse(val list: List<TodoItem>, val size: Int, val id: Int, val name: String)
+data class ListsResponse(val list: List<TodoItemResponse>, val size: Int, val id: Int, val name: String)
 
 @Serializable
 data class GetListsResponse(val lists: List<ListsResponse>)
 
 @Serializable
-data class SingleListResponse(val listId: Int, val size: Int, val list: List<TodoItem>, val name: String)
+data class SingleListResponse(val listId: Int, val size: Int, val list: List<TodoItemResponse>, val name: String)
 
 @Serializable
 data class NewListRequest(val name: String)
@@ -50,7 +50,7 @@ class Client(url: String) {
     Will return an Object called GetItemResponse or NULL if the item wasn't found
     GetItemResponse has two fields:
     - listId: the id of the list that the item is in
-    - item: the actual todoItem
+    - item: TodoItemResponse wrapper. Use this to build the todoItem. Check the dataclass for the fields
      */
     suspend fun getTodoItem(id: Int): GetItemResponse? {
         return try {
@@ -60,7 +60,9 @@ class Client(url: String) {
 
             body
         } catch (ex: Exception) {
-            print(ex.message)
+            println(ex.cause)
+            println(ex.stackTrace)
+            println(ex.message)
             null
         }
     }
@@ -130,7 +132,7 @@ class Client(url: String) {
     Creates a list with the name passed as argument
     Will return a Boolean (true for success, false otherwise)
      */
-    suspend fun createList(name: String): Boolean {
+    suspend fun createList(name: String): Int {
         try {
             val url = "$host/api/lists"
             val response: HttpResponse = client.post(url) {
@@ -138,12 +140,10 @@ class Client(url: String) {
                 setBody(NewListRequest(name))
             }
 
-            val res = response.body<String>()
-            println(res)
-            return res == "success"
+            return response.body()
         } catch (ex: Exception) {
             println(ex.message)
-            return false
+            return -1
         }
     }
 
@@ -151,7 +151,7 @@ class Client(url: String) {
     This function edits the todoItem with the given ID. Pass in the new todoItem to essentially replace the item with
     the given ID. Will return a Boolean (true for success, false otherwise).
      */
-    suspend fun editTodoItem(id: Int, item: TodoItem): Boolean? {
+    suspend fun editTodoItem(id: Int, item: TodoItem): Boolean {
         try {
             val url = "$host/api/todo/$id"
             val response: HttpResponse = client.put(url) {
@@ -171,7 +171,7 @@ class Client(url: String) {
     This function deletes a todoItem with a specific ID
     Return a boolean (true for success, false otherwise).
     */
-    suspend fun deleteTodoItem(id: Int): Boolean? {
+    suspend fun deleteTodoItem(id: Int): Boolean {
         try {
             val url = "$host/api/todo/$id"
             val response: HttpResponse = client.delete(url)

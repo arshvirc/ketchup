@@ -11,7 +11,9 @@ import ketchup.console.TodoItem
 import ketchup.console.TodoList
 import ketchup.service.controllers.ItemController
 import java.text.DateFormat
+import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.util.*
 
 data class ListName(val name: String)
 data class TodoItemRequest(val id: Int, val title: String, val description: String, val timestamp: String, val deadline: String?,
@@ -27,11 +29,6 @@ fun Application.configureRouting(conn: Connection) {
     val df: DateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS")
 
     routing {
-        route("/"){
-            get {
-                call.respondText("Hello World!");
-            }
-        }
         route("/api/lists") {
             get {
                 // return all lists as JSON
@@ -74,11 +71,7 @@ fun Application.configureRouting(conn: Connection) {
                 val controller = ListController(conn)
                 val success = controller.createList(name)
 
-                if(success) {
-                    call.respondText("success")
-                } else {
-                    call.respondText("failure")
-                }
+                call.respond(success.toString())
             }
         }
 
@@ -100,20 +93,39 @@ fun Application.configureRouting(conn: Connection) {
                 // edit item with specific id
                 val itemId = call.parameters["id"]?.toInt() ?: -1
                 var todoItem = call.receive<TodoItemRequest>()
-
-                val parsedDeadline = if(todoItem.deadline != null) df.parse(todoItem.deadline) else null
-                val parsedTimestamp = df.parse(todoItem.timestamp)
-
-                val tags = todoItem.tags ?: mutableListOf<String>()
-
-                val newItem: TodoItem = TodoItem(todoItem.title, todoItem.description, parsedDeadline,
-                    todoItem.priority, todoItem.id, tags, parsedTimestamp)
-
+                val tags = todoItem.tags ?: mutableListOf()
                 val controller = ItemController(conn)
-                val success = controller.editItem(newItem, itemId)
-                if (success) {
-                    call.respondText("success")
-                } else {
+
+                try {
+                    val parsedDeadline = if(todoItem.deadline != null) df.parse(todoItem.deadline) else null
+                    val parsedTimestamp = df.parse(todoItem.timestamp)
+
+                    val newItem: TodoItem = TodoItem(todoItem.title, todoItem.description, parsedDeadline,
+                        todoItem.priority, todoItem.id, tags, parsedTimestamp, todoItem.completion)
+
+                    val success = controller.editItem(newItem, itemId)
+                    if (success) {
+                        call.respondText("success")
+                    } else {
+                        call.respondText("failure")
+                    }
+                } catch (pex: ParseException) {
+                    val parsedDeadline: Date? = todoItem.deadline?.toLongOrNull()?.let { it1 -> Date(it1) }
+                    val parsedTimestamp: Date = Date(todoItem.timestamp.toLong())
+
+                    val newItem: TodoItem = TodoItem(todoItem.title, todoItem.description, parsedDeadline,
+                        todoItem.priority, todoItem.id, tags, parsedTimestamp, todoItem.completion)
+
+                    val success = controller.editItem(newItem, itemId)
+
+                    println(success)
+                    if (success) {
+                        call.respondText("success")
+                    } else {
+                        call.respondText("failure")
+                    }
+                } catch(ex: Exception) {
+                    println(ex.message)
                     call.respondText("failure")
                 }
             }
@@ -137,23 +149,40 @@ fun Application.configureRouting(conn: Connection) {
                 // create item
                 val item = call.receive<AddItemRequest>()
                 val controller = ItemController(conn)
-
                 val todoItem = item.item
-
-                val parsedDeadline = if(todoItem.deadline != null) df.parse(todoItem.deadline) else null
-                val parsedTimestamp = df.parse(todoItem.timestamp)
-
                 val tags = todoItem.tags ?: mutableListOf<String>()
 
-                val newItem: TodoItem = TodoItem(todoItem.title, todoItem.description, parsedDeadline,
-                    todoItem.priority, todoItem.id, tags, parsedTimestamp)
+                try {
+                    val parsedDeadline = if(todoItem.deadline != null) df.parse(todoItem.deadline) else null
+                    val parsedTimestamp = df.parse(todoItem.timestamp)
 
-                val newId = controller.addItem(newItem, item.listId)
+                    val newItem: TodoItem = TodoItem(todoItem.title, todoItem.description, parsedDeadline,
+                        todoItem.priority, todoItem.id, tags, parsedTimestamp)
 
-                if (newId != controller.INVALID_ITEM_ID) {
-                    call.respond<Int>(newId) // maybe an HTTP status code here
-                } else {
-                    call.respondText("failure")
+                    val newId = controller.addItem(newItem, item.listId)
+
+                    if (newId != controller.INVALID_ITEM_ID) {
+                        call.respond<Int>(newId) // maybe an HTTP status code here
+                    } else {
+                        call.respondText("failure")
+                    }
+                } catch(pex: ParseException) {
+                    val parsedDeadline: Date? = todoItem.deadline?.toLongOrNull()?.let { it1 -> Date(it1) }
+                    val parsedTimestamp: Date = Date(todoItem.timestamp.toLong())
+
+                    val newItem: TodoItem = TodoItem(todoItem.title, todoItem.description, parsedDeadline,
+                        todoItem.priority, todoItem.id, tags, parsedTimestamp)
+
+                    val newId = controller.addItem(newItem, item.listId)
+
+                    if (newId != controller.INVALID_ITEM_ID) {
+                        call.respond<Int>(newId) // maybe an HTTP status code here
+                    } else {
+                        call.respondText("failure")
+                    }
+                } catch (ex: Exception) {
+                    println(ex.message)
+                    call.respondText { "failure" }
                 }
             }
         }
