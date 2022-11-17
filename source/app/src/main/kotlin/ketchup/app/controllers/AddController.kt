@@ -44,10 +44,12 @@ class AddController {
                 println("You must have a title!")
                 return
             }
+            if (inputPriority.value == null) { inputPriority.value = "0"}
             val item = TodoItem(
                 title = inputTitle.text,
                 description = inputDetail.text,
                 id = model.num,
+                priority = inputPriority.value.toInt()
             )
             model.addItemToList(item)
         }

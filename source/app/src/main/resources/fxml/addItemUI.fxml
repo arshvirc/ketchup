@@ -13,25 +13,25 @@
 
 <VBox spacing="5.0" styleClass="container" stylesheets="@../css/add.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AddController">
    <children>
-      <TextArea fx:id="inputTitle" maxHeight="50.0" maxWidth="500.0" minHeight="50.0" minWidth="450.0" prefHeight="50.0" prefWidth="500.0" promptText="Enter Title" style="-fx-background-color: #DB8A8A;" />
+      <TextArea fx:id="inputTitle" maxHeight="50.0" maxWidth="500.0" minHeight="50.0" minWidth="450.0" prefHeight="50.0" prefWidth="500.0" promptText="Enter Title..." />
       <Separator prefHeight="7.0" prefWidth="463.0" />
-      <TextArea fx:id="inputDetail" maxHeight="50.0" maxWidth="500.0" minHeight="50.0" minWidth="450.0" prefHeight="50.0" prefWidth="500.0" promptText="Enter description" style="-fx-background-color: #DB8A8A;" />
+      <TextArea fx:id="inputDetail" maxHeight="50.0" maxWidth="500.0" minHeight="50.0" minWidth="450.0" prefHeight="50.0" prefWidth="500.0" promptText="Enter Description..." />
       <HBox prefHeight="10.0" prefWidth="500.0">
          <children>
-            <Label prefHeight="26.0" prefWidth="65.0" text="Tags:" textFill="#db8a8a" />
-            <ComboBox fx:id="inputTags" prefHeight="26.0" prefWidth="138.0" style="-fx-border-color: #DB8A8A;" />
+            <Label prefHeight="26.0" prefWidth="65.0" text="Tags:" />
+            <ComboBox fx:id="inputTags" prefHeight="26.0" prefWidth="138.0" />
          </children>
       </HBox>
       <HBox prefHeight="10.0" prefWidth="500.0">
          <children>
             <Label prefHeight="26.0" prefWidth="65.0" text="Deadline: " textFill="#db8a8a" />
-            <DatePicker fx:id="inputDeadline" prefHeight="24.0" prefWidth="138.0" style="-fx-border-color: #DB8A8A;" />
+            <DatePicker fx:id="inputDeadline" prefHeight="24.0" prefWidth="138.0" />
          </children>
       </HBox>
       <HBox prefHeight="0.0" prefWidth="500.0">
          <children>
             <Label prefHeight="26.0" prefWidth="66.0" text="Priority: " textFill="#db8a8a" />
-            <ComboBox fx:id="inputPriority" prefHeight="28.0" prefWidth="78.0" style="-fx-border-color: #DB8A8A;" />
+            <ComboBox fx:id="inputPriority" prefHeight="28.0" prefWidth="78.0" />
          </children>
       </HBox>
       <ButtonBar prefHeight="40.0" prefWidth="200.0">
