@@ -11,11 +11,15 @@ import ketchup.console.TodoItem
 import ketchup.console.TodoList
 
 class ItemComponent: TitledPane {
-
+    val item: TodoItem
     constructor(dbItem: TodoItem, model: Model) {
         id = dbItem.id.toString()
+        item = dbItem
         graphic = GraphicComponent(dbItem, model)
         content = ContentComponent(dbItem, model)
+    }
+    private fun getToDoItem(): TodoItem {
+        return this.item
     }
 }
 

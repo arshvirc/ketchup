@@ -52,8 +52,8 @@ class ListController(connection: Connection) {
                     result.getInt("priority"),
                     result.getInt("item_id"),
                     tags,
-                    df.parse(timestampStr),
-                    result.getString("completion").toBooleanStrict()
+                    // ADD BACK TIMESTAMP
+                    completion = result.getString("completion").toBooleanStrict()
                 )
                 list.addItem(item)
             }
