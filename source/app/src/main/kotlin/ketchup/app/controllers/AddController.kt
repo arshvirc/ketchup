@@ -4,6 +4,7 @@ import javafx.scene.Node
 import javafx.scene.control.*
 import javafx.stage.Stage
 import ketchup.console.TodoItem
+import java.util.*
 
 class AddController {
     private lateinit var model: Model
@@ -44,13 +45,18 @@ class AddController {
                 println("You must have a title!")
                 return
             }
+
+            if (inputDetail.text == null || inputDetail.text == "") inputDetail.text = " ";
             if (inputPriority.value == null) { inputPriority.value = "0"}
+
             val item = TodoItem(
                 title = inputTitle.text,
                 description = inputDetail.text,
-                id = model.num,
-                priority = inputPriority.value.toInt()
+                priority = inputPriority.value.toInt(),
+                completion = false,
+                timestamp = Date(System.currentTimeMillis())
             )
+
             model.addItemToList(item)
         }
         var stage = createButton.scene.window as Stage
