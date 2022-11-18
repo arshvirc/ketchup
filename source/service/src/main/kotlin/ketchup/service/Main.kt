@@ -46,7 +46,7 @@ fun main() {
         val program = Program()
         val conn = program.run()
 
-        embeddedServer(Netty, port = 8080, host = "127.0.0.1") {
+        embeddedServer(Netty, port = 3000, host = "127.0.0.1") {
             if (conn != null) {
                 configureRouting(conn)
             }

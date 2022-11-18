@@ -20,7 +20,7 @@ import kotlinx.coroutines.runBlocking
 
 
 class Model() {
-    val apiUrl = "http://127.0.0.1:8080"
+    val apiUrl = "http://127.0.0.1:3000"
     val api = Client(apiUrl)
     // We have the UI Components:
     lateinit var uiListOfAllItems: ObservableList<Node>                     // Contains the Merged List of All Items
@@ -38,6 +38,7 @@ class Model() {
 
     constructor(list: ObservableList<Node>) : this() {
         val mainList = runBlocking { api.getListById(0)?.list ?: mutableListOf<TodoItemResponse>() }
+
         val dbList = TodoList()
         for(item in mainList) {
             val newItem = TodoItem(id = item.id, title = item.title,

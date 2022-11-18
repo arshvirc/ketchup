@@ -1,3 +1,4 @@
+import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
@@ -6,11 +7,13 @@ import javafx.fxml.Initializable
 import javafx.scene.Node
 import javafx.scene.Scene
 import javafx.scene.control.Button
+import javafx.scene.control.ComboBox
 import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import javafx.stage.StageStyle
+import ketchup.app.components.graphic.ItemComponent
 import java.net.URL
 import java.util.ResourceBundle
 import java.io.IOException
@@ -38,7 +41,7 @@ class MainController: Initializable {
     private lateinit var addItemButton: Button
 
     @FXML
-    private lateinit var filterButton: Button
+    private lateinit var filterButton: ComboBox<String>
 
     @FXML
     private lateinit var searchBarField: TextArea
@@ -48,6 +51,7 @@ class MainController: Initializable {
 
     override fun initialize(arg0:URL?, arg1: ResourceBundle? ) {
         model = Model(displayView.children)
+        filterButton.items.addAll("Decreasing Priority", "Increase Priority")
         //updateDisplayView(model.getList())
     }
 
@@ -66,6 +70,13 @@ class MainController: Initializable {
         if (id == "addItemButton") {
             showDialog("addItemUI")
         }
+        if (id == "filterButton") {
+            if (filterButton.value == "Decreasing Priority") {
+                sortPriority(0)
+            } else {
+                sortPriority(1)
+            }
+        }
     }
 
     @FXML
@@ -83,6 +94,43 @@ class MainController: Initializable {
 
         } catch (e: IOException) {
             e.printStackTrace()
+        }
+    }
+
+    private fun sortPriority(type: Int) {
+        println("SORTING BY INCREASING")
+        var priority0 = FXCollections.observableArrayList<Node>()
+        var priority1 = FXCollections.observableArrayList<Node>()
+        var priority2 = FXCollections.observableArrayList<Node>()
+        var priority3 = FXCollections.observableArrayList<Node>()
+        var item : ItemComponent
+        for (i in 0..model.uiListOfAllItems.lastIndex) {
+            item = model.uiListOfAllItems[i] as ItemComponent
+            when (item.item.priority) {
+                0 -> priority0.add(item)
+                1 -> priority1.add(item)
+                2 -> priority2.add(item)
+                3 -> priority3.add(item)
+            }
+        }
+        if ( type == 0 ) {  // Decreasing
+            model.uiListOfAllItems.removeAll(priority0)
+            model.uiListOfAllItems.removeAll(priority1)
+            model.uiListOfAllItems.removeAll(priority2)
+            model.uiListOfAllItems.removeAll(priority3)
+            model.uiListOfAllItems.addAll(priority0)
+            model.uiListOfAllItems.addAll(priority1)
+            model.uiListOfAllItems.addAll(priority2)
+            model.uiListOfAllItems.addAll(priority3)
+        } else {
+            model.uiListOfAllItems.removeAll(priority0)
+            model.uiListOfAllItems.removeAll(priority1)
+            model.uiListOfAllItems.removeAll(priority2)
+            model.uiListOfAllItems.removeAll(priority3)
+            model.uiListOfAllItems.addAll(priority3)
+            model.uiListOfAllItems.addAll(priority2)
+            model.uiListOfAllItems.addAll(priority1)
+            model.uiListOfAllItems.addAll(priority0)
         }
     }
 }
