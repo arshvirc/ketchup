@@ -26,6 +26,7 @@ class DeadlineComponent: HBox {
         this.options.prefHeight = 26.0
         this.options.prefWidth = 120.0
         this.options.value = LocalDate.now()
+        //this.options.ar
         toDoItemId = item.id.toString()
         this.children.add(label)
         this.children.add(options)

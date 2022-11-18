@@ -17,6 +17,7 @@ class DescriptionComponent: TextField {
     constructor(item: TodoItem, m :Model) {
         this.prefHeight = 20.0
         this.prefWidth = 331.0
+        //this.padding = 10.0
 
         if (item.description == "") {
             this.promptText = "Enter Details"

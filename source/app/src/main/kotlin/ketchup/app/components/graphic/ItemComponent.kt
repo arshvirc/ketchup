@@ -24,6 +24,7 @@ class GraphicComponent: HBox {
         id = dbItem.id.toString()
         var dragButton = DragComponent(m)
         var title = TitleComponent(dbItem, m)
+        title.minWidth = 400.0
         var complete = CompleteComponent(dbItem, m)
         children.addAll(dragButton, title, complete)
     }
@@ -34,6 +35,7 @@ class ContentComponent: VBox {
         id = dbItem.id.toString()
         prefHeight = 200.0
         prefWidth = 100.0
+        this.setSpacing(10.0)
         var description = DescriptionComponent(dbItem, m)
         var tags = TagsComponent(dbItem, m)
         var deadline = DeadlineComponent(dbItem, m)
