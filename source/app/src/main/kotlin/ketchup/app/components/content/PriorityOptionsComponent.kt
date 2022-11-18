@@ -5,17 +5,21 @@ import javafx.collections.FXCollections
 import javafx.scene.Node
 import javafx.scene.control.ComboBox
 import ketchup.app.components.graphic.ItemComponent
+import ketchup.app.ktorclient.Client
 import ketchup.console.TodoItem
 import ketchup.console.TodoList
+import kotlinx.coroutines.runBlocking
 
 class PriorityOptionsComponent: ComboBox<String> {
     var model: Model
-    var toDoItemId: String
+    private var toDoItemId: String
+    private val api: Client
     constructor(item: TodoItem, m: Model) {
         this.prefHeight = 26.0
         this.prefWidth = 120.0
 
         this.model = m
+        this.api = m.api
         this.toDoItemId = item.id.toString()
 
         this.value = item.priority.toString()
@@ -37,6 +41,10 @@ class PriorityOptionsComponent: ComboBox<String> {
             item = model.dbListOfAllItems.list[i]
             if (item.id == id.toInt()) {
                 item.priority = priority.toInt()
+                val editSuccess = runBlocking { api.editTodoItem(id.toInt(), item) }
+                if(!editSuccess) {
+                    println("Editing priority for item with ID $id failed")
+                }
                 return item
             }
         }

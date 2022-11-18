@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 data class ListName(val name: String)
-data class TodoItemRequest(val id: Int, val title: String, val description: String, val timestamp: String, val deadline: String?,
+data class TodoItemRequest(val id: Int, val title: String, val description: String, val timestamp: String?, val deadline: String?,
                            val priority: Int, val tags: MutableList<String>?, val completion: Boolean)
 data class ListResponse(val listId: Int, val size: Int, val list: MutableList<TodoItem>, val name: String)
 data class ListsResponse(val lists: MutableList<TodoList>)
@@ -98,10 +98,9 @@ fun Application.configureRouting(conn: Connection) {
 
                 try {
                     val parsedDeadline = if(todoItem.deadline != null) df.parse(todoItem.deadline) else null
-                    val parsedTimestamp = df.parse(todoItem.timestamp)
 
                     val newItem: TodoItem = TodoItem(todoItem.title, todoItem.description, parsedDeadline,
-                        todoItem.priority, todoItem.id, tags, parsedTimestamp, todoItem.completion)
+                        todoItem.priority, todoItem.id, tags, completion = todoItem.completion)
 
                     val success = controller.editItem(newItem, itemId)
                     if (success) {
@@ -111,10 +110,9 @@ fun Application.configureRouting(conn: Connection) {
                     }
                 } catch (pex: ParseException) {
                     val parsedDeadline: Date? = todoItem.deadline?.toLongOrNull()?.let { it1 -> Date(it1) }
-                    val parsedTimestamp: Date = Date(todoItem.timestamp.toLong())
 
                     val newItem: TodoItem = TodoItem(todoItem.title, todoItem.description, parsedDeadline,
-                        todoItem.priority, todoItem.id, tags, parsedTimestamp, todoItem.completion)
+                        todoItem.priority, todoItem.id, tags, completion = todoItem.completion)
 
                     val success = controller.editItem(newItem, itemId)
 
@@ -168,10 +166,9 @@ fun Application.configureRouting(conn: Connection) {
                     }
                 } catch(pex: ParseException) {
                     val parsedDeadline: Date? = todoItem.deadline?.toLongOrNull()?.let { it1 -> Date(it1) }
-                    val parsedTimestamp: Date = Date(todoItem.timestamp.toLong())
 
                     val newItem: TodoItem = TodoItem(todoItem.title, todoItem.description, parsedDeadline,
-                        todoItem.priority, todoItem.id, tags, parsedTimestamp)
+                        todoItem.priority, todoItem.id, tags, completion = false)
 
                     val newId = controller.addItem(newItem, item.listId)
 

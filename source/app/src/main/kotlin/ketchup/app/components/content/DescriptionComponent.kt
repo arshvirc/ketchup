@@ -4,12 +4,15 @@ import javafx.collections.FXCollections
 import javafx.scene.Node
 import javafx.scene.control.TextField
 import ketchup.app.components.graphic.ItemComponent
+import ketchup.app.ktorclient.Client
 import ketchup.console.TodoItem
 import ketchup.console.TodoList
+import kotlinx.coroutines.runBlocking
 
 class DescriptionComponent: TextField {
     private var toDoItemId : String
     private var model: Model
+    private val api: Client
 
     constructor(item: TodoItem, m :Model) {
         this.prefHeight = 20.0
@@ -23,6 +26,7 @@ class DescriptionComponent: TextField {
 
         this.toDoItemId = item.id.toString()
         this.model = m
+        this.api = m.api
         this.focusedProperty().addListener{ _, _, new ->
             run {
                 if (!new) {
@@ -41,6 +45,10 @@ class DescriptionComponent: TextField {
             item = model.dbListOfAllItems.list[i]
             if (item.id == id.toInt()) {
                 item.description = desc
+                val editSuccess = runBlocking { api.editTodoItem(id.toInt(), item) }
+                if(!editSuccess) {
+                    println("Editing description for item with ID $id failed")
+                }
                 return item
             }
         }
