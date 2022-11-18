@@ -16,10 +16,10 @@ Click accept. API requests are asynchronous so we need this suspend keyword to h
 class App(): Application() {
     override fun start(primaryStage: Stage) {
         val fxmlLoader = FXMLLoader(App::class.java.getResource("fxml/main.fxml"))
-        val scene = Scene(fxmlLoader.load(), 700.0, 550.0)
+        val scene = Scene(fxmlLoader.load(), 900.0, 550.0)
         primaryStage.scene = scene
         primaryStage.minHeight = 550.0
-        primaryStage.minWidth = 700.0
+        primaryStage.minWidth = 900.0
         primaryStage.title = "Ketchup 0.2"
         primaryStage.show()
     }
