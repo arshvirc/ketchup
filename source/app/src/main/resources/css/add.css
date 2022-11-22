@@ -75,7 +75,7 @@
     -fx-background-radius: 10;
 }
 .date-picker .cell {
-    -fx-background-color: secondary-color;
+    -fx-background-color: whtie;
     -fx-background-radius: 10;
     -fx-border-radius: 10;
 }
