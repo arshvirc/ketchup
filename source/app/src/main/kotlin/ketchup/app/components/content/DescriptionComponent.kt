@@ -3,7 +3,7 @@ import Model
 import javafx.collections.FXCollections
 import javafx.scene.Node
 import javafx.scene.control.TextField
-import ketchup.app.components.graphic.ItemComponent
+import ketchup.app.components.ItemComponent
 import ketchup.app.ktorclient.Client
 import ketchup.console.TodoItem
 import ketchup.console.TodoList

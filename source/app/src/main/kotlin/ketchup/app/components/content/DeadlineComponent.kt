@@ -6,7 +6,7 @@ import javafx.scene.Node
 import javafx.scene.control.DatePicker
 import javafx.scene.control.Label
 import javafx.scene.layout.HBox
-import ketchup.app.components.graphic.ItemComponent
+import ketchup.app.components.ItemComponent
 import ketchup.console.TodoItem
 import ketchup.console.TodoList
 import java.time.LocalDate
