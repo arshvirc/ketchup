@@ -15,7 +15,7 @@ import ketchup.console.TodoItem
 
 
 class ItemComponent: TitledPane {
-    lateinit var model :Model
+    var model :Model
     constructor(dbItem: TodoItem, model: Model) {
         id = dbItem.id.toString()
         this.model = model
@@ -30,16 +30,17 @@ class ItemComponent: TitledPane {
         }
         this.setOnMouseDragExited {
             border = (Border(BorderStroke(null, null, null, null)))
+            padding = Insets(0.0)
         }
 
         this.setOnMouseExited {
             border = (Border(BorderStroke(null, null, null, null)))
+            padding = Insets(0.0)
         }
         this.setOnMouseDragReleased {
             println("setOnMouseDragReleased2")
             model.dragInitiated = false
             model.moveItems(model.draggedItemId,this.id)
-            //isMouseTransparent = false
         }
         this.setOnMouseDragOver {
             if (it.source != it.gestureSource ) {
@@ -61,6 +62,7 @@ class ItemComponent: TitledPane {
                             Insets.EMPTY
                         )
                     )
+                    padding = Insets(10.0)
                     model.dragTop = false;
                     model.dragBottom = true;
                 } else {
