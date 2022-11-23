@@ -62,7 +62,7 @@ class ItemComponent: TitledPane {
                             Insets.EMPTY
                         )
                     )
-                    padding = Insets(10.0)
+                    padding = Insets(10.0, 0.0, 10.0, 0.0)
                     model.dragTop = false;
                     model.dragBottom = true;
                 } else {
