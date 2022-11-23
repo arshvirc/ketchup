@@ -22,13 +22,14 @@ class PriorityOptionsComponent: ComboBox<String> {
         this.api = m.api
         this.toDoItemId = item.id.toString()
 
-        this.value = item.priority.toString()
+        this.value = convertNumToPriority(item.priority)
         this.items.addAll(m.listOfPriorities)
         this.focusedProperty().addListener{ _, _, new ->
             run {
                 if (!new) {
-                    println("Proceeding to Update Priority to be ${this.value}")
-                    val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, this.value)
+                    val newValue = convertPriorityToNum(this.value);
+                    println("Proceeding to Update Priority to be ${newValue}")
+                    val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, newValue.toString())
                     updateEditedItem(toDoItemId, editedItem)
 
                 }
@@ -74,5 +75,25 @@ class PriorityOptionsComponent: ComboBox<String> {
         model.uiListOfAllItems.removeAll(afterList)
         model.uiListOfAllItems.addAll(newList)
         model.uiListOfAllItems.addAll(afterList)
+    }
+
+    private fun convertNumToPriority(priority: Int): String {
+        return when(priority) {
+            0 -> "None"
+            1 -> "Low"
+            2 -> "Medium"
+            3 -> "High"
+            else -> "None"
+        }
+    }
+
+    private fun convertPriorityToNum(priority: String): Int {
+        return when(priority) {
+            "None" -> 0
+            "Low" -> 1
+            "Medium" -> 2
+            "High" -> 3
+            else -> 0
+        }
     }
 }

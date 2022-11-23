@@ -27,7 +27,7 @@ class Model() {
     lateinit var listOfGroups: MutableList<String>                          // Contains the Groups
 
     // Other Information
-    val listOfPriorities: List<String> = listOf<String>("0", "1", "2", "3")
+    val listOfPriorities: List<String> = listOf<String>("None", "Low", "Medium", "High")
 
 
     //

@@ -1,6 +1,7 @@
 package ketchup.app.components.content
 import Model
 import javafx.collections.FXCollections
+import javafx.geometry.Insets
 import javafx.scene.Node
 import javafx.scene.control.TextField
 import ketchup.app.components.ItemComponent
@@ -17,8 +18,8 @@ class DescriptionComponent: TextField {
     constructor(item: TodoItem, m :Model) {
         this.prefHeight = 20.0
         this.prefWidth = 331.0
-        //this.padding = 10.0
-
+        this.padding = Insets(5.0)
+        this.style += "-fx-padding:10;" + "-fx-border-insets: 5;" + "-fx-background-insets: 5px;"
         if (item.description == "") {
             this.promptText = "Enter Details"
         } else {
