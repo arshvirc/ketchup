@@ -17,6 +17,7 @@ class PriorityComponent: HBox {
         this.prefWidth = 200.0
         this.label = LabelComponent("Priority: ")
         this.options = PriorityOptionsComponent(item, m)
+        this.padding = javafx.geometry.Insets(0.0,0.0,0.0,10.0)
         toDoItemId = item.id.toString()
         this.model = m
 
