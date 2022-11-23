@@ -54,15 +54,21 @@ class DeadlineComponent: HBox {
         }
     }
 
-    private fun editToDoItem(list: TodoList, id: String, deadline: LocalDate): TodoItem {
+    private fun editToDoItem(list: TodoList, id: String, deadline: LocalDate?): TodoItem {
         var item: TodoItem
         for (i in 0..model.dbListOfAllItems.list.lastIndex) {
             item = model.dbListOfAllItems.list[i]
             if (item.id == id.toInt()) {
-                val instant = Instant.from(deadline.atStartOfDay(ZoneId.systemDefault()))
-                val date = Date.from(instant)
-                item.deadline = date   /* Update this to include  */
-                val editSuccess = runBlocking { api.editTodoItem(id.toInt(), item) }
+                if(deadline != null) {
+                    val instant = Instant.from(deadline.atStartOfDay(ZoneId.systemDefault()))
+                    val date = Date.from(instant)
+                    item.deadline = date   /* Update this to include  */
+                    val editSuccess = runBlocking { api.editTodoItem(id.toInt(), item) }
+                } else {
+                    item.deadline = null;
+                    val editSuccess = runBlocking { api.editTodoItem(id.toInt(), item)};
+                }
+
                 return item
             }
         }
