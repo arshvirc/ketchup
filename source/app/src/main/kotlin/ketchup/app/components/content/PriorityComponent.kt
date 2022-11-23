@@ -1,15 +1,10 @@
 package ketchup.app.components.content
 
 import Model
-import javafx.collections.FXCollections
-import javafx.scene.Node
 import javafx.scene.control.ComboBox
 import javafx.scene.control.Label
 import javafx.scene.layout.HBox
-import javafx.scene.layout.Priority
-import ketchup.app.components.graphic.ItemComponent
 import ketchup.console.TodoItem
-import ketchup.console.TodoList
 
 class PriorityComponent: HBox {
     var toDoItemId : String

@@ -4,7 +4,7 @@ import Model
 import javafx.collections.FXCollections
 import javafx.scene.Node
 import javafx.scene.control.ComboBox
-import ketchup.app.components.graphic.ItemComponent
+import ketchup.app.components.ItemComponent
 import ketchup.console.TodoItem
 import ketchup.console.TodoList
 

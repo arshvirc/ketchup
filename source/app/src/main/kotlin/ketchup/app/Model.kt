@@ -1,17 +1,9 @@
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import javafx.geometry.Pos
 import javafx.scene.Node
-import javafx.scene.control.*
-import javafx.scene.image.Image
-import javafx.scene.image.ImageView
-import javafx.scene.layout.HBox
-import javafx.scene.layout.VBox
-import ketchup.app.components.content.*
-import ketchup.app.components.graphic.CompleteComponent
-import ketchup.app.components.graphic.DragComponent
-import ketchup.app.components.graphic.ItemComponent
-import ketchup.app.components.graphic.TitleComponent
+import javafx.scene.control.TitledPane
+import javafx.scene.layout.Pane
+import ketchup.app.components.ItemComponent
 import ketchup.app.ktorclient.Client
 import ketchup.app.ktorclient.TodoItemResponse
 import ketchup.console.TodoItem
@@ -37,6 +29,13 @@ class Model() {
     // Other Information
     val listOfPriorities: List<String> = listOf<String>("0", "1", "2", "3")
 
+
+    //
+    var dragInitiated = false
+    lateinit var draggedItemId : String
+    var dragTop = false
+    var dragBottom = false
+
     constructor(list: ObservableList<Node>) : this() {
         val mainList = runBlocking { api.getListById(0)?.list ?: mutableListOf<TodoItemResponse>() }
 
@@ -51,21 +50,12 @@ class Model() {
 //        dbList.displayList()
 
         this.uiListOfAllItems = list
+        // Add Space
         this.dbListOfAllItems = dbList
         this.uiListOfAllItems.addAll(TodoListConverter(this.dbListOfAllItems))
         this.dbListOfCompletedItems = TodoList()
         this.listOfTags = mutableListOf("Academic", "Family", "Extra")
         this.listOfGroups = mutableListOf("List 1", "List 2", "List 3")
-        //this.callApiToUpdateModel()
-    }
-
-    fun callApiToUpdateModel() {
-        // dbListOfAllItems = TodoList(dbListOfAllItems)               // replace w API call
-        // dbListOfGroups
-        // this.uiListOfAllItems = TodoListConverter(dbListOfAllItems) //
-        // uiListOfGroups
-        // listOfTags = mutableListOf("Academic", "Family", "Extra")
-        // listOfGroups = mutableListOf("List 1", "List 2", "List 3")
     }
 
     fun addItemToList(dbItem: TodoItem) {
@@ -77,7 +67,8 @@ class Model() {
             dbItem.id = itemId
             println("New item id: ${dbItem.id}")
             this.dbListOfAllItems.addItem(dbItem)       // Update model list
-            val itemUI = ItemComponent(dbItem, this)  //Convert to UI Component
+            var itemUI = ItemComponent(dbItem, this)  //Convert to UI Component
+            itemUI.isExpanded = false
             this.uiListOfAllItems.add(itemUI)              //Update UI List
         }
     }
@@ -88,7 +79,78 @@ class Model() {
             var uiItem = ItemComponent(dbItem, this)
             uiItem.isExpanded = false
             uiList.add(uiItem)
+            // Add Space
         }
         return uiList
+    }
+
+    fun moveItems(srcId: String, destId: String) {
+        var srcIndex = 0
+        var destIndex = 0;
+        for ((counter, item) in uiListOfAllItems.withIndex()) {
+            if (item.id == srcId) {
+                srcIndex = counter;
+            }
+            if (item.id == destId) {
+                destIndex = counter;
+            }
+        }
+        println("(srcId, destId): ($srcId, $destId)")
+        println("(srcIndex, destIndex): ($srcIndex, $destIndex)")
+        var gap = FXCollections.observableArrayList<Node>()
+        var after = FXCollections.observableArrayList<Node>()
+        var moveItem = TitledPane() as Node
+        if ( srcIndex == destIndex) {
+            println("Useless Call")
+        } else if ( srcIndex < destIndex) {
+            for ((counter, item) in uiListOfAllItems.withIndex()) {
+                if (counter < srcIndex) {
+                    // keep in the list
+                } else if ( counter == srcIndex ) {
+                    moveItem = item
+                } else if ( counter < destIndex ) {
+                    gap.add(item)
+                } else if ( counter == destIndex ) {
+                    if (this.dragTop) {
+                        after.add(item)
+                    } else {
+                        gap.add(item)
+                    }
+                } else {
+                    after.add(item)
+                }
+            }
+            uiListOfAllItems.removeAll(moveItem)
+            uiListOfAllItems.removeAll(gap)
+            uiListOfAllItems.removeAll(after)
+            uiListOfAllItems.addAll(gap)
+            uiListOfAllItems.addAll(moveItem)
+            uiListOfAllItems.addAll(after)
+        } else {
+            for ((counter, item) in uiListOfAllItems.withIndex()) {
+                if (counter < destIndex) {
+                    // keep in the list
+                } else if ( counter == destIndex ) {
+                    if (this.dragTop) {
+                        gap.add(item)
+                    } else {
+                        // keep in the list
+                    }
+                } else if ( counter < srcIndex ) {
+                    gap.add(item)
+                } else if ( counter == srcIndex ) {
+                    moveItem = item
+                } else {
+                    after.add(item)
+                }
+            }
+            uiListOfAllItems.removeAll(gap)
+            uiListOfAllItems.removeAll(moveItem)
+            uiListOfAllItems.removeAll(after)
+            uiListOfAllItems.addAll(moveItem)
+            uiListOfAllItems.addAll(gap)
+            uiListOfAllItems.addAll(after)
+        }
+
     }
 }

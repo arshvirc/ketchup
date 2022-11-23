@@ -1,7 +1,10 @@
 package ketchup.app.components.graphic
 
 import Model
+import javafx.collections.FXCollections
+import javafx.collections.ObservableList
 import javafx.geometry.Pos
+import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
@@ -27,5 +30,15 @@ class DragComponent: Button  {
         imageView.isPreserveRatio = true
         imageView.image = image
         this.graphic = imageView
+
+        this.setOnMousePressed {
+            model.draggedItemId = this.parent.parent.parent.id
+        }
+        this.setOnMouseDragReleased {
+            model.moveItems(model.draggedItemId,this.parent.parent.parent.id)
+        }
+        this.setOnDragDetected {
+            startFullDrag()
+        }
     }
 }
