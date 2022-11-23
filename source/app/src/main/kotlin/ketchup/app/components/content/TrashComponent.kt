@@ -21,6 +21,7 @@ class TrashComponent: ButtonBar {
         this.api = m.api
         this.prefHeight = 40.0
         this.prefWidth = 200.0
+        this.padding = javafx.geometry.Insets(10.0)
         var trashButton = Button("Trash")
         trashButton.setOnAction { obs ->
             run {

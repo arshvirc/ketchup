@@ -15,6 +15,7 @@ class TagsComponent: HBox {
         this.prefHeight = 100.0
         this.prefWidth = 200.0
         this.label = LabelComponent("Tags: ")
+        this.padding = javafx.geometry.Insets(0.0,0.0,0.0,10.0)
         this.options = TagsOptionsComponent(item, m)
         toDoItemId = item.id.toString()
         this.children.add(label)

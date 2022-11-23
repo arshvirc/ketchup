@@ -12,6 +12,7 @@ import ketchup.console.TodoItem
 import ketchup.console.TodoList
 import kotlinx.coroutines.runBlocking
 import java.time.Instant
+import java.awt.Color.black
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
@@ -28,6 +29,7 @@ class DeadlineComponent: HBox {
         this.prefWidth = 200.0
         this.model = m
         this.label = LabelComponent("Deadline: ")
+        this.padding = javafx.geometry.Insets(0.0,0.0,0.0,10.0)
         this.options = DatePicker()
         this.api = m.api
         if(item.deadline != null) {
