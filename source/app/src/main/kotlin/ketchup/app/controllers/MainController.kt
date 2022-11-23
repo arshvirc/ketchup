@@ -13,7 +13,7 @@ import javafx.scene.control.TextField
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import javafx.stage.StageStyle
-import ketchup.app.components.graphic.ItemComponent
+import ketchup.app.components.ItemComponent
 import java.net.URL
 import java.util.ResourceBundle
 import java.io.IOException

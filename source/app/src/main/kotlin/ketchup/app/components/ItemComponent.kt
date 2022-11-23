@@ -16,9 +16,11 @@ import ketchup.console.TodoItem
 
 class ItemComponent: TitledPane {
     var model :Model
+    var item : TodoItem
     constructor(dbItem: TodoItem, model: Model) {
         id = dbItem.id.toString()
         this.model = model
+        item = dbItem
         graphic = GraphicComponent(dbItem, model)
         content = ContentComponent(dbItem, model)
 
