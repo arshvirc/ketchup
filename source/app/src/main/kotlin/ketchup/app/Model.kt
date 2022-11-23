@@ -17,6 +17,7 @@ import ketchup.app.ktorclient.TodoItemResponse
 import ketchup.console.TodoItem
 import ketchup.console.TodoList
 import kotlinx.coroutines.runBlocking
+import java.util.*
 
 
 class Model() {
@@ -41,11 +42,13 @@ class Model() {
 
         val dbList = TodoList()
         for(item in mainList) {
+            val date = item.deadline?.let { Date(it.toLong()) }
             val newItem = TodoItem(id = item.id, title = item.title,
-                description = item.description, priority = item.priority, completion = item.completion)
+                description = item.description, priority = item.priority, completion = item.completion,
+                deadline = date)
             dbList.addItem(newItem)
         }
-        dbList.displayList()
+//        dbList.displayList()
 
         this.uiListOfAllItems = list
         this.dbListOfAllItems = dbList

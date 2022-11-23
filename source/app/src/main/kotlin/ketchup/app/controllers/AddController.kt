@@ -4,6 +4,8 @@ import javafx.scene.Node
 import javafx.scene.control.*
 import javafx.stage.Stage
 import ketchup.console.TodoItem
+import java.time.Instant
+import java.time.ZoneId
 import java.util.*
 
 class AddController {
@@ -46,15 +48,22 @@ class AddController {
                 return
             }
 
+            val local = inputDeadline.value
+            val instant = Instant.from(local.atStartOfDay(ZoneId.systemDefault()))
+            val date = Date.from(instant)
+
             if (inputDetail.text == null || inputDetail.text == "") inputDetail.text = " ";
             if (inputPriority.value == null) { inputPriority.value = "0"}
+
+            // TODO: Convert deadline from LocalDate to Date
 
             val item = TodoItem(
                 title = inputTitle.text,
                 description = inputDetail.text,
                 priority = inputPriority.value.toInt(),
                 completion = false,
-                timestamp = Date(System.currentTimeMillis())
+                timestamp = Date(System.currentTimeMillis()),
+                deadline = date
             )
 
             model.addItemToList(item)

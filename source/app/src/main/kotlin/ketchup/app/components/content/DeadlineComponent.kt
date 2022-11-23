@@ -7,15 +7,21 @@ import javafx.scene.control.DatePicker
 import javafx.scene.control.Label
 import javafx.scene.layout.HBox
 import ketchup.app.components.graphic.ItemComponent
+import ketchup.app.ktorclient.Client
 import ketchup.console.TodoItem
 import ketchup.console.TodoList
+import kotlinx.coroutines.runBlocking
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
+import java.util.Date
 
 class DeadlineComponent: HBox {
     var toDoItemId : String
     var label : Label
     var options : DatePicker
     var model: Model
+    private val api: Client
 
     constructor(item: TodoItem, m: Model) {
         this.prefHeight = 100.0
@@ -23,17 +29,23 @@ class DeadlineComponent: HBox {
         this.model = m
         this.label = LabelComponent("Deadline: ")
         this.options = DatePicker()
+        this.api = m.api
+        if(item.deadline != null) {
+            val date = item.deadline;
+            val instant = date?.toInstant()
+            val local = instant?.atZone(ZoneId.systemDefault())?.toLocalDate();
+
+            this.options.value = local
+        }
         this.options.prefHeight = 26.0
         this.options.prefWidth = 120.0
-        this.options.value = LocalDate.now()
-        //this.options.ar
         toDoItemId = item.id.toString()
         this.children.add(label)
         this.children.add(options)
         this.options.focusedProperty().addListener{ _, _, new ->
             run {
                 if (!new) {
-                    println("Proceeding to Update Description to be ${this.options.value}")
+                    println("Proceeding to Update Deadline to be ${this.options.value}")
                     val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, this.options.value)
                     updateEditedItem(toDoItemId, editedItem)
 
@@ -42,12 +54,21 @@ class DeadlineComponent: HBox {
         }
     }
 
-    private fun editToDoItem(list: TodoList, id: String, deadline: LocalDate): TodoItem {
+    private fun editToDoItem(list: TodoList, id: String, deadline: LocalDate?): TodoItem {
         var item: TodoItem
         for (i in 0..model.dbListOfAllItems.list.lastIndex) {
             item = model.dbListOfAllItems.list[i]
             if (item.id == id.toInt()) {
-                item.deadline = null   /* Update this to include  */
+                if(deadline != null) {
+                    val instant = Instant.from(deadline.atStartOfDay(ZoneId.systemDefault()))
+                    val date = Date.from(instant)
+                    item.deadline = date   /* Update this to include  */
+                    val editSuccess = runBlocking { api.editTodoItem(id.toInt(), item) }
+                } else {
+                    item.deadline = null;
+                    val editSuccess = runBlocking { api.editTodoItem(id.toInt(), item)};
+                }
+
                 return item
             }
         }

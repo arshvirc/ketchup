@@ -45,7 +45,11 @@ class DescriptionComponent: TextField {
         for (i in 0..model.dbListOfAllItems.list.lastIndex) {
             item = model.dbListOfAllItems.list[i]
             if (item.id == id.toInt()) {
-                item.description = desc
+                if(desc.trim() == "") {
+                    item.description = " "
+                } else {
+                    item.description = desc
+                }
                 val editSuccess = runBlocking { api.editTodoItem(id.toInt(), item) }
                 if(!editSuccess) {
                     println("Editing description for item with ID $id failed")
