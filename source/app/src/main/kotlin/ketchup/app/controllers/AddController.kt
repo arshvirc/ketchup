@@ -48,9 +48,15 @@ class AddController {
                 return
             }
 
-            val local = inputDeadline.value
-            val instant = Instant.from(local.atStartOfDay(ZoneId.systemDefault()))
-            val date = Date.from(instant)
+            var date: Date? = null;
+
+            if(inputDeadline.value != null) {
+                val local = inputDeadline.value
+                val instant = Instant.from(local.atStartOfDay(ZoneId.systemDefault()))
+                date = Date.from(instant)
+            }
+
+
 
             if (inputDetail.text == null || inputDetail.text == "") inputDetail.text = " ";
             if (inputPriority.value == null) { inputPriority.value = "0"}
@@ -60,7 +66,7 @@ class AddController {
             val item = TodoItem(
                 title = inputTitle.text,
                 description = inputDetail.text,
-                priority = inputPriority.value.toInt(),
+                priority = convertPriorityToNum(inputPriority.value),
                 completion = false,
                 timestamp = Date(System.currentTimeMillis()),
                 deadline = date
@@ -70,5 +76,15 @@ class AddController {
         }
         var stage = createButton.scene.window as Stage
         stage.close()
+    }
+
+    private fun convertPriorityToNum(priority: String): Int {
+        return when(priority) {
+            "None" -> 0
+            "Low" -> 1
+            "Medium" -> 2
+            "High" -> 3
+            else -> 0
+        }
     }
 }
