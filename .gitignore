@@ -6,3 +6,4 @@ out/
 www/public
 .idea
 tasks.json
+source/data.db
