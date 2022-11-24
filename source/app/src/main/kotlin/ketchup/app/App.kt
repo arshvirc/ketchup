@@ -19,26 +19,8 @@ Click accept. API requests are asynchronous so we need this suspend keyword to h
 
 class App(): Application() {
     override fun start(primaryStage: Stage) {
-        val menu: MenuBar = MenuBar()
-        val file: Menu = Menu("File")
-        val edit: Menu = Menu("Edit")
-
-        val newItem = MenuItem("New Item")
-
-        val undo = MenuItem("Undo")
-        val redo = MenuItem("redo")
-
-        file.items.addAll(newItem)
-        edit.items.addAll(undo, redo)
-
-        menu.menus.addAll(file, edit)
-        menu.isUseSystemMenuBar = true
-
         val fxmlLoader = FXMLLoader(App::class.java.getResource("fxml/main.fxml"))
-
-        val vbox = VBox(menu, fxmlLoader.load());
-
-        val scene = Scene(vbox, 900.0, 550.0)
+        val scene = Scene(fxmlLoader.load(), 900.0, 550.0)
         primaryStage.scene = scene
         primaryStage.minHeight = 550.0
         primaryStage.minWidth = 900.0
