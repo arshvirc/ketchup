@@ -6,10 +6,7 @@ import javafx.fxml.FXMLLoader
 import javafx.fxml.Initializable
 import javafx.scene.Node
 import javafx.scene.Scene
-import javafx.scene.control.Button
-import javafx.scene.control.ComboBox
-import javafx.scene.control.TextArea
-import javafx.scene.control.TextField
+import javafx.scene.control.*
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import javafx.stage.StageStyle
@@ -52,7 +49,6 @@ class MainController: Initializable {
     override fun initialize(arg0:URL?, arg1: ResourceBundle? ) {
         model = Model(displayView.children)
         filterButton.items.addAll("Decreasing Priority", "Increase Priority")
-        //updateDisplayView(model.getList())
     }
 
     @FXML
@@ -69,13 +65,14 @@ class MainController: Initializable {
         val id = source.id
         if (id == "addItemButton") {
             showDialog("addItemUI")
-        }
-        if (id == "filterButton") {
+        } else if (id == "filterButton") {
             if (filterButton.value == "Decreasing Priority") {
                 sortPriority(0)
             } else {
                 sortPriority(1)
             }
+        } else {
+            showDialog("addItemUI")
         }
     }
 
