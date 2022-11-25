@@ -1,7 +1,7 @@
 package ketchup.app.controllers
 
 import App
-import Model
+import ketchup.app.Model
 import javafx.collections.FXCollections
 import javafx.event.ActionEvent
 import javafx.fxml.FXML

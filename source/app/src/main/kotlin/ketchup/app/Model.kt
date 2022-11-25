@@ -1,32 +1,31 @@
+package ketchup.app
+
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.Node
 import javafx.scene.control.TitledPane
 import ketchup.app.components.ItemComponent
-import ketchup.app.components.graphic.TitleComponent
 import ketchup.app.ktorclient.Client
 import ketchup.app.ktorclient.TodoItemResponse
 import ketchup.console.TodoItem
 import ketchup.console.TodoList
 import kotlinx.coroutines.runBlocking
 import java.util.*
-import java.util.function.Predicate
 
 
 class Model() {
     // Api Fields
-    val apiUrl = "http://127.0.0.1:3000"
+    private val apiUrl = "http://127.0.0.1:3000"
     val api = Client(apiUrl)
 
     // Ui Fields
     lateinit var displayList: ObservableList<Node>
     lateinit var uiListOfAllItems: ObservableList<Node>
     var uiListOfTags = mutableListOf<ObservableList<Node>>()
-//    var pairsOfTags = mutableListOf<Pair<ObservableList<Node>, String>>()
 
     // Item Versions
-    lateinit var dbListOfAllItems: TodoList                                 // Contains all TodoItems
-    var listOfTags = mutableListOf("Academic", "Family", "Extra")                  // API Call needed
+    var dbListOfAllItems =  TodoList()                                // Contains all TodoItems
+    var listOfTags: MutableList<String> = mutableListOf<String>()
 
     // Fixed Information
     val listOfPriorities: List<String> = listOf<String>("None", "Low", "Medium", "High")
@@ -39,17 +38,17 @@ class Model() {
 
     constructor(list: ObservableList<Node>) : this() {
         val mainList = runBlocking { api.getListById(0)?.list ?: mutableListOf<TodoItemResponse>() }
-
-        val dbList = TodoList()
         for(item in mainList) {
             val date = item.deadline?.let { Date(it.toLong()) }
             val newItem = TodoItem(id = item.id, title = item.title, description = item.description,
                 priority = item.priority, completion = item.completion, deadline = date)
-            dbList.addItem(newItem)
+            dbListOfAllItems.addItem(newItem)
         }
         this.uiListOfAllItems = list
-        this.dbListOfAllItems = dbList
         this.uiListOfAllItems.addAll(todoListConverter(this.dbListOfAllItems))
+
+        val apiTags = runBlocking { api.getAllTags() }
+        for( tag in apiTags) listOfTags.add(tag)
         sortUiLists()
     }
 

@@ -1,5 +1,5 @@
 package ketchup.app.components.content
-import Model
+import ketchup.app.Model
 import javafx.collections.FXCollections
 import javafx.geometry.Insets
 import javafx.scene.Node
@@ -15,7 +15,7 @@ class DescriptionComponent: TextField {
     private var model: Model
     private val api: Client
 
-    constructor(item: TodoItem, m :Model) {
+    constructor(item: TodoItem, m : Model) {
         this.prefHeight = 20.0
         this.prefWidth = 331.0
         this.padding = Insets(5.0)
