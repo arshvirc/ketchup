@@ -32,6 +32,9 @@ data class NewListRequest(val name: String)
 @Serializable
 data class AddItemRequest(val listId: Int, val item: TodoItem)
 
+@Serializable
+data class TagName(val name: String)
+
 // Instantiate this by doing val api: Client = Client(url) <- url is the url of the api
 class Client(url: String) {
     private val host = url
@@ -200,6 +203,32 @@ class Client(url: String) {
             return response.body()
         } catch (ex: Exception) {
             return -1
+        }
+    }
+
+    suspend fun getAllTags(): List<String> {
+        try {
+            val url = "$host/api/tags"
+            val response = client.get(url);
+            return response.body()
+        } catch(ex: Exception) {
+            return mutableListOf()
+        }
+    }
+
+    suspend fun createNewTag(name: String): List<String> {
+        try {
+            val url = "$host/api/tags"
+            val response = client.post(url) {
+                contentType(ContentType.Application.Json)
+                setBody(TagName(name))
+            }
+
+            return response.body()
+
+        } catch(ex: Exception) {
+            println(ex)
+            return mutableListOf()
         }
     }
 
