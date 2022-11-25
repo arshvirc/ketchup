@@ -14,6 +14,7 @@ class PriorityOptionsComponent: ComboBox<String> {
     var model: Model
     private var toDoItemId: String
     private val api: Client
+
     constructor(item: TodoItem, m: Model) {
         this.prefHeight = 26.0
         this.prefWidth = 120.0
@@ -28,7 +29,7 @@ class PriorityOptionsComponent: ComboBox<String> {
             run {
                 if (!new) {
                     val newValue = convertPriorityToNum(this.value);
-                    println("Proceeding to Update Priority to be ${newValue}")
+                    println("Proceeding to Update Priority to be $newValue")
                     val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, newValue.toString())
                     updateEditedItem(toDoItemId, editedItem)
 
