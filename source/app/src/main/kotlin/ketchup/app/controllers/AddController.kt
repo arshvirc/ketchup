@@ -73,10 +73,9 @@ class AddController {
 
 
                 tagContainer.children.remove(1,4)
-                val tagsSelection = CheckComboBox<String>()
-                tagsSelection.items.addAll(model.listOfTags)
-                tagsSelection.checkModel.check(newTag)
-                tagContainer.children.add(tagsSelection)
+                inputTags.items.add(newTag)
+                inputTags.checkModel.check(newTag)
+                tagContainer.children.add(inputTags)
 
                 val add = Button("Add Tag")
                 add.setOnAction { e-> newTagOptions(e) }
@@ -84,9 +83,7 @@ class AddController {
             }
             "Cancel" -> {
                 tagContainer.children.remove(1,4)
-                val tagsSelection = CheckComboBox<String>()
-                tagsSelection.items.addAll(model.listOfTags)
-                tagContainer.children.add(tagsSelection)
+                tagContainer.children.add(inputTags)
 
                 val add = Button("Add Tag")
                 add.setOnAction { e-> newTagOptions(e) }
@@ -115,6 +112,8 @@ class AddController {
 
             var tagsList = mutableListOf<String>()
             val observableTags : ObservableList<String> = inputTags.checkModel.checkedItems
+
+            println(observableTags)
 
             for (item in observableTags) tagsList.add(item)
             if (inputDesc.text == null || inputDesc.text == "") inputDesc.text = " ";
