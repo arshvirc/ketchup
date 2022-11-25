@@ -1,7 +1,12 @@
 package ketchup.service.controllers
 
+import kotlinx.serialization.Serializable
+import java.lang.Exception
 import java.sql.Connection
 import java.sql.SQLException
+
+@Serializable
+data class DeleteTagResponse(val success: Boolean, val tags: List<String>)
 
 class TagController(connection: Connection) {
     private val conn = connection;
@@ -46,6 +51,26 @@ class TagController(connection: Connection) {
         } catch (ex: SQLException) {
             println(ex.message);
             return mutableListOf()
+        }
+    }
+
+    fun deleteTag(name: String): DeleteTagResponse {
+        try {
+            if(conn != null) {
+                val query = conn!!.createStatement()
+                val deleteQuery = "DELETE FROM TAGS WHERE name=\"$name\""
+
+                query.executeUpdate(deleteQuery)
+
+                val newTags = getAllTags()
+
+                return DeleteTagResponse(true, newTags)
+            } else {
+                return DeleteTagResponse(false, listOf())
+            }
+        } catch (ex: Exception) {
+            println(ex.message)
+            return DeleteTagResponse(false, listOf())
         }
     }
 }

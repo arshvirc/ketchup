@@ -35,6 +35,9 @@ data class AddItemRequest(val listId: Int, val item: TodoItem)
 @Serializable
 data class TagName(val name: String)
 
+@Serializable
+data class DeleteTagResponse(val success: Boolean, val tags: List<String>)
+
 // Instantiate this by doing val api: Client = Client(url) <- url is the url of the api
 class Client(url: String) {
     private val host = url
@@ -229,6 +232,20 @@ class Client(url: String) {
         } catch(ex: Exception) {
             println(ex)
             return mutableListOf()
+        }
+    }
+
+    suspend fun deleteTag(name: String): DeleteTagResponse {
+        try {
+            val url = "$host/api/tags"
+            val response: DeleteTagResponse = client.delete(url) {
+                contentType(ContentType.Application.Json)
+                setBody(TagName(name))
+            }.body<DeleteTagResponse>()
+
+            return response;
+        } catch (ex: Exception) {
+            return DeleteTagResponse(false, listOf())
         }
     }
 

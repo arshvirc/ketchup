@@ -9,6 +9,7 @@ import ketchup.service.controllers.ListController
 import java.sql.Connection
 import ketchup.console.TodoItem
 import ketchup.console.TodoList
+import ketchup.service.controllers.DeleteTagResponse
 import ketchup.service.controllers.ItemController
 import ketchup.service.controllers.TagController
 import java.text.DateFormat
@@ -207,6 +208,19 @@ fun Application.configureRouting(conn: Connection) {
                     call.respond(newTags)
                 } catch (ex: Exception) {
                     call.respond(mutableListOf<String>());
+                }
+            }
+
+            delete {
+                val name = call.receive<TagName>().name;
+                val controller = TagController(conn)
+
+                try {
+                    val newTags = controller.deleteTag(name)
+                    call.respond(newTags)
+                } catch (ex: Exception) {
+                    println(ex.message)
+                    call.respond(DeleteTagResponse(false, listOf()))
                 }
             }
         }
