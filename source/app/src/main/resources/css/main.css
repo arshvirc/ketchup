@@ -119,9 +119,10 @@ titled-pane . text-field .button {
     -fx-font-size: 16px;
 }
 
-.titled-pane:x .content
+.titled-pane:expanded .content
 {
     -fx-background-radius: 10;
+    -fx-border-radius: 0 0 10 10;
     -fx-font-size: 16px;
 }
 
