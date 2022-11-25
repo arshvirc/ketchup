@@ -25,23 +25,28 @@ class DeadlineComponent: HBox {
     private val api: Client
 
     constructor(item: TodoItem, m: Model) {
+        // Styling
         this.prefHeight = 100.0
         this.prefWidth = 200.0
-        this.model = m
-        this.label = LabelComponent("Deadline: ")
         this.padding = javafx.geometry.Insets(0.0,0.0,0.0,10.0)
-        this.options = DatePicker()
+
+        // Initializing
+        this.model = m
         this.api = m.api
+        this.toDoItemId = item.id.toString()
+
+        // Components
+        this.options = DatePicker()
+        this.options.prefHeight = 26.0
+        this.options.prefWidth = 120.0
+        this.label = LabelComponent("Deadline: ")
         if(item.deadline != null) {
             val date = item.deadline;
             val instant = date?.toInstant()
             val local = instant?.atZone(ZoneId.systemDefault())?.toLocalDate();
-
             this.options.value = local
         }
-        this.options.prefHeight = 26.0
-        this.options.prefWidth = 120.0
-        toDoItemId = item.id.toString()
+
         this.children.add(label)
         this.children.add(options)
         this.options.focusedProperty().addListener{ _, _, new ->

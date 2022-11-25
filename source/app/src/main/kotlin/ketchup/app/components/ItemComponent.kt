@@ -3,7 +3,6 @@ package ketchup.app.components
 import Model
 import javafx.geometry.Bounds
 import javafx.geometry.Insets
-import javafx.scene.Node
 import javafx.scene.control.TitledPane
 import javafx.scene.layout.*
 import javafx.scene.paint.Color
@@ -17,12 +16,14 @@ import ketchup.console.TodoItem
 class ItemComponent: TitledPane {
     var model :Model
     var item : TodoItem
+
     constructor(dbItem: TodoItem, model: Model) {
-        id = dbItem.id.toString()
+        this.id = dbItem.id.toString()
         this.model = model
-        item = dbItem
-        graphic = GraphicComponent(dbItem, model)
-        content = ContentComponent(dbItem, model)
+        this.item = dbItem
+        this.graphic = GraphicComponent(dbItem, model)
+        this.content = ContentComponent(dbItem, model)
+        this.userData = dbItem
 
         this.setOnMouseEntered {
             border = (Border(BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii(10.0), null)))

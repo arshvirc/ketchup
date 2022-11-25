@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainController">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ketchup.app.controllers.MainController">
    <children>
       <MenuBar useSystemMenuBar="true" VBox.vgrow="NEVER">
          <menus>
@@ -62,7 +62,7 @@
       </MenuBar>
       <BorderPane id="container" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="550.0" minWidth="-Infinity" prefHeight="583.0" prefWidth="900.0" stylesheets="@../css/main.css">
          <left>
-            <VBox id="sidebar-container" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="184.0" prefHeight="550.0" prefWidth="184.0" spacing="10.0" BorderPane.alignment="CENTER">
+            <VBox id="sidebar-container" fx:id="sidebar" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="184.0" prefHeight="550.0" prefWidth="184.0" spacing="10.0" BorderPane.alignment="CENTER">
                <children>
                   <Button fx:id="allTasksListButton" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="175.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="175.0" styleClass="option" text="All Tasks">
                      <graphic>

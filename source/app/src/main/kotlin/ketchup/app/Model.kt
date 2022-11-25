@@ -2,35 +2,36 @@ import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.Node
 import javafx.scene.control.TitledPane
-import javafx.scene.layout.Pane
 import ketchup.app.components.ItemComponent
+import ketchup.app.components.graphic.TitleComponent
 import ketchup.app.ktorclient.Client
 import ketchup.app.ktorclient.TodoItemResponse
 import ketchup.console.TodoItem
 import ketchup.console.TodoList
 import kotlinx.coroutines.runBlocking
 import java.util.*
+import java.util.function.Predicate
 
 
 class Model() {
+    // Api Fields
     val apiUrl = "http://127.0.0.1:3000"
     val api = Client(apiUrl)
-    // We have the UI Components:
-    lateinit var uiListOfAllItems: ObservableList<Node>                     // Contains the Merged List of All Items
-    lateinit var uiListOfGroups: MutableList<ObservableList<Node>>          // Contains the UI Components
 
-    // We have the Actual Information:
+    // Ui Fields
+    lateinit var displayList: ObservableList<Node>
+    lateinit var uiListOfAllItems: ObservableList<Node>
+    var uiListOfTags = mutableListOf<ObservableList<Node>>()
+//    var pairsOfTags = mutableListOf<Pair<ObservableList<Node>, String>>()
+
+    // Item Versions
     lateinit var dbListOfAllItems: TodoList                                 // Contains all TodoItems
-    lateinit var dbListOfGroups: MutableList<TodoList>                      // Contains the Grouped List
-    lateinit var dbListOfCompletedItems: TodoList                           // Contains all CompletedItems
-    lateinit var listOfTags: MutableList<String>                            // Contains the Tags
-    lateinit var listOfGroups: MutableList<String>                          // Contains the Groups
+    var listOfTags = mutableListOf("Academic", "Family", "Extra")                  // API Call needed
 
-    // Other Information
+    // Fixed Information
     val listOfPriorities: List<String> = listOf<String>("None", "Low", "Medium", "High")
 
-
-    //
+    // Drag Global Information (Try to find a better version of these)
     var dragInitiated = false
     lateinit var draggedItemId : String
     var dragTop = false
@@ -42,26 +43,21 @@ class Model() {
         val dbList = TodoList()
         for(item in mainList) {
             val date = item.deadline?.let { Date(it.toLong()) }
-            val newItem = TodoItem(id = item.id, title = item.title,
-                description = item.description, priority = item.priority, completion = item.completion,
-                deadline = date)
+            val newItem = TodoItem(id = item.id, title = item.title, description = item.description,
+                priority = item.priority, completion = item.completion, deadline = date)
             dbList.addItem(newItem)
         }
-//        dbList.displayList()
-
         this.uiListOfAllItems = list
-        // Add Space
         this.dbListOfAllItems = dbList
-        this.uiListOfAllItems.addAll(TodoListConverter(this.dbListOfAllItems))
-        this.dbListOfCompletedItems = TodoList()
-        this.listOfTags = mutableListOf("Academic", "Family", "Extra")
-        this.listOfGroups = mutableListOf("List 1", "List 2", "List 3")
+        this.uiListOfAllItems.addAll(todoListConverter(this.dbListOfAllItems))
+        sortUiLists()
     }
 
+
+    // addItemToList(dbItem: TodoItem)
     fun addItemToList(dbItem: TodoItem) {
-        // Add item to Api
         val itemId = runBlocking { api.createTodoItem(0, dbItem) }
-        if(itemId == -1) {
+        if (itemId == -1) {
             println("Adding TodoItem failed.")
         } else {
             dbItem.id = itemId
@@ -73,28 +69,46 @@ class Model() {
         }
     }
 
-    private fun TodoListConverter(dbList: TodoList): ObservableList<Node> {
+    // todoListConverter(dbList: TodoList):
+    private fun todoListConverter(dbList: TodoList): ObservableList<Node> {
         val uiList = FXCollections.observableArrayList<Node>()
         for (dbItem in dbList.list) {
             var uiItem = ItemComponent(dbItem, this)
             uiItem.isExpanded = false
             uiList.add(uiItem)
-            // Add Space
         }
         return uiList
     }
 
-    fun moveItems(srcId: String, destId: String) {
-        var srcIndex = 0
-        var destIndex = 0;
+
+    /* findItemById(id) returns the index of the item in the given string or -1 if not in the list */
+    private fun findItemById(id: String): Int {
         for ((counter, item) in uiListOfAllItems.withIndex()) {
-            if (item.id == srcId) {
-                srcIndex = counter;
-            }
-            if (item.id == destId) {
-                destIndex = counter;
+            if (item.id == id) {
+                return counter;
             }
         }
+        return -1
+    }
+
+
+    private fun sortUiLists() {
+        uiListOfTags.removeAll { (it as ItemComponent).item.id > 0 }
+        for ( (counter, group) in listOfTags.withIndex()) {
+            val listWithGroup = uiListOfAllItems.filter {
+                (it as ItemComponent).item.tags.contains(group)
+            }
+            val obsList = FXCollections.observableArrayList<Node>()
+            for (item in listWithGroup) {
+                obsList.add(item)
+            }
+            uiListOfTags.add(obsList)
+        }
+    }
+
+    fun moveItems(srcId: String, destId: String) {
+        var srcIndex = findItemById(srcId)
+        var destIndex = findItemById(destId);
         println("(srcId, destId): ($srcId, $destId)")
         println("(srcIndex, destIndex): ($srcIndex, $destIndex)")
         var gap = FXCollections.observableArrayList<Node>()

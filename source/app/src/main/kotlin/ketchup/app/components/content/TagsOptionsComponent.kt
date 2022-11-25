@@ -2,47 +2,58 @@ package ketchup.app.components.content
 
 import Model
 import javafx.collections.FXCollections
+import javafx.collections.ListChangeListener
+import javafx.collections.ObservableList
 import javafx.scene.Node
-import javafx.scene.control.ComboBox
 import ketchup.app.components.ItemComponent
+import ketchup.app.ktorclient.Client
 import ketchup.console.TodoItem
 import ketchup.console.TodoList
+import kotlinx.coroutines.runBlocking
+import org.controlsfx.control.CheckComboBox
 
-class TagsOptionsComponent: ComboBox<String> {
+
+class TagsOptionsComponent: CheckComboBox<String> {
     var model: Model
     private var toDoItemId: String
+    private val api: Client
 
     constructor(item: TodoItem, m: Model) {
         this.prefHeight = 26.0
         this.prefWidth = 117.0
         this.model = m
+        this.api = m.api
         this.toDoItemId = item.id.toString()
-        this.value = "Not Implemented Yet"
-        this.focusedProperty().addListener{ _, _, new ->
-            run {
-                if (!new) {
-                    println("Proceeding to Update Tags Field")
-                    // Write Code
-                }
-            }
-        }
-        this.focusedProperty().addListener{ _, _, new ->
-            run {
-                if (!new) {
-                    println("Proceeding to Update Tags to contain ${this.value}")
-                    val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, this.value)
-                    updateEditedItem(toDoItemId, editedItem)
 
-                }
+        this.items.addAll(m.listOfTags)
+
+        for (tag in this.items) {
+            if (item.tags.contains(tag)) {
+                this.checkModel.check(tag)
+                println("has the following tag $tag")
             }
         }
+        this.checkModel.checkedItems.addListener(ListChangeListener<String?> { c ->
+            val newValue : ObservableList<String> = this.checkModel.checkedItems
+            println("Proceeding to Update Tags to be ${newValue.toString()}")
+            val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, newValue)
+            updateEditedItem(toDoItemId, editedItem)
+        })
     }
-    private fun editToDoItem(list: TodoList, id: String, tag: String): TodoItem {
+    private fun editToDoItem(list: TodoList, id: String, tags: ObservableList<String>): TodoItem {
         var item: TodoItem
+        var mutableTags = mutableListOf<String>()
+        for (item in tags) {
+            mutableTags.add(item)
+        }
         for (i in 0..model.dbListOfAllItems.list.lastIndex) {
             item = model.dbListOfAllItems.list[i]
             if (item.id == id.toInt()) {
-                //item.tags = null/* Update this */
+                item.tags = mutableTags
+                val editSuccess = runBlocking { api.editTodoItem(id.toInt(), item) }
+                if(!editSuccess) {
+                    println("Editing tags for item with ID $id failed")
+                }
                 return item
             }
         }
@@ -73,5 +84,4 @@ class TagsOptionsComponent: ComboBox<String> {
         model.uiListOfAllItems.addAll(newList)
         model.uiListOfAllItems.addAll(afterList)
     }
-
 }

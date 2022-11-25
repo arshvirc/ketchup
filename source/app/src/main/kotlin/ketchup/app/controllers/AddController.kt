@@ -1,9 +1,15 @@
+package ketchup.app.controllers
+
+import Model
+import javafx.collections.ObservableList
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.Node
 import javafx.scene.control.*
+import javafx.scene.layout.HBox
 import javafx.stage.Stage
 import ketchup.console.TodoItem
+import org.controlsfx.control.CheckComboBox
 import java.time.Instant
 import java.time.ZoneId
 import java.util.*
@@ -15,10 +21,16 @@ class AddController {
     private lateinit var inputTitle: TextArea
 
     @FXML
-    private lateinit var inputDetail: TextArea
+    private lateinit var inputDesc: TextArea
 
     @FXML
-    private lateinit var inputTags: ComboBox<String>
+    private lateinit var inputTags: CheckComboBox<String>
+
+    @FXML
+    private lateinit var tagContainer: HBox
+
+    @FXML
+    private lateinit var addTag: Button
 
     @FXML
     private lateinit var inputDeadline: DatePicker
@@ -39,15 +51,60 @@ class AddController {
     }
 
     @FXML
+    private fun newTagOptions(event: ActionEvent) {
+        val source = event.source as Button
+        val id = source.id
+        when (source.text) {
+            "Add Tag" -> {
+                tagContainer.children.remove(1,3)
+                val field = TextField()
+                tagContainer.children.add(field)
+                val check = Button("Confirm")
+                check.setOnAction { e-> newTagOptions(e) }
+                val cancel = Button("Cancel")
+                cancel.setOnAction { e-> newTagOptions(e) }
+                tagContainer.children.addAll(check, cancel)
+            }
+            "Confirm" -> {
+                val text = tagContainer.children[1] as TextField
+                val newTag = text.text
+                model.listOfTags.add(newTag)
+                // make API call to make new tag
+
+
+                tagContainer.children.remove(1,4)
+                val tagsSelection = CheckComboBox<String>()
+                tagsSelection.items.addAll(model.listOfTags)
+                tagsSelection.checkModel.check(newTag)
+                tagContainer.children.add(tagsSelection)
+
+                val add = Button("Add Tag")
+                add.setOnAction { e-> newTagOptions(e) }
+                tagContainer.children.addAll(add)
+            }
+            "Cancel" -> {
+                tagContainer.children.remove(1,4)
+                val tagsSelection = CheckComboBox<String>()
+                tagsSelection.items.addAll(model.listOfTags)
+                tagContainer.children.add(tagsSelection)
+
+                val add = Button("Add Tag")
+                add.setOnAction { e-> newTagOptions(e) }
+                tagContainer.children.addAll(add)
+            }
+        }
+    }
+
+    @FXML
     private fun onButtonClicked(event: ActionEvent) {
         val source = event.source as Node
         val id = source.id
         if (id == "createButton") {
+
             if (inputTitle.text == null || inputTitle.text == "" || inputTitle.text == " " ) {
                 println("You must have a title!")
                 return
             }
-
             var date: Date? = null;
 
             if(inputDeadline.value != null) {
@@ -56,20 +113,23 @@ class AddController {
                 date = Date.from(instant)
             }
 
+            var tagsList = mutableListOf<String>()
+            val observableTags : ObservableList<String> = inputTags.checkModel.checkedItems
 
-
-            if (inputDetail.text == null || inputDetail.text == "") inputDetail.text = " ";
+            for (item in observableTags) tagsList.add(item)
+            if (inputDesc.text == null || inputDesc.text == "") inputDesc.text = " ";
             if (inputPriority.value == null) { inputPriority.value = "0"}
 
             // TODO: Convert deadline from LocalDate to Date
 
             val item = TodoItem(
                 title = inputTitle.text,
-                description = inputDetail.text,
+                description = inputDesc.text,
                 priority = convertPriorityToNum(inputPriority.value),
                 completion = false,
                 timestamp = Date(System.currentTimeMillis()),
-                deadline = date
+                deadline = date,
+                tags = tagsList
             )
 
             model.addItemToList(item)

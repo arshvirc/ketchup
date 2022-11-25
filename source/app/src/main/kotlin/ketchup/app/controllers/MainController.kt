@@ -1,5 +1,8 @@
+package ketchup.app.controllers
+
+import App
+import Model
 import javafx.collections.FXCollections
-import javafx.collections.ObservableList
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -20,19 +23,19 @@ class MainController: Initializable {
     private lateinit var model: Model
 
     @FXML
+    private lateinit var sidebar: VBox
+
+    @FXML
     private lateinit var title: TextField
 
     @FXML
-    private lateinit var allTasksListButton: Button
+    private lateinit var displayAll: Button
 
     @FXML
-    private lateinit var upcomingListButton: Button
+    private lateinit var displayToday: Button
 
     @FXML
-    private lateinit var list1Button: Button
-
-    @FXML
-    private lateinit var list2Button: Button
+    private lateinit var displayUpcoming: Button
 
     @FXML
     private lateinit var addItemButton: Button
@@ -41,22 +44,11 @@ class MainController: Initializable {
     private lateinit var filterButton: ComboBox<String>
 
     @FXML
-    private lateinit var searchBarField: TextArea
-
-    @FXML
     private lateinit var displayView: VBox
 
     override fun initialize(arg0:URL?, arg1: ResourceBundle? ) {
         model = Model(displayView.children)
         filterButton.items.addAll("Decreasing Priority", "Increase Priority")
-    }
-
-    @FXML
-    private fun updateDisplayView( list: ObservableList<Node>) {
-        for ( item in list ) {
-            displayView.children.removeAll()
-            displayView.children.addAll(model.uiListOfAllItems)
-        }
     }
 
     @FXML

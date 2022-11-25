@@ -26,7 +26,6 @@ class TrashComponent: ButtonBar {
         trashButton.setOnAction { obs ->
             run {
                 println("Deleting the item with the following item: ${this.toDoItemId}")
-                // Re-Add Functionality
                 removeDeletedItem(toDoItemId)
             }
         }
