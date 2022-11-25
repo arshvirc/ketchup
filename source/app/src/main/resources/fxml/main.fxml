@@ -60,7 +60,7 @@
             </Menu>
          </menus>
       </MenuBar>
-      <BorderPane id="container" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="550.0" minWidth="-Infinity" prefHeight="583.0" prefWidth="900.0" stylesheets="@../css/main.css">
+      <BorderPane VBox.vgrow="always" id="container" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="550.0" minWidth="-Infinity" prefHeight="583.0" prefWidth="900.0" stylesheets="@../css/main.css">
          <left>
             <VBox id="sidebar-container" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="184.0" prefHeight="550.0" prefWidth="184.0" spacing="10.0" BorderPane.alignment="CENTER">
                <children>
