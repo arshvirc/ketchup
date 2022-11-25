@@ -1,6 +1,6 @@
 package ketchup.app.components.content
 
-import Model
+import ketchup.app.Model
 import javafx.collections.FXCollections
 import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
@@ -24,7 +24,6 @@ class TagsOptionsComponent: CheckComboBox<String> {
         this.model = m
         this.api = m.api
         this.toDoItemId = item.id.toString()
-
         this.items.addAll(m.listOfTags)
 
         for (tag in this.items) {
@@ -33,6 +32,7 @@ class TagsOptionsComponent: CheckComboBox<String> {
                 println("has the following tag $tag")
             }
         }
+
         this.checkModel.checkedItems.addListener(ListChangeListener<String?> { c ->
             val newValue : ObservableList<String> = this.checkModel.checkedItems
             println("Proceeding to Update Tags to be ${newValue.toString()}")

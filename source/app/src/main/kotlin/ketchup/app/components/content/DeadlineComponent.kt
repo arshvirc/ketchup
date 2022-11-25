@@ -1,6 +1,6 @@
 package ketchup.app.components.content
 
-import Model
+import ketchup.app.Model
 import javafx.collections.FXCollections
 import javafx.scene.Node
 import javafx.scene.control.DatePicker
@@ -12,7 +12,6 @@ import ketchup.console.TodoItem
 import ketchup.console.TodoList
 import kotlinx.coroutines.runBlocking
 import java.time.Instant
-import java.awt.Color.black
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date

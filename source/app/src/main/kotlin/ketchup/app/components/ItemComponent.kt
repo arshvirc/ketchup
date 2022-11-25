@@ -1,6 +1,6 @@
 package ketchup.app.components
 
-import Model
+import ketchup.app.Model
 import javafx.geometry.Bounds
 import javafx.geometry.Insets
 import javafx.scene.control.TitledPane
@@ -14,7 +14,7 @@ import ketchup.console.TodoItem
 
 
 class ItemComponent: TitledPane {
-    var model :Model
+    var model : Model
     var item : TodoItem
 
     constructor(dbItem: TodoItem, model: Model) {

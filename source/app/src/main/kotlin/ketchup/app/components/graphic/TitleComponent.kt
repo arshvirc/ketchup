@@ -1,5 +1,5 @@
 package ketchup.app.components.graphic
-import Model
+import ketchup.app.Model
 import javafx.collections.FXCollections
 import javafx.scene.Node
 import javafx.scene.control.TextField

@@ -1,6 +1,6 @@
 package ketchup.app.controllers
 
-import Model
+import ketchup.app.Model
 import javafx.collections.ObservableList
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
@@ -8,7 +8,10 @@ import javafx.scene.Node
 import javafx.scene.control.*
 import javafx.scene.layout.HBox
 import javafx.stage.Stage
+import ketchup.app.components.ContentComponent
+import ketchup.app.components.ItemComponent
 import ketchup.console.TodoItem
+import kotlinx.coroutines.runBlocking
 import org.controlsfx.control.CheckComboBox
 import java.time.Instant
 import java.time.ZoneId
@@ -69,13 +72,12 @@ class AddController {
                 val text = tagContainer.children[1] as TextField
                 val newTag = text.text
                 model.listOfTags.add(newTag)
-                // make API call to make new tag
-
-
+                val apiTag = runBlocking { model.api.createNewTag(newTag) }
                 tagContainer.children.remove(1,4)
                 inputTags.items.add(newTag)
                 inputTags.checkModel.check(newTag)
                 tagContainer.children.add(inputTags)
+                updateAllTags()
 
                 val add = Button("Add Tag")
                 add.setOnAction { e-> newTagOptions(e) }
@@ -89,6 +91,13 @@ class AddController {
                 add.setOnAction { e-> newTagOptions(e) }
                 tagContainer.children.addAll(add)
             }
+        }
+    }
+
+    private fun updateAllTags() {
+        for ( item in model.uiListOfAllItems) {
+            val uiItem = item as ItemComponent
+            uiItem.content = ContentComponent(uiItem.item, model)
         }
     }
 

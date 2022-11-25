@@ -1,8 +1,6 @@
 package ketchup.app.components.content
 
-import Model
-import javafx.scene.Node
-import javafx.scene.control.ComboBox
+import ketchup.app.Model
 import javafx.scene.control.Label
 import javafx.scene.layout.HBox
 import ketchup.console.TodoItem
