@@ -48,7 +48,7 @@ class MainController: Initializable {
 
     override fun initialize(arg0:URL?, arg1: ResourceBundle? ) {
         model = Model(displayView.children)
-        filterButton.items.addAll("Decreasing Priority", "Increase Priority")
+        filterButton.items.addAll("Decreasing Priority", "Increase Priority", "Due Earliest", "Due Latest")
     }
 
     @FXML
@@ -68,8 +68,15 @@ class MainController: Initializable {
         } else if (id == "filterButton") {
             if (filterButton.value == "Decreasing Priority") {
                 sortPriority(0)
-            } else {
+            } else if(filterButton.value == "Increase Priority") {
                 sortPriority(1)
+            } else if(filterButton.value == "Due Earliest") {
+                sortDeadline(true)
+            } else if(filterButton.value == "Due Latest") {
+                sortDeadline(false)
+            } else {
+                // what happens here?
+                println("Idk what to do here lolz");
             }
         } else {
             showDialog("addItemUI")
@@ -95,7 +102,7 @@ class MainController: Initializable {
     }
 
     private fun sortPriority(type: Int) {
-        println("SORTING BY INCREASING")
+        println("SORTING BY PRIORITY")
         var priority0 = FXCollections.observableArrayList<Node>()
         var priority1 = FXCollections.observableArrayList<Node>()
         var priority2 = FXCollections.observableArrayList<Node>()
@@ -129,5 +136,23 @@ class MainController: Initializable {
             model.uiListOfAllItems.addAll(priority1)
             model.uiListOfAllItems.addAll(priority0)
         }
+    }
+
+    private fun sortDeadline(increasing: Boolean) {
+        println("SORTING BY DEADLINE");
+        val itemComponents = model.uiListOfAllItems.map { it as ItemComponent }
+        val nullItems = itemComponents.filter { it.item.deadline == null }
+        var notNullItems = itemComponents.filter{ it.item.deadline != null}
+
+        if(increasing) {
+            notNullItems = notNullItems.sortedBy { it.item.deadline }
+        } else {
+            notNullItems = notNullItems.sortedByDescending { it.item.deadline }
+        }
+
+        model.uiListOfAllItems.clear()
+
+        model.uiListOfAllItems.addAll(notNullItems)
+        model.uiListOfAllItems.addAll(nullItems)
     }
 }
