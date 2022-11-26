@@ -62,6 +62,11 @@ class TagController(connection: Connection) {
 
                 query.executeUpdate(deleteQuery)
 
+                val deleteItemTags = conn!!.createStatement()
+                val deleteItemQuery = "DELETE FROM ItemTags WHERE tag=\"$name\""
+
+                deleteItemTags.executeUpdate(deleteItemQuery);
+
                 val newTags = getAllTags()
 
                 return DeleteTagResponse(true, newTags)
