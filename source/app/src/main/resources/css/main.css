@@ -44,12 +44,14 @@
 
 #center-container .combo-box {
     -fx-pref-width: 150.0;
-    -fx-pref-height: 37;
+    -fx-pref-height: 30;
+    -fx-min-width: 150.0;
+    -fx-min-height: 30;
     -fx-background-color: secondary-color;
     -fx-border-color: secondary-color;
     -fx-border-radius: 10;
     -fx-background-radius: 10;
-    -fx-font-size: 12;
+    -fx-font-size: 14;
 }
 
 .titled-pane .text-field {
@@ -164,6 +166,11 @@ titled-pane . text-field .button {
 .date-picker .text-field {
     -fx-background-color: secondary-color;
     -fx-background-radius: 10;
+    -fx-font-size: 14;
+    -fx-pref-width: 150.0;
+    -fx-pref-height: 30;
+    -fx-min-width: 150.0;
+    -fx-min-height: 30;
 }
 .date-picker .cell {
     -fx-background-radius: 10;

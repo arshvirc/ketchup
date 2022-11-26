@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat
 class ItemController(connection: Connection) {
     val INVALID_ITEM_ID = -1
     private val conn: Connection = connection
-    val df = SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy")
+    val df = SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.US)
 
     fun getTodoCount(): Int {
         return try {
