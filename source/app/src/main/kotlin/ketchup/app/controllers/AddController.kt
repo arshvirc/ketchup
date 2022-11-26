@@ -19,6 +19,7 @@ import java.util.*
 
 class AddController {
     private lateinit var model: Model
+    private lateinit var previousController: MainController
 
     @FXML
     private lateinit var inputTitle: TextArea
@@ -47,10 +48,12 @@ class AddController {
     @FXML
     private lateinit var createButton: Button
 
-    fun setModel(m: Model) {
+    fun setModel(m: Model, c: MainController) {
         this.model = m
+        this.previousController = c
         inputTags.items.addAll(m.listOfTags)
         inputPriority.items.addAll(m.listOfPriorities)
+
     }
 
     @FXML
@@ -77,7 +80,7 @@ class AddController {
                 inputTags.items.add(newTag)
                 inputTags.checkModel.check(newTag)
                 tagContainer.children.add(inputTags)
-                updateAllTags()
+                updateAllTags(newTag)
 
                 val add = Button("Add Tag")
                 add.setOnAction { e-> newTagOptions(e) }
@@ -93,12 +96,14 @@ class AddController {
             }
         }
     }
-
-    private fun updateAllTags() {
+    @FXML
+    private fun updateAllTags(tag: String) {
         for ( item in model.uiListOfAllItems) {
             val uiItem = item as ItemComponent
             uiItem.content = ContentComponent(uiItem.item, model)
         }
+        previousController.updateSideBar(tag)
+        model.displayListByType(model.displayState)
     }
 
     @FXML

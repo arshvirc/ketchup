@@ -32,7 +32,7 @@ class DragComponent: Button  {
             model.draggedItemId = this.parent.parent.parent.id
         }
         this.setOnMouseDragReleased {
-            model.moveItems(model.draggedItemId,this.parent.parent.parent.id)
+            model.moveItemsForDrag(model.draggedItemId,this.parent.parent.parent.id)
         }
         this.setOnDragDetected {
             startFullDrag()

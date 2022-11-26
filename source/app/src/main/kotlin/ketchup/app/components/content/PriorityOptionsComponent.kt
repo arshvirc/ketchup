@@ -76,6 +76,7 @@ class PriorityOptionsComponent: ComboBox<String> {
         model.uiListOfAllItems.removeAll(afterList)
         model.uiListOfAllItems.addAll(newList)
         model.uiListOfAllItems.addAll(afterList)
+        model.displayListByType(model.displayState)
     }
 
     private fun convertNumToPriority(priority: Int): String {

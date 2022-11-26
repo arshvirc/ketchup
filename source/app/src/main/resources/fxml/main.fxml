@@ -25,7 +25,7 @@
          <menus>
             <Menu mnemonicParsing="false" text="File">
                <items>
-                  <MenuItem mnemonicParsing="false" text="New" accelerator="Shortcut+N"/>
+                  <MenuItem accelerator="Shortcut+N" mnemonicParsing="false" text="New" />
                   <MenuItem mnemonicParsing="false" text="Open…" />
                   <Menu mnemonicParsing="false" text="Open Recent" />
                   <SeparatorMenuItem mnemonicParsing="false" />
@@ -103,7 +103,7 @@
                <children>
                   <HBox alignment="BOTTOM_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="100.0" prefHeight="100.0" spacing="10.0" styleClass="top-center-container">
                      <children>
-                        <Label maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="28.0" prefWidth="120.0" text="ALL" textFill="#5b2525">
+                        <Label fx:id="title" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="28.0" prefWidth="120.0" text="ALL" textFill="#5b2525">
                            <font>
                               <Font name="Avenir Book" size="23.0" />
                            </font>

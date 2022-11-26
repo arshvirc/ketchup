@@ -37,10 +37,10 @@
          </children>
       </HBox>
       <ButtonBar prefHeight="40.0" prefWidth="200.0">
-        <buttons>
-          <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onButtonClicked" text="Cancel" />
+         <buttons>
+            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onButtonClicked" text="Cancel" />
             <Button fx:id="createButton" mnemonicParsing="false" onAction="#onButtonClicked" text="Create" />
-        </buttons>
+         </buttons>
       </ButtonBar>
    </children>
    <padding>

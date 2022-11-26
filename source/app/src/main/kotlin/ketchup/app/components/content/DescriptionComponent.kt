@@ -84,6 +84,7 @@ class DescriptionComponent: TextField {
         model.uiListOfAllItems.removeAll(afterList)
         model.uiListOfAllItems.addAll(newList)
         model.uiListOfAllItems.addAll(afterList)
+        model.displayListByType(model.displayState)
     }
 
 }

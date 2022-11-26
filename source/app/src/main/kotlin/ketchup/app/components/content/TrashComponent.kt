@@ -22,7 +22,7 @@ class TrashComponent: ButtonBar {
         this.prefWidth = 200.0
         this.padding = javafx.geometry.Insets(10.0)
         var trashButton = Button("Trash")
-        trashButton.setOnAction { obs ->
+        trashButton.setOnAction {
             run {
                 println("Deleting the item with the following item: ${this.toDoItemId}")
                 removeDeletedItem(toDoItemId)
@@ -42,9 +42,9 @@ class TrashComponent: ButtonBar {
                     println("Deleting item with ID $completedID failed.")
                 }
                 tempList.add(item)
-                println()
             }
         }
         this.model.uiListOfAllItems.removeAll(tempList)
+        model.displayListByType(model.displayState)
     }
 }
