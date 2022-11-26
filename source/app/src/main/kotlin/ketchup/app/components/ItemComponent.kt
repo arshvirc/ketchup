@@ -41,9 +41,7 @@ class ItemComponent: TitledPane {
             padding = Insets(0.0)
         }
         this.setOnMouseDragReleased {
-            println("setOnMouseDragReleased2")
-            model.dragInitiated = false
-            model.moveItems(model.draggedItemId,this.id)
+            model.moveItemsForDrag(model.draggedItemId,this.id)
         }
         this.setOnMouseDragOver {
             if (it.source != it.gestureSource ) {
@@ -108,7 +106,7 @@ class ContentComponent: VBox {
         id = dbItem.id.toString()
         prefHeight = 200.0
         prefWidth = 100.0
-        this.setSpacing(10.0)
+        this.spacing = 10.0
         var description = DescriptionComponent(dbItem, m)
         var tags = TagsComponent(dbItem, m)
         var deadline = DeadlineComponent(dbItem, m)
