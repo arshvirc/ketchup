@@ -44,8 +44,9 @@ class Model() {
         val mainList = runBlocking { api.getListById(0)?.list ?: mutableListOf<TodoItemResponse>() }
         for(item in mainList) {
             val date = item.deadline?.let { Date(it.toLong()) }
+            val tags = item.tags ?: mutableListOf()
             val newItem = TodoItem(id = item.id, title = item.title, description = item.description,
-                priority = item.priority, completion = item.completion, deadline = date)
+                priority = item.priority, completion = item.completion, deadline = date, tags = tags)
             dbListOfAllItems.addItem(newItem)
         }
         previousController = c
