@@ -5,10 +5,11 @@ import ketchup.console.TodoList
 import java.sql.Connection
 import java.sql.SQLException
 import java.text.SimpleDateFormat
+import java.util.*
 
 class ListController(connection: Connection) {
     private val conn: Connection = connection
-    val df = SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy")
+    val df = SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.US)
 
     fun createList(name: String): Int {
         return try {
