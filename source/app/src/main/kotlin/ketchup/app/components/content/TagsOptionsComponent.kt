@@ -27,6 +27,7 @@ class TagsOptionsComponent: CheckComboBox<String> {
         this.items.addAll(m.listOfTags)
 
         for (tag in this.items) {
+            println("${item.tags} hello")
             if (item.tags.contains(tag)) {
                 this.checkModel.check(tag)
                 println("has the following tag $tag")
@@ -36,7 +37,8 @@ class TagsOptionsComponent: CheckComboBox<String> {
         this.checkModel.checkedItems.addListener(ListChangeListener<String?> { c ->
             val newValue : ObservableList<String> = this.checkModel.checkedItems
             println("Proceeding to Update Tags to be ${newValue.toString()}")
-            val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, newValue)
+            val editedItem = model.editToDoItem(toDoItemId, "tags", newValue)
+            //val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, newValue)
             updateEditedItem(toDoItemId, editedItem)
         })
     }

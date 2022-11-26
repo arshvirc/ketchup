@@ -52,7 +52,8 @@ class DeadlineComponent: HBox {
             run {
                 if (!new) {
                     println("Proceeding to Update Deadline to be ${this.options.value}")
-                    val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, this.options.value)
+                    val editedItem = model.editToDoItem(toDoItemId, "deadline", this.options.value)
+                    // val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, this.options.value)
                     updateEditedItem(toDoItemId, editedItem)
 
                 }

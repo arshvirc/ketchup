@@ -33,7 +33,8 @@ class DescriptionComponent: TextField {
             run {
                 if (!new) {
                     println("Proceeding to Update Description to be ${this.text}")
-                    val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, this.text)
+                    val editedItem = model.editToDoItem(toDoItemId, "desc", this.text)
+                    // val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, this.text)
                     updateEditedItem(toDoItemId, editedItem)
 
                 }

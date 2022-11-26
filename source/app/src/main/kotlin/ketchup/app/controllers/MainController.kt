@@ -17,7 +17,9 @@ import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import ketchup.app.Model
+import ketchup.app.components.ContentComponent
 import ketchup.app.components.ItemComponent
+import kotlinx.coroutines.runBlocking
 
 class MainController : Initializable {
     private lateinit var model: Model
@@ -39,15 +41,15 @@ class MainController : Initializable {
     @FXML private lateinit var displayView: VBox
 
     override fun initialize(arg0: URL?, arg1: ResourceBundle?) {
-        model = Model(displayView.children)
+        model = Model(displayView.children, this)
         filterButton.items.addAll(
                 "Decreasing Priority",
                 "Increase Priority",
                 "Due Earliest",
                 "Due Latest"
         )
-        for (item in model.listOfTags) {
-            updateSideBar(item)
+        for (tag in model.listOfTags) {
+            updateSideBar(tag)
         }
     }
 
@@ -94,13 +96,25 @@ class MainController : Initializable {
 
     @FXML
     fun updateSideBar(tag: String) {
-        val button = Button(tag)
-        var filteredList: ObservableList<Node>
-        button.setOnAction {
-            title.text = button.text
+        val bar = ButtonBar()
+        val tagButton = Button(tag)
+        tagButton.setOnAction {
+            title.text = tagButton.text
             model.displayListByType(tag)
         }
-        sidebar.children.add(button)
+        val delButton = Button("X")
+        delButton.setOnAction {
+            model.listOfTags.remove(tagButton.text)
+            sidebar.children.remove(bar)
+            // TODO ADD API CALL
+            val apiTag = runBlocking { model.api.deleteTag(tagButton.text) }
+            for ( item in model.uiListOfAllItems) {
+                val uiItem = item as ItemComponent
+                uiItem.content = ContentComponent(uiItem.item, model)
+            }
+        }
+        bar.buttons.addAll(tagButton, delButton)
+        sidebar.children.add(bar)
     }
 
     private fun sortPriority(type: Int) {

@@ -30,7 +30,8 @@ class PriorityOptionsComponent: ComboBox<String> {
                 if (!new) {
                     val newValue = convertPriorityToNum(this.value);
                     println("Proceeding to Update Priority to be $newValue")
-                    val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, newValue.toString())
+                    val editedItem = model.editToDoItem(toDoItemId, "priority", newValue.toString())
+                    // val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, newValue.toString())
                     updateEditedItem(toDoItemId, editedItem)
 
                 }

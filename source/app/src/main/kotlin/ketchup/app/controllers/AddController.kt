@@ -49,11 +49,10 @@ class AddController {
     private lateinit var createButton: Button
 
     fun setModel(m: Model, c: MainController) {
-        this.model = m
-        this.previousController = c
+        model = m
+        previousController = c
         inputTags.items.addAll(m.listOfTags)
         inputPriority.items.addAll(m.listOfPriorities)
-
     }
 
     @FXML
@@ -127,9 +126,8 @@ class AddController {
             var tagsList = mutableListOf<String>()
             val observableTags : ObservableList<String> = inputTags.checkModel.checkedItems
 
-            println(observableTags)
-
             for (item in observableTags) tagsList.add(item)
+            println(tagsList)
             if (inputDesc.text == null || inputDesc.text == "") inputDesc.text = " ";
             if (inputPriority.value == null) { inputPriority.value = "0"}
 

@@ -5,11 +5,15 @@ import javafx.collections.ObservableList
 import javafx.scene.Node
 import javafx.scene.control.TitledPane
 import ketchup.app.components.ItemComponent
+import ketchup.app.controllers.MainController
 import ketchup.app.ktorclient.Client
 import ketchup.app.ktorclient.TodoItemResponse
 import ketchup.console.TodoItem
 import ketchup.console.TodoList
 import kotlinx.coroutines.runBlocking
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.*
 
 
@@ -17,6 +21,7 @@ class Model() {
     // Api Fields
     private val apiUrl = "http://127.0.0.1:3000"
     val api = Client(apiUrl)
+    lateinit var previousController: MainController
 
     // Ui Fields
     lateinit var displayList: ObservableList<Node>                                                    // Displayed List
@@ -35,7 +40,7 @@ class Model() {
     var dragTop = false
     var dragBottom = false
 
-    constructor(list: ObservableList<Node>) : this() {
+    constructor(list: ObservableList<Node>, c: MainController) : this() {
         val mainList = runBlocking { api.getListById(0)?.list ?: mutableListOf<TodoItemResponse>() }
         for(item in mainList) {
             val date = item.deadline?.let { Date(it.toLong()) }
@@ -43,6 +48,7 @@ class Model() {
                 priority = item.priority, completion = item.completion, deadline = date)
             dbListOfAllItems.addItem(newItem)
         }
+        previousController = c
 
         val apiTags = runBlocking { api.getAllTags() }
         for( tag in apiTags) listOfTags.add(tag)
@@ -108,6 +114,7 @@ class Model() {
     private fun todoListConverter(dbList: TodoList): ObservableList<Node> {
         val uiList = FXCollections.observableArrayList<Node>()
         for (dbItem in dbList.list) {
+            dbItem.printItem()
             var uiItem = ItemComponent(dbItem, this)
             uiItem.isExpanded = false
             uiList.add(uiItem)
@@ -188,44 +195,53 @@ class Model() {
 
     }
 
-//    fun editToDoItem(id: String, field: String, change: Any): TodoItem {
-//        var item = TodoItem()
-//        for (i in 0.. dbListOfAllItems.list.lastIndex) {
-//            item = dbListOfAllItems.list[i]
-//            if (item.id == id.toInt()) {
-//                break
-//            }
-//        }
-//        when (field) {
-//            "title" -> {
-//                var title = change as String
-//                item.title = title
-//            }
-//            "desc" -> {
-//                var desc = change as String
-//                if (desc.trim() == "") {
-//                    item.description = " "
-//                } else {
-//                    item.description = desc
-//                }
-//            }
-//            "tags" -> {
-//                var mutableTags = mutableListOf<String>()
-//                var tags = change as ObservableList<String>
-//                for (item in tags) mutableTags.add(item)
-//                item.tags = mutableTags
-//            }
-//            "priority" -> {
-//
-//            }
-//            "deadline" -> {}
-//            "completion" -> {}
-//            else -> return error("Wrong Flaw")
-//        }
-//        val editSuccess = runBlocking { api.editTodoItem(id.toInt(), item) }
-//        if(!editSuccess) {
-//            println("Editing tags for item with ID $id failed")
-//        }
-//        return item
-//    }
+    fun editToDoItem(id: String, field: String, change: Any): TodoItem {
+        var item = TodoItem()
+        for (i in 0.. dbListOfAllItems.list.lastIndex) {
+            item = dbListOfAllItems.list[i]
+            if (item.id == id.toInt()) {
+                break
+            }
+        }
+        when (field) {
+            "title" -> {
+                var title = change as String
+                item.title = title
+            }
+            "desc" -> {
+                var desc = change as String
+                if (desc.trim() == "") {
+                    item.description = " "
+                } else {
+                    item.description = desc
+                }
+            }
+            "tags" -> {
+                var mutableTags = mutableListOf<String>()
+                var tags = change as ObservableList<String>
+                for (item in tags) mutableTags.add(item)
+                item.tags = mutableTags
+            }
+            "priority" -> {
+                var priority = change as Int
+                item.priority = priority
+            }
+            "deadline" -> {
+                var deadline = change as LocalDate?
+                if(deadline != null) {
+                    val instant = Instant.from(deadline.atStartOfDay(ZoneId.systemDefault()))
+                    val date = Date.from(instant)
+                    item.deadline = date   /* Update this to include  */
+                } else {
+                    item.deadline = null;
+                }
+            }
+            else -> return error("Wrong Field Value")
+        }
+        val editSuccess = runBlocking { api.editTodoItem(id.toInt(), item) }
+        if(!editSuccess) {
+            println("Editing tags for item with ID $id failed")
+        }
+        return item
+    }
 }

@@ -24,7 +24,7 @@ class App(): Application() {
         primaryStage.scene = scene
         primaryStage.minHeight = 550.0
         primaryStage.minWidth = 900.0
-        primaryStage.title = "Ketchup 0.2"
+        primaryStage.title = "Ketchup 0.4"
         primaryStage.show()
     }
 }

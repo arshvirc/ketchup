@@ -31,7 +31,8 @@ class TitleComponent: TextField {
             run {
                 if (!new) {
                     println("Proceeding to Update Title Field to have the following title: ${this.text}")
-                    val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, this.text)
+                    val editedItem = model.editToDoItem(toDoItemId, "title", this.text)
+                    // val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, this.text)
                     updateEditedItem(toDoItemId, editedItem)
 
                 }
