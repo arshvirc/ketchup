@@ -4,8 +4,6 @@ import App
 import java.io.IOException
 import java.net.URL
 import java.util.ResourceBundle
-import javafx.collections.FXCollections
-import javafx.collections.ObservableList
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -43,8 +41,8 @@ class MainController : Initializable {
     override fun initialize(arg0: URL?, arg1: ResourceBundle?) {
         model = Model(displayView.children, this)
         filterButton.items.addAll(
-                "Decreasing Priority",
                 "Increase Priority",
+                "Decreasing Priority",
                 "Due Earliest",
                 "Due Latest"
         )
@@ -56,30 +54,26 @@ class MainController : Initializable {
     @FXML
     private fun sideBarButton(e: ActionEvent) {
         val source = e.source as Button
-        model.displayListByType(source.text)
+        title.text = source.text
+        model.displayState = source.text
+        model.refreshDisplayedList()
     }
 
     @FXML
     private fun onButtonClicked(e: ActionEvent) {
         val source = e.source as Node
-        val id = source.id
-        if (id == "addItemButton") {
-            showDialog("addItemUI")
-        } else if (id == "filterButton") {
-            if (filterButton.value == "Decreasing Priority") {
-                sortPriority(0)
-            } else if (filterButton.value == "Increase Priority") {
-                sortPriority(1)
-            } else if (filterButton.value == "Due Earliest") {
-                sortDeadline(true)
-            } else if (filterButton.value == "Due Latest") {
-                sortDeadline(false)
-            } else {
-                // what happens here?
-                println("Idk what to do here lolz")
+        when (source.id) {
+            "addItemButton" -> showDialog("addItemUI")
+            "filterButton" -> {
+                when (filterButton.value) {
+                    "Increase Priority" -> sortPriority(true)
+                    "Decreasing Priority" -> sortPriority(false)
+                    "Due Earliest" -> sortDeadline(true)
+                    "Due Latest" -> sortDeadline(false)
+                    else -> return error("FilterButton has some other function")
+                }
             }
-        } else {
-            showDialog("addItemUI")
+            else -> showDialog("addItemUI")
         }
     }
 
@@ -106,13 +100,13 @@ class MainController : Initializable {
         val tagButton = Button(tag)
         tagButton.setOnAction {
             title.text = tagButton.text
-            model.displayListByType(tag)
+            model.displayState = tagButton.text
+            model.refreshDisplayedList()
         }
         val delButton = Button("X")
         delButton.setOnAction {
             model.listOfTags.remove(tagButton.text)
             sidebar.children.remove(bar)
-            // TODO ADD API CALL
             val apiTag = runBlocking { model.api.deleteTag(tagButton.text) }
             for ( item in model.uiListOfAllItems) {
                 val uiItem = item as ItemComponent
@@ -123,55 +117,34 @@ class MainController : Initializable {
         sidebar.children.add(bar)
     }
 
-    private fun sortPriority(type: Int) {
-        var priority0 = FXCollections.observableArrayList<Node>()
-        var priority1 = FXCollections.observableArrayList<Node>()
-        var priority2 = FXCollections.observableArrayList<Node>()
-        var priority3 = FXCollections.observableArrayList<Node>()
-        var item: ItemComponent
-        for (i in 0..model.displayList.lastIndex) {
-            item = model.displayList[i] as ItemComponent
-            when (item.item.priority) {
-                0 -> priority0.add(item)
-                1 -> priority1.add(item)
-                2 -> priority2.add(item)
-                3 -> priority3.add(item)
-            }
-        }
-        model.displayList.removeAll(priority0)
-        model.displayList.removeAll(priority1)
-        model.displayList.removeAll(priority2)
-        model.displayList.removeAll(priority3)
-        if (type == 0) { // Decreasing
-            println("SORTING BY INCREASING")
-            model.displayList.addAll(priority0)
-            model.displayList.addAll(priority1)
-            model.displayList.addAll(priority2)
-            model.displayList.addAll(priority3)
+    private fun sortPriority(increasing: Boolean) {
+        var itemComponents = model.displayList.map { it as ItemComponent }
+
+        itemComponents = if (increasing) {
+            println("SORTING BY INCREASING DEADLINE")
+            itemComponents.sortedBy { it.item.priority }
         } else {
-            println("SORTING BY DECREASING")
-            model.displayList.addAll(priority3)
-            model.displayList.addAll(priority2)
-            model.displayList.addAll(priority1)
-            model.displayList.addAll(priority0)
+            println("SORTING BY DECREASING DEADLINE")
+            itemComponents.sortedByDescending { it.item.priority }
         }
+        model.displayList.clear()
+        model.displayList.addAll(itemComponents)
     }
 
     private fun sortDeadline(increasing: Boolean) {
         println("SORTING BY DEADLINE")
-        val itemComponents = model.uiListOfAllItems.map { it as ItemComponent }
+        val itemComponents = model.displayList.map { it as ItemComponent }
         val nullItems = itemComponents.filter { it.item.deadline == null }
         var notNullItems = itemComponents.filter { it.item.deadline != null }
 
-        if (increasing) {
-            notNullItems = notNullItems.sortedBy { it.item.deadline }
+        notNullItems = if (increasing) { notNullItems.sortedBy { it.item.deadline }
         } else {
-            notNullItems = notNullItems.sortedByDescending { it.item.deadline }
+            notNullItems.sortedByDescending { it.item.deadline }
         }
 
-        model.uiListOfAllItems.clear()
+        model.displayList.clear()
 
-        model.uiListOfAllItems.addAll(notNullItems)
-        model.uiListOfAllItems.addAll(nullItems)
+        model.displayList.addAll(notNullItems)
+        model.displayList.addAll(nullItems)
     }
 }

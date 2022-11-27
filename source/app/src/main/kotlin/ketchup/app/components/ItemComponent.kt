@@ -24,13 +24,12 @@ class ItemComponent: TitledPane {
         this.graphic = GraphicComponent(dbItem, model)
         this.content = ContentComponent(dbItem, model)
         this.userData = dbItem
+        this.isExpanded = false
 
         this.setOnMouseEntered {
             border = (Border(BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii(10.0), null)))
         }
-        this.setOnMouseDragEntered {
-            border = (Border(BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, CornerRadii(10.0), null)))
-        }
+
         this.setOnMouseDragExited {
             border = (Border(BorderStroke(null, null, null, null)))
             padding = Insets(0.0)
@@ -41,7 +40,15 @@ class ItemComponent: TitledPane {
             padding = Insets(0.0)
         }
         this.setOnMouseDragReleased {
-            model.moveItemsForDrag(model.draggedItemId,this.id)
+            val gestureSource = it.gestureSource as DragComponent
+            val sourceId = gestureSource.parent.parent.parent.id
+            var boundsInScene: Bounds = this.localToScene(this.boundsInLocal)
+            var halfPoint = boundsInScene.maxY - 0.5 * boundsInScene.height
+            var releasedAbove = false
+            if (it.sceneY < halfPoint) {
+                releasedAbove = true
+            }
+            model.moveItem(sourceId,this.id, releasedAbove)
         }
         this.setOnMouseDragOver {
             if (it.source != it.gestureSource ) {
@@ -64,8 +71,6 @@ class ItemComponent: TitledPane {
                         )
                     )
                     padding = Insets(10.0, 0.0, 10.0, 0.0)
-                    model.dragTop = false;
-                    model.dragBottom = true;
                 } else {
                     border = Border(
                         BorderStroke(
@@ -82,8 +87,6 @@ class ItemComponent: TitledPane {
                             Insets.EMPTY
                         )
                     )
-                    model.dragTop = true;
-                    model.dragBottom = false;
                 }
             }
         }

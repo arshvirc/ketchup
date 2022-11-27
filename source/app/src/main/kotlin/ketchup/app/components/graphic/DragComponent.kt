@@ -1,5 +1,6 @@
 package ketchup.app.components.graphic
 
+import javafx.geometry.Bounds
 import ketchup.app.Model
 import javafx.geometry.Pos
 import javafx.scene.control.Button
@@ -28,11 +29,16 @@ class DragComponent: Button  {
         imageView.image = image
         this.graphic = imageView
 
-        this.setOnMousePressed {
-            model.draggedItemId = this.parent.parent.parent.id
-        }
         this.setOnMouseDragReleased {
-            model.moveItemsForDrag(model.draggedItemId,this.parent.parent.parent.id)
+            val gestureSource = it.gestureSource as DragComponent
+            val sourceId = gestureSource.parent.parent.parent.id
+            var boundsInScene: Bounds = this.localToScene(this.boundsInLocal)
+            var halfPoint = boundsInScene.maxY - 0.5 * boundsInScene.height
+            var releasedAbove = false
+            if (it.sceneY < halfPoint) {
+                releasedAbove = true
+            }
+            model.moveItem(sourceId,this.parent.parent.parent.id, releasedAbove)
         }
         this.setOnDragDetected {
             startFullDrag()
