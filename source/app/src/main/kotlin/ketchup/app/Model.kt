@@ -73,7 +73,7 @@ class Model() {
             }
             "Today" -> {
                 // TODO Implement this
-                println("$type - Not Implemented")
+
             }
             "Upcoming" -> {
                 // TODO Implement so that stuff not today comes up in order of deadline

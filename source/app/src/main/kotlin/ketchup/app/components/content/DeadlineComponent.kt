@@ -66,7 +66,7 @@ class DeadlineComponent: HBox {
         for (i in 0..model.dbListOfAllItems.list.lastIndex) {
             item = model.dbListOfAllItems.list[i]
             if (item.id == id.toInt()) {
-                if(deadline != null) {
+                if (deadline != null) {
                     val instant = Instant.from(deadline.atStartOfDay(ZoneId.systemDefault()))
                     val date = Date.from(instant)
                     item.deadline = date   /* Update this to include  */

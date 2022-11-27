@@ -54,6 +54,12 @@ class MainController : Initializable {
     }
 
     @FXML
+    private fun sideBarButton(e: ActionEvent) {
+        val source = e.source as Button
+        model.displayListByType(source.text)
+    }
+
+    @FXML
     private fun onButtonClicked(e: ActionEvent) {
         val source = e.source as Node
         val id = source.id
