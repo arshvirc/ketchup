@@ -11,9 +11,7 @@ import ketchup.app.ktorclient.TodoItemResponse
 import ketchup.console.TodoItem
 import ketchup.console.TodoList
 import kotlinx.coroutines.runBlocking
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
+import java.time.*
 import java.util.*
 
 
@@ -65,6 +63,25 @@ class Model() {
         displayListByType(displayState)
     }
 
+    fun atStartOfDay(date: Date): Date? {
+        val localDateTime: LocalDateTime = dateToLocalDateTime(date)
+        val startOfDay: LocalDateTime = localDateTime.with(LocalTime.MIN)
+        return localDateTimeToDate(startOfDay)
+    }
+
+//    fun atEndOfDay(date: Date): Date? {
+//        val localDateTime: LocalDateTime = dateToLocalDateTime(date)
+//        val endOfDay: LocalDateTime = localDateTime.with(LocalTime.MAX)
+//        return localDateTimeToDate(endOfDay)
+//    }
+
+    private fun dateToLocalDateTime(date: Date): LocalDateTime {
+        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
+    }
+
+    private fun localDateTimeToDate(localDateTime: LocalDateTime): Date? {
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant())
+    }
     fun displayListByType(type: String) {
         displayList.removeAll{ (it as ItemComponent).item.id > 0 }
         when (type) {
@@ -72,12 +89,35 @@ class Model() {
                 displayList.addAll(uiListOfAllItems)
             }
             "Today" -> {
-                // TODO Implement this
-
+                val filteredList : ObservableList<Node>  = FXCollections.observableArrayList<Node>()
+                var temp = Date(System.currentTimeMillis())
+                val today = atStartOfDay(temp)
+                for ( item in uiListOfAllItems) {
+                    var deadline = (item as ItemComponent).item.deadline
+                    if (deadline != null) {
+                        println(deadline)
+                        if ( deadline == today) {
+                            filteredList.add(item)
+                        }
+                    }
+                }
+                displayList.addAll(filteredList)
             }
             "Upcoming" -> {
                 // TODO Implement so that stuff not today comes up in order of deadline
-                println("$type - Not Implemented")
+                val filteredList : ObservableList<Node>  = FXCollections.observableArrayList<Node>()
+                var temp = Date(System.currentTimeMillis())
+                val today = atStartOfDay(temp)
+                for ( item in uiListOfAllItems) {
+                    var deadline = (item as ItemComponent).item.deadline
+                    if (deadline != null) {
+                        println(deadline)
+                        if ( deadline.after(today)) {
+                            filteredList.add(item)
+                        }
+                    }
+                }
+                displayList.addAll(filteredList)
             }
             else -> {
                 val filteredList : ObservableList<Node>  = FXCollections.observableArrayList<Node>()
@@ -87,10 +127,7 @@ class Model() {
                         filteredList.add(component)
                     }
                 }
-                println(filteredList)
-                println(displayList)
                 displayList.addAll(filteredList)
-                println(displayList)
             }
         }
     }
