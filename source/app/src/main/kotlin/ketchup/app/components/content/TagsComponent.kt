@@ -7,7 +7,6 @@ import ketchup.app.Model
 import javafx.scene.control.Label
 import javafx.scene.control.TextField
 import javafx.scene.layout.HBox
-import javafx.stage.Stage
 import ketchup.app.components.ContentComponent
 import ketchup.app.components.ItemComponent
 import ketchup.console.TodoItem
@@ -23,22 +22,19 @@ class TagsComponent: HBox {
     constructor(item: TodoItem, m: Model) {
         this.prefHeight = 100.0
         this.prefWidth = 200.0
+        this.spacing = 10.0
+        this.padding = Insets(0.0,0.0,0.0,10.0)
+
         this.model = m
         this.label = LabelComponent("Tags: ")
-        this.padding = javafx.geometry.Insets(0.0,0.0,0.0,10.0)
         this.options = TagsOptionsComponent(item, m)
-        this.options.checkModelProperty().addListener{ e, o, n ->
-            println("checked something off")
-        }
-
-        this.spacing = 10.0
-
-        toDoItemId = item.id.toString()
-        this.children.add(label)
-        this.children.add(options)
+        this.toDoItemId = item.id.toString()
 
         var addTag = Button("Add Tag")
         addTag.setOnAction { e-> newTagOptions(e)}
+
+        this.children.add(label)
+        this.children.add(options)
         this.children.add(addTag)
     }
     private fun newTagOptions(event: ActionEvent) {
@@ -58,15 +54,15 @@ class TagsComponent: HBox {
             "Confirm" -> {
                 val text = this.children[1] as TextField
                 val newTag = text.text
-                model.listOfTags.add(newTag)
-                val apiTag = runBlocking { model.api.createNewTag(newTag) }
-                this.children.remove(1,4)
-                options.items.add(newTag)
-                options.checkModel.check(newTag)
-                this.children.add(options)
+                // MODEL
                 updateAllTags(newTag)
+                val apiTag = runBlocking { model.api.createNewTag(newTag) }
+                this.children.remove(1,4)                   // keep label only
+                options.items.add(newTag)                   // update options
+                options.checkModel.check(newTag)
+                this.children.add(options)                  // add checkcombobox
 
-                val add = Button("Add Tag")
+                val add = Button("Add Tag")           // add add box
                 add.setOnAction { e-> newTagOptions(e) }
                 this.children.addAll(add)
             }
@@ -81,11 +77,12 @@ class TagsComponent: HBox {
         }
     }
     private fun updateAllTags(tag: String) {
+        model.listOfTags.add(tag)
         for ( item in model.uiListOfAllItems) {
             val uiItem = item as ItemComponent
             uiItem.content = ContentComponent(uiItem.item, model)
         }
         model.previousController.updateSideBar(tag)
-        model.displayListByType(model.displayState)
+        model.refreshDisplayedList()
     }
 }

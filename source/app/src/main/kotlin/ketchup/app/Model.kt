@@ -3,7 +3,6 @@ package ketchup.app
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.Node
-import javafx.scene.control.TitledPane
 import ketchup.app.components.ItemComponent
 import ketchup.app.controllers.MainController
 import ketchup.app.ktorclient.Client
@@ -33,12 +32,11 @@ class Model() {
     // Fixed Information
     val listOfPriorities: List<String> = listOf<String>("None", "Low", "Medium", "High")
 
-    // Drag Global Information (Try to find a better version of these)
-    lateinit var draggedItemId : String
-    var dragTop = false
-    var dragBottom = false
-
     constructor(list: ObservableList<Node>, c: MainController) : this() {
+        previousController = c
+        displayList = list
+        displayState = "All Tasks"
+
         val mainList = runBlocking { api.getListById(0)?.list ?: mutableListOf<TodoItemResponse>() }
         for(item in mainList) {
             val date = item.deadline?.let { Date(it.toLong()) }
@@ -47,92 +45,46 @@ class Model() {
                 priority = item.priority, completion = item.completion, deadline = date, tags = tags)
             dbListOfAllItems.addItem(newItem)
         }
-        previousController = c
 
         val apiTags = runBlocking { api.getAllTags() }
         for( tag in apiTags) listOfTags.add(tag)
-        displayList = list
         uiListOfAllItems.addAll(todoListConverter(this.dbListOfAllItems))
-
-        // Todo: Add functionality to recover what was the last screen display list
-        // val displayType = api.call
-        // displayListByType(displayType)
-
-        // hard coded to display all items
-        displayState = "All Tasks"
-        displayListByType(displayState)
+        refreshDisplayedList()
     }
 
-    fun atStartOfDay(date: Date): Date? {
-        val localDateTime: LocalDateTime = dateToLocalDateTime(date)
-        val startOfDay: LocalDateTime = localDateTime.with(LocalTime.MIN)
-        return localDateTimeToDate(startOfDay)
-    }
-
-//    fun atEndOfDay(date: Date): Date? {
-//        val localDateTime: LocalDateTime = dateToLocalDateTime(date)
-//        val endOfDay: LocalDateTime = localDateTime.with(LocalTime.MAX)
-//        return localDateTimeToDate(endOfDay)
-//    }
-
-    private fun dateToLocalDateTime(date: Date): LocalDateTime {
-        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
-    }
-
-    private fun localDateTimeToDate(localDateTime: LocalDateTime): Date? {
-        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant())
-    }
-    fun displayListByType(type: String) {
-        displayList.removeAll{ (it as ItemComponent).item.id > 0 }
-        when (type) {
-            "All Tasks" -> {
-                displayList.addAll(uiListOfAllItems)
-            }
+    /*  Critical Function: refreshDisplayedList()
+     *  Used by:
+     */
+    fun refreshDisplayedList() {
+        val itemComponents = uiListOfAllItems.map { it as ItemComponent }
+        var temp = Date(System.currentTimeMillis())
+        val today = atStartOfDay(temp)
+        displayList.clear()
+        when (displayState) {
+            "All Tasks" -> displayList.addAll(uiListOfAllItems)
             "Today" -> {
-                val filteredList : ObservableList<Node>  = FXCollections.observableArrayList<Node>()
-                var temp = Date(System.currentTimeMillis())
-                val today = atStartOfDay(temp)
-                for ( item in uiListOfAllItems) {
-                    var deadline = (item as ItemComponent).item.deadline
-                    if (deadline != null) {
-                        println(deadline)
-                        if ( deadline == today) {
-                            filteredList.add(item)
-                        }
-                    }
+                val filteredList = itemComponents.filter {
+                    it.item.deadline?.equals(today) ?: false
                 }
                 displayList.addAll(filteredList)
             }
             "Upcoming" -> {
-                // TODO Implement so that stuff not today comes up in order of deadline
-                val filteredList : ObservableList<Node>  = FXCollections.observableArrayList<Node>()
-                var temp = Date(System.currentTimeMillis())
-                val today = atStartOfDay(temp)
-                for ( item in uiListOfAllItems) {
-                    var deadline = (item as ItemComponent).item.deadline
-                    if (deadline != null) {
-                        println(deadline)
-                        if ( deadline.after(today)) {
-                            filteredList.add(item)
-                        }
-                    }
+                val filteredList = itemComponents.filter {
+                    it.item.deadline?.after(today) ?: false
                 }
                 displayList.addAll(filteredList)
             }
             else -> {
-                val filteredList : ObservableList<Node>  = FXCollections.observableArrayList<Node>()
-                for ( item in uiListOfAllItems) {
-                    var component = item as ItemComponent
-                    if ( component.item.tags.contains(type)) {
-                        filteredList.add(component)
-                    }
-                }
+                val filteredList = itemComponents.filter { it.item.tags.contains(displayState) }
                 displayList.addAll(filteredList)
             }
         }
     }
 
-    // addItemToList(dbItem: TodoItem)
+    /*  Critical Function: addItemToList(dbItem)
+     *      dbItem -> the item that is converted into an ItemComponent
+     *  Used by: Constructor and Add Controller
+     */
     fun addItemToList(dbItem: TodoItem) {
         val itemId = runBlocking { api.createTodoItem(0, dbItem) }
         if (itemId == -1) {
@@ -140,100 +92,75 @@ class Model() {
         } else {
             dbItem.id = itemId
             println("New item id: ${dbItem.id}")
-            this.dbListOfAllItems.addItem(dbItem)             // Update model list
-            var itemUI = ItemComponent(dbItem, this)  //Convert to UI Component
-            itemUI.isExpanded = false
-            uiListOfAllItems.add(itemUI)              //Update UI List
-            displayListByType(displayState)
+            this.dbListOfAllItems.addItem(dbItem)
+            var itemUI = ItemComponent(dbItem, this)
+            uiListOfAllItems.add(itemUI)
+            refreshDisplayedList()
         }
     }
 
-    // todoListConverter(dbList: TodoList):
+    /*  Critical Function: todoListConverter(dbList)
+     *      dbList -> the list that is converted into a uiList
+     *  Used by: Constructor
+     */
     private fun todoListConverter(dbList: TodoList): ObservableList<Node> {
         val uiList = FXCollections.observableArrayList<Node>()
         for (dbItem in dbList.list) {
-            dbItem.printItem()
             var uiItem = ItemComponent(dbItem, this)
-            uiItem.isExpanded = false
             uiList.add(uiItem)
         }
         return uiList
     }
 
-
-    /* findItemById(id) returns the index of the item in the given string or -1 if not in the list */
-    private fun findItemByIdForDrag(id: String): Int {
-        for ((counter, item) in displayList.withIndex()) {
-            if (item.id == id) {
-                return counter;
-            }
+    /*  Critical Function: moveItem(itemId, destId, moveAboveDest)
+     *      itemId -> the id of the item you want to move
+     *      destId -> helps you find the index to move the item to
+     *      moveAboveDest -> true or false
+     *  used by event drag listeners
+     */
+    fun moveItem(itemId: String, destId: String, moveAboveDest: Boolean) {
+        var fromIndex = findUiIndexById(itemId)
+        var destIndex = findUiIndexById(destId)
+        if (moveAboveDest) destIndex -= 1  //adjusts it so we item[1], item[2], item[3], ...  item[destIndex], movedItem
+        if (fromIndex == destIndex) {
+            println("Misclicked")
+            return
         }
-        return -1
-    }
+        var itemComponents = displayList.map { it as ItemComponent }
+        var list1 : List<ItemComponent>
+        var tempList: List<ItemComponent>
+        var list2 = mutableListOf<ItemComponent>()
+        var list3: List<ItemComponent>
+        var item = itemComponents[fromIndex]
 
-    fun moveItemsForDrag(srcId: String, destId: String) {
-        var srcIndex = findItemByIdForDrag(srcId)
-        var destIndex = findItemByIdForDrag(destId);
-        println("(srcId, destId): ($srcId, $destId)")
-        println("(srcIndex, destIndex): ($srcIndex, $destIndex)")
-        var gap = FXCollections.observableArrayList<Node>()
-        var after = FXCollections.observableArrayList<Node>()
-        var moveItem = TitledPane() as Node
-        if ( srcIndex == destIndex) {
-            println("Useless Call")
-        } else if ( srcIndex < destIndex) {
-            for ((counter, item) in displayList.withIndex()) {
-                if (counter < srcIndex) {
-                    // keep in the list
-                } else if ( counter == srcIndex ) {
-                    moveItem = item
-                } else if ( counter < destIndex ) {
-                    gap.add(item)
-                } else if ( counter == destIndex ) {
-                    if (this.dragTop) {
-                        after.add(item)
-                    } else {
-                        gap.add(item)
-                    }
-                } else {
-                    after.add(item)
-                }
-            }
-            displayList.removeAll(moveItem)
-            displayList.removeAll(gap)
-            displayList.removeAll(after)
-            displayList.addAll(gap)
-            displayList.addAll(moveItem)
-            displayList.addAll(after)
+        if ( fromIndex < destIndex) {
+            list1 = itemComponents.slice(0 until fromIndex)
+            tempList = itemComponents.slice(fromIndex + 1 ..destIndex)
+            list3 = itemComponents.slice(destIndex + 1 ..itemComponents.lastIndex)
+            list2.addAll(tempList)
+            list2.add(item)
         } else {
-            for ((counter, item) in displayList.withIndex()) {
-                if (counter < destIndex) {
-                    // keep in the list
-                } else if ( counter == destIndex ) {
-                    if (this.dragTop) {
-                        gap.add(item)
-                    } else {
-                        // keep in the list
-                    }
-                } else if ( counter < srcIndex ) {
-                    gap.add(item)
-                } else if ( counter == srcIndex ) {
-                    moveItem = item
-                } else {
-                    after.add(item)
-                }
-            }
-            displayList.removeAll(gap)
-            displayList.removeAll(moveItem)
-            displayList.removeAll(after)
-            displayList.addAll(moveItem)
-            displayList.addAll(gap)
-            displayList.addAll(after)
+            list1 = itemComponents.slice(0 .. destIndex)
+            tempList = itemComponents.slice(destIndex + 1 until fromIndex)
+            list3 = itemComponents.slice(fromIndex + 1 ..itemComponents.lastIndex)
+            list2.add(item)
+            list2.addAll(tempList)
         }
-
+        displayList.clear()
+        displayList.addAll(list1)
+        displayList.addAll(list2)
+        displayList.addAll(list3)
     }
 
-    fun editToDoItem(id: String, field: String, change: Any): TodoItem {
+
+
+    /*  Critical Function: editToDoItem(id, field, change)
+     *      id -> the id of the item to be edited
+     *      field -> the item's field that needs to be changed
+     *      newVal -> the updated value
+     *  used by event listeners
+     */
+    fun editToDoItem(id: String, field: String, newVal: Any) {
         var item = TodoItem()
         for (i in 0.. dbListOfAllItems.list.lastIndex) {
             item = dbListOfAllItems.list[i]
@@ -243,11 +170,11 @@ class Model() {
         }
         when (field) {
             "title" -> {
-                var title = change as String
+                var title = newVal as String
                 item.title = title
             }
             "desc" -> {
-                var desc = change as String
+                var desc = newVal as String
                 if (desc.trim() == "") {
                     item.description = " "
                 } else {
@@ -256,30 +183,73 @@ class Model() {
             }
             "tags" -> {
                 var mutableTags = mutableListOf<String>()
-                var tags = change as ObservableList<String>
+                var tags = newVal as ObservableList<String>
                 for (item in tags) mutableTags.add(item)
                 item.tags = mutableTags
             }
             "priority" -> {
-                var priority = change as Int
-                item.priority = priority
+                var priority = newVal as String
+                item.priority = priority.toInt()
             }
             "deadline" -> {
-                var deadline = change as LocalDate?
+                var deadline = newVal as LocalDate?
                 if(deadline != null) {
                     val instant = Instant.from(deadline.atStartOfDay(ZoneId.systemDefault()))
                     val date = Date.from(instant)
-                    item.deadline = date   /* Update this to include  */
+                    item.deadline = date
                 } else {
                     item.deadline = null;
                 }
             }
+            "delete" -> {}
             else -> return error("Wrong Field Value")
         }
-        val editSuccess = runBlocking { api.editTodoItem(id.toInt(), item) }
-        if(!editSuccess) {
-            println("Editing tags for item with ID $id failed")
+        if (field != "delete") {
+            val editSuccess = runBlocking { api.editTodoItem(id.toInt(), item) }
+            if (!editSuccess) {
+                println("Editing tags for item with ID $id failed")
+            }
+        } else {
+            val deleteSuccess = runBlocking { api.deleteTodoItem(id.toInt()) }
+            if(!deleteSuccess) {
+                println("Deleting item with ID $id failed.")
+            }
         }
-        return item
+        // UPDATE UI Part Now
+        val index = findUiIndexById(id)
+        val list1 = uiListOfAllItems.slice(0 until index)
+        val list2 = uiListOfAllItems.slice(index+1 .. uiListOfAllItems.lastIndex)
+        val uiItem = ItemComponent(item, this)
+
+        uiListOfAllItems.clear()
+        uiListOfAllItems.addAll(list1)
+        if (field != "delete") uiListOfAllItems.add(uiItem)
+        uiListOfAllItems.addAll(list2)
+        refreshDisplayedList()
     }
+
+    /*  Helper Function: findUiIndexById(id)
+     *      id -> the id of the item to be found
+     *  used by event listeners; returns -1 if not found
+     */
+    private fun findUiIndexById(id: String): Int {
+        val item = displayList.find { (it as ItemComponent).item.id == id.toInt() }
+        return displayList.indexOf(item)
+    }
+}
+
+
+// HELPER FUNCTIONS
+private fun atStartOfDay(date: Date): Date? {
+    val localDateTime: LocalDateTime = dateToLocalDateTime(date)
+    val startOfDay: LocalDateTime = localDateTime.with(LocalTime.MIN)
+    return localDateTimeToDate(startOfDay)
+}
+
+private fun dateToLocalDateTime(date: Date): LocalDateTime {
+    return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
+}
+
+private fun localDateTimeToDate(localDateTime: LocalDateTime): Date? {
+    return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant())
 }

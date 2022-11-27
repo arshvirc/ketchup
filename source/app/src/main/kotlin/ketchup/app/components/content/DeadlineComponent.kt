@@ -52,59 +52,9 @@ class DeadlineComponent: HBox {
             run {
                 if (!new) {
                     println("Proceeding to Update Deadline to be ${this.options.value}")
-                    val editedItem = model.editToDoItem(toDoItemId, "deadline", this.options.value)
-                    // val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, this.options.value)
-                    updateEditedItem(toDoItemId, editedItem)
-
+                    model.editToDoItem(toDoItemId, "deadline", this.options.value)
                 }
             }
         }
-    }
-
-    private fun editToDoItem(list: TodoList, id: String, deadline: LocalDate?): TodoItem {
-        var item: TodoItem
-        for (i in 0..model.dbListOfAllItems.list.lastIndex) {
-            item = model.dbListOfAllItems.list[i]
-            if (item.id == id.toInt()) {
-                if (deadline != null) {
-                    val instant = Instant.from(deadline.atStartOfDay(ZoneId.systemDefault()))
-                    val date = Date.from(instant)
-                    item.deadline = date   /* Update this to include  */
-                    val editSuccess = runBlocking { api.editTodoItem(id.toInt(), item) }
-                } else {
-                    item.deadline = null;
-                    val editSuccess = runBlocking { api.editTodoItem(id.toInt(), item)};
-                }
-
-                return item
-            }
-        }
-        item = TodoItem()
-        return item
-    }
-
-    private fun updateEditedItem( completedID: String, dbItem: TodoItem) {
-        val newItem = ItemComponent(dbItem, model)
-        var newList = FXCollections.observableArrayList<Node>()
-        newList.addAll(newItem)
-        var FOUND = false
-        var beforeList = FXCollections.observableArrayList<Node>()
-        var oldList = FXCollections.observableArrayList<Node>()
-        var afterList = FXCollections.observableArrayList<Node>()
-        for (item in model.uiListOfAllItems) {
-            if ( item.id == completedID ) {
-                oldList.add(item)
-                FOUND = true
-            } else if ( FOUND ) {
-                afterList.add(item)
-            } else {
-                beforeList.add(item)
-            }
-        }
-        model.uiListOfAllItems.removeAll(oldList)
-        model.uiListOfAllItems.removeAll(afterList)
-        model.uiListOfAllItems.addAll(newList)
-        model.uiListOfAllItems.addAll(afterList)
-        model.displayListByType(model.displayState)
     }
 }

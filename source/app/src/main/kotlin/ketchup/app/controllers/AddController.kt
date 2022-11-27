@@ -102,7 +102,7 @@ class AddController {
             uiItem.content = ContentComponent(uiItem.item, model)
         }
         previousController.updateSideBar(tag)
-        model.displayListByType(model.displayState)
+        model.refreshDisplayedList()
     }
 
     @FXML
