@@ -1,6 +1,6 @@
 package ketchup.app.components.content
 
-import Model
+import ketchup.app.Model
 import javafx.collections.FXCollections
 import javafx.scene.Node
 import javafx.scene.control.DatePicker
@@ -12,7 +12,6 @@ import ketchup.console.TodoItem
 import ketchup.console.TodoList
 import kotlinx.coroutines.runBlocking
 import java.time.Instant
-import java.awt.Color.black
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
@@ -25,30 +24,36 @@ class DeadlineComponent: HBox {
     private val api: Client
 
     constructor(item: TodoItem, m: Model) {
+        // Styling
         this.prefHeight = 100.0
         this.prefWidth = 200.0
-        this.model = m
-        this.label = LabelComponent("Deadline: ")
         this.padding = javafx.geometry.Insets(0.0,0.0,0.0,10.0)
-        this.options = DatePicker()
+
+        // Initializing
+        this.model = m
         this.api = m.api
+        this.toDoItemId = item.id.toString()
+
+        // Components
+        this.options = DatePicker()
+        this.options.prefHeight = 26.0
+        this.options.prefWidth = 120.0
+        this.label = LabelComponent("Deadline: ")
         if(item.deadline != null) {
             val date = item.deadline;
             val instant = date?.toInstant()
             val local = instant?.atZone(ZoneId.systemDefault())?.toLocalDate();
-
             this.options.value = local
         }
-        this.options.prefHeight = 26.0
-        this.options.prefWidth = 120.0
-        toDoItemId = item.id.toString()
+
         this.children.add(label)
         this.children.add(options)
         this.options.focusedProperty().addListener{ _, _, new ->
             run {
                 if (!new) {
                     println("Proceeding to Update Deadline to be ${this.options.value}")
-                    val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, this.options.value)
+                    val editedItem = model.editToDoItem(toDoItemId, "deadline", this.options.value)
+                    // val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, this.options.value)
                     updateEditedItem(toDoItemId, editedItem)
 
                 }
@@ -61,7 +66,7 @@ class DeadlineComponent: HBox {
         for (i in 0..model.dbListOfAllItems.list.lastIndex) {
             item = model.dbListOfAllItems.list[i]
             if (item.id == id.toInt()) {
-                if(deadline != null) {
+                if (deadline != null) {
                     val instant = Instant.from(deadline.atStartOfDay(ZoneId.systemDefault()))
                     val date = Date.from(instant)
                     item.deadline = date   /* Update this to include  */
@@ -100,5 +105,6 @@ class DeadlineComponent: HBox {
         model.uiListOfAllItems.removeAll(afterList)
         model.uiListOfAllItems.addAll(newList)
         model.uiListOfAllItems.addAll(afterList)
+        model.displayListByType(model.displayState)
     }
 }

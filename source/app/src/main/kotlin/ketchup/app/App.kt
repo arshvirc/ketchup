@@ -1,13 +1,7 @@
 import javafx.application.Application
 import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
-import javafx.scene.control.Menu
-import javafx.scene.control.MenuBar
-import javafx.scene.control.MenuItem
-import javafx.scene.layout.VBox
 import javafx.stage.Stage
-import ketchup.app.ktorclient.Client
-
 
 /*
 To run the server locally, go into service module and run Main.kt
@@ -24,7 +18,7 @@ class App(): Application() {
         primaryStage.scene = scene
         primaryStage.minHeight = 550.0
         primaryStage.minWidth = 900.0
-        primaryStage.title = "Ketchup 0.2"
+        primaryStage.title = "Ketchup 0.4"
         primaryStage.show()
     }
 }

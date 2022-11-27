@@ -1,5 +1,5 @@
 package ketchup.app.components.content
-import Model
+import ketchup.app.Model
 import javafx.collections.FXCollections
 import javafx.geometry.Insets
 import javafx.scene.Node
@@ -15,7 +15,7 @@ class DescriptionComponent: TextField {
     private var model: Model
     private val api: Client
 
-    constructor(item: TodoItem, m :Model) {
+    constructor(item: TodoItem, m : Model) {
         this.prefHeight = 20.0
         this.prefWidth = 331.0
         this.padding = Insets(5.0)
@@ -33,6 +33,7 @@ class DescriptionComponent: TextField {
             run {
                 if (!new) {
                     println("Proceeding to Update Description to be ${this.text}")
+                    //val editedItem = model.editToDoItem(toDoItemId, "desc", this.text)
                     val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, this.text)
                     updateEditedItem(toDoItemId, editedItem)
 
@@ -84,6 +85,7 @@ class DescriptionComponent: TextField {
         model.uiListOfAllItems.removeAll(afterList)
         model.uiListOfAllItems.addAll(newList)
         model.uiListOfAllItems.addAll(afterList)
+        model.displayListByType(model.displayState)
     }
 
 }

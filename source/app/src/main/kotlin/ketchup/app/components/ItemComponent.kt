@@ -1,9 +1,8 @@
 package ketchup.app.components
 
-import Model
+import ketchup.app.Model
 import javafx.geometry.Bounds
 import javafx.geometry.Insets
-import javafx.scene.Node
 import javafx.scene.control.TitledPane
 import javafx.scene.layout.*
 import javafx.scene.paint.Color
@@ -15,14 +14,16 @@ import ketchup.console.TodoItem
 
 
 class ItemComponent: TitledPane {
-    var model :Model
+    var model : Model
     var item : TodoItem
+
     constructor(dbItem: TodoItem, model: Model) {
-        id = dbItem.id.toString()
+        this.id = dbItem.id.toString()
         this.model = model
-        item = dbItem
-        graphic = GraphicComponent(dbItem, model)
-        content = ContentComponent(dbItem, model)
+        this.item = dbItem
+        this.graphic = GraphicComponent(dbItem, model)
+        this.content = ContentComponent(dbItem, model)
+        this.userData = dbItem
 
         this.setOnMouseEntered {
             border = (Border(BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii(10.0), null)))
@@ -40,9 +41,7 @@ class ItemComponent: TitledPane {
             padding = Insets(0.0)
         }
         this.setOnMouseDragReleased {
-            println("setOnMouseDragReleased2")
-            model.dragInitiated = false
-            model.moveItems(model.draggedItemId,this.id)
+            model.moveItemsForDrag(model.draggedItemId,this.id)
         }
         this.setOnMouseDragOver {
             if (it.source != it.gestureSource ) {
@@ -107,7 +106,7 @@ class ContentComponent: VBox {
         id = dbItem.id.toString()
         prefHeight = 200.0
         prefWidth = 100.0
-        this.setSpacing(10.0)
+        this.spacing = 10.0
         var description = DescriptionComponent(dbItem, m)
         var tags = TagsComponent(dbItem, m)
         var deadline = DeadlineComponent(dbItem, m)

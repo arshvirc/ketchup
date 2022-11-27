@@ -1,6 +1,6 @@
 package ketchup.app.components.content
 
-import Model
+import ketchup.app.Model
 import javafx.collections.FXCollections
 import javafx.scene.Node
 import javafx.scene.control.ComboBox
@@ -14,6 +14,7 @@ class PriorityOptionsComponent: ComboBox<String> {
     var model: Model
     private var toDoItemId: String
     private val api: Client
+
     constructor(item: TodoItem, m: Model) {
         this.prefHeight = 26.0
         this.prefWidth = 120.0
@@ -28,8 +29,9 @@ class PriorityOptionsComponent: ComboBox<String> {
             run {
                 if (!new) {
                     val newValue = convertPriorityToNum(this.value);
-                    println("Proceeding to Update Priority to be ${newValue}")
-                    val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, newValue.toString())
+                    println("Proceeding to Update Priority to be $newValue")
+                    val editedItem = model.editToDoItem(toDoItemId, "priority", newValue.toString())
+                    // val editedItem = editToDoItem(model.dbListOfAllItems, toDoItemId, newValue.toString())
                     updateEditedItem(toDoItemId, editedItem)
 
                 }
@@ -75,6 +77,7 @@ class PriorityOptionsComponent: ComboBox<String> {
         model.uiListOfAllItems.removeAll(afterList)
         model.uiListOfAllItems.addAll(newList)
         model.uiListOfAllItems.addAll(afterList)
+        model.displayListByType(model.displayState)
     }
 
     private fun convertNumToPriority(priority: Int): String {

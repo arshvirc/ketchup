@@ -1,8 +1,7 @@
 package ketchup.app.components.content
 
-import Model
+import ketchup.app.Model
 import javafx.collections.FXCollections
-import javafx.collections.ObservableList
 import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.control.ButtonBar
@@ -23,10 +22,9 @@ class TrashComponent: ButtonBar {
         this.prefWidth = 200.0
         this.padding = javafx.geometry.Insets(10.0)
         var trashButton = Button("Trash")
-        trashButton.setOnAction { obs ->
+        trashButton.setOnAction {
             run {
                 println("Deleting the item with the following item: ${this.toDoItemId}")
-                // Re-Add Functionality
                 removeDeletedItem(toDoItemId)
             }
         }
@@ -44,9 +42,9 @@ class TrashComponent: ButtonBar {
                     println("Deleting item with ID $completedID failed.")
                 }
                 tempList.add(item)
-                println()
             }
         }
         this.model.uiListOfAllItems.removeAll(tempList)
+        model.displayListByType(model.displayState)
     }
 }
