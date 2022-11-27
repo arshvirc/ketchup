@@ -19,13 +19,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainController">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ketchup.app.controllers.MainController">
    <children>
       <MenuBar useSystemMenuBar="true" VBox.vgrow="NEVER">
          <menus>
             <Menu mnemonicParsing="false" text="File">
                <items>
-                  <MenuItem mnemonicParsing="false" text="New" />
+                  <MenuItem accelerator="Shortcut+N" mnemonicParsing="false" text="New" />
                   <MenuItem mnemonicParsing="false" text="Open…" />
                   <Menu mnemonicParsing="false" text="Open Recent" />
                   <SeparatorMenuItem mnemonicParsing="false" />
@@ -55,16 +55,16 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
                <items>
-                  <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+                  <MenuItem mnemonicParsing="false" text="About Ketchup" />
                </items>
             </Menu>
          </menus>
       </MenuBar>
-      <BorderPane VBox.vgrow="always" id="container" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="550.0" minWidth="-Infinity" prefHeight="583.0" prefWidth="900.0" stylesheets="@../css/main.css">
+      <BorderPane id="container" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="550.0" minWidth="-Infinity" prefHeight="583.0" prefWidth="900.0" stylesheets="@../css/main.css" VBox.vgrow="always">
          <left>
-            <VBox id="sidebar-container" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="184.0" prefHeight="550.0" prefWidth="184.0" spacing="10.0" BorderPane.alignment="CENTER">
+            <VBox id="sidebar-container" fx:id="sidebar" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="184.0" prefHeight="550.0" prefWidth="184.0" spacing="10.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="allTasksListButton" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="175.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="175.0" styleClass="option" text="All Tasks">
+                  <Button fx:id="allTasksListButton" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="175.0" mnemonicParsing="false" onAction="#sideBarButton" prefHeight="40.0" prefWidth="175.0" styleClass="option" text="All Tasks">
                      <graphic>
                         <ImageView fitHeight="23.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -73,7 +73,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="allTasksListButton1" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="175.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="175.0" styleClass="option" text="Today">
+                  <Button fx:id="allTasksListButton1" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="175.0" mnemonicParsing="false" onAction="#sideBarButton" prefHeight="40.0" prefWidth="175.0" styleClass="option" text="Today">
                      <graphic>
                         <ImageView fitHeight="23.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -82,7 +82,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="allTasksListButton2" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="175.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="175.0" styleClass="option" text="Upcoming">
+                  <Button fx:id="allTasksListButton2" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="175.0" mnemonicParsing="false" onAction="#sideBarButton" prefHeight="40.0" prefWidth="175.0" styleClass="option" text="Upcoming">
                      <graphic>
                         <ImageView fitHeight="23.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -103,22 +103,22 @@
                <children>
                   <HBox alignment="BOTTOM_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="100.0" prefHeight="100.0" spacing="10.0" styleClass="top-center-container">
                      <children>
-                        <Label maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="28.0" prefWidth="120.0" text="ALL" textFill="#5b2525">
+                        <Label fx:id="title" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="28.0" prefWidth="120.0" text="ALL" textFill="#5b2525">
                            <font>
                               <Font name="Avenir Book" size="23.0" />
                            </font>
                         </Label>
-                        <Button fx:id="addItemButton" maxHeight="28.0" maxWidth="107.0" minWidth="75.0" mnemonicParsing="false" onAction="#onButtonClicked" prefHeight="28.0" prefWidth="107.0" text="Add Item">
+                        <Button fx:id="addItemButton" maxHeight="33.0" maxWidth="107.0" minHeight="7.0" minWidth="75.0" mnemonicParsing="false" onAction="#onButtonClicked" prefHeight="20.0" prefWidth="107.0" text="Add Item">
                            <font>
-                              <Font size="12.0" />
+                              <Font size="14.0" />
                            </font>
                         </Button>
-                        <ComboBox fx:id="filterButton" maxHeight="28.0" maxWidth="-Infinity" minHeight="7.0" minWidth="75.0" onAction="#onButtonClicked" prefHeight="28.0" prefWidth="107.0" promptText="Filter Text" style="-fx-background-color: primary-color; -fx-border-color: primary-color;">
+                        <ComboBox fx:id="filterButton" maxHeight="34.0" maxWidth="-Infinity" minHeight="26.0" minWidth="75.0" onAction="#onButtonClicked" prefHeight="26.0" prefWidth="107.0" promptText="Filter Text" style="-fx-background-color: primary-color; -fx-border-color: primary-color; -fx-font-size: 14;">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                            <padding>
-                              <Insets left="40.0" />
+                              <Insets left="34.0" />
                            </padding>
                         </ComboBox>
                         <TextArea id="hi" fx:id="searchBarField" maxHeight="26.0" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="65.0" prefHeight="28.0" prefWidth="100.0" promptText="Search by title" HBox.hgrow="ALWAYS" />

@@ -1,9 +1,8 @@
 package ketchup.app.components
 
-import Model
+import ketchup.app.Model
 import javafx.geometry.Bounds
 import javafx.geometry.Insets
-import javafx.scene.Node
 import javafx.scene.control.TitledPane
 import javafx.scene.layout.*
 import javafx.scene.paint.Color
@@ -15,21 +14,22 @@ import ketchup.console.TodoItem
 
 
 class ItemComponent: TitledPane {
-    var model :Model
+    var model : Model
     var item : TodoItem
+
     constructor(dbItem: TodoItem, model: Model) {
-        id = dbItem.id.toString()
+        this.id = dbItem.id.toString()
         this.model = model
-        item = dbItem
-        graphic = GraphicComponent(dbItem, model)
-        content = ContentComponent(dbItem, model)
+        this.item = dbItem
+        this.graphic = GraphicComponent(dbItem, model)
+        this.content = ContentComponent(dbItem, model)
+        this.userData = dbItem
+        this.isExpanded = false
 
         this.setOnMouseEntered {
             border = (Border(BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii(10.0), null)))
         }
-        this.setOnMouseDragEntered {
-            border = (Border(BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, CornerRadii(10.0), null)))
-        }
+
         this.setOnMouseDragExited {
             border = (Border(BorderStroke(null, null, null, null)))
             padding = Insets(0.0)
@@ -40,9 +40,15 @@ class ItemComponent: TitledPane {
             padding = Insets(0.0)
         }
         this.setOnMouseDragReleased {
-            println("setOnMouseDragReleased2")
-            model.dragInitiated = false
-            model.moveItems(model.draggedItemId,this.id)
+            val gestureSource = it.gestureSource as DragComponent
+            val sourceId = gestureSource.parent.parent.parent.id
+            var boundsInScene: Bounds = this.localToScene(this.boundsInLocal)
+            var halfPoint = boundsInScene.maxY - 0.5 * boundsInScene.height
+            var releasedAbove = false
+            if (it.sceneY < halfPoint) {
+                releasedAbove = true
+            }
+            model.moveItem(sourceId,this.id, releasedAbove)
         }
         this.setOnMouseDragOver {
             if (it.source != it.gestureSource ) {
@@ -65,8 +71,6 @@ class ItemComponent: TitledPane {
                         )
                     )
                     padding = Insets(10.0, 0.0, 10.0, 0.0)
-                    model.dragTop = false;
-                    model.dragBottom = true;
                 } else {
                     border = Border(
                         BorderStroke(
@@ -83,8 +87,6 @@ class ItemComponent: TitledPane {
                             Insets.EMPTY
                         )
                     )
-                    model.dragTop = true;
-                    model.dragBottom = false;
                 }
             }
         }
@@ -107,7 +109,7 @@ class ContentComponent: VBox {
         id = dbItem.id.toString()
         prefHeight = 200.0
         prefWidth = 100.0
-        this.setSpacing(10.0)
+        this.spacing = 10.0
         var description = DescriptionComponent(dbItem, m)
         var tags = TagsComponent(dbItem, m)
         var deadline = DeadlineComponent(dbItem, m)

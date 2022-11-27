@@ -10,35 +10,37 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.control.CheckComboBox?>
 
-<VBox spacing="5.0" styleClass="container" stylesheets="@../css/add.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AddController">
+<VBox spacing="5.0" styleClass="container" stylesheets="@../css/add.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ketchup.app.controllers.AddController">
    <children>
       <TextArea fx:id="inputTitle" maxHeight="50.0" maxWidth="500.0" minHeight="27.0" minWidth="450.0" prefHeight="27.0" prefWidth="500.0" promptText="Enter Title..." />
       <Separator prefHeight="7.0" prefWidth="463.0" />
-      <TextArea fx:id="inputDetail" maxHeight="50.0" maxWidth="500.0" minHeight="50.0" minWidth="450.0" prefHeight="50.0" prefWidth="500.0" promptText="Enter Description..." />
-      <HBox prefHeight="10.0" prefWidth="500.0">
+      <TextArea fx:id="inputDesc" maxHeight="50.0" maxWidth="500.0" minHeight="50.0" minWidth="450.0" prefHeight="50.0" prefWidth="500.0" promptText="Enter Description..." />
+      <HBox fx:id="tagContainer" prefHeight="10.0" prefWidth="500.0" spacing="10.0">
          <children>
             <Label prefHeight="26.0" prefWidth="65.0" text="Tags:" />
-            <ComboBox fx:id="inputTags" prefHeight="26.0" prefWidth="138.0" />
+            <CheckComboBox fx:id="inputTags" prefHeight="27.0" prefWidth="138.0" />
+            <Button fx:id="addTag" mnemonicParsing="false" onAction="#newTagOptions" text="Add Tag" />
          </children>
       </HBox>
-      <HBox prefHeight="10.0" prefWidth="500.0">
+      <HBox prefHeight="10.0" prefWidth="500.0" spacing="10.0">
          <children>
             <Label prefHeight="26.0" prefWidth="65.0" text="Deadline: " textFill="#db8a8a" />
             <DatePicker fx:id="inputDeadline" prefHeight="24.0" prefWidth="138.0" />
          </children>
       </HBox>
-      <HBox prefHeight="0.0" prefWidth="500.0">
+      <HBox prefHeight="0.0" prefWidth="500.0" spacing="10.0">
          <children>
             <Label prefHeight="26.0" prefWidth="66.0" text="Priority: " textFill="#db8a8a" />
             <ComboBox fx:id="inputPriority" prefHeight="28.0" prefWidth="78.0" />
          </children>
       </HBox>
       <ButtonBar prefHeight="40.0" prefWidth="200.0">
-        <buttons>
-          <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onButtonClicked" text="Cancel" />
+         <buttons>
+            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onButtonClicked" text="Cancel" />
             <Button fx:id="createButton" mnemonicParsing="false" onAction="#onButtonClicked" text="Create" />
-        </buttons>
+         </buttons>
       </ButtonBar>
    </children>
    <padding>

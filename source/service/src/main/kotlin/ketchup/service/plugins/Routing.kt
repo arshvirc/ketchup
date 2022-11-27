@@ -9,13 +9,16 @@ import ketchup.service.controllers.ListController
 import java.sql.Connection
 import ketchup.console.TodoItem
 import ketchup.console.TodoList
+import ketchup.service.controllers.DeleteTagResponse
 import ketchup.service.controllers.ItemController
+import ketchup.service.controllers.TagController
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
 data class ListName(val name: String)
+data class TagName(val name: String)
 data class TodoItemRequest(val id: Int, val title: String, val description: String, val timestamp: String?, val deadline: String?,
                            val priority: Int, val tags: MutableList<String>?, val completion: Boolean)
 data class ListResponse(val listId: Int, val size: Int, val list: MutableList<TodoItem>, val name: String)
@@ -180,6 +183,44 @@ fun Application.configureRouting(conn: Connection) {
                 } catch (ex: Exception) {
                     println(ex.message)
                     call.respondText { "failure" }
+                }
+            }
+        }
+
+        route("/api/tags") {
+            get {
+                val controller = TagController(conn)
+
+                try {
+                    val tags = controller.getAllTags();
+                    call.respond(tags)
+                } catch (ex: Exception) {
+                    call.respond(mutableListOf<String>())
+                }
+            }
+
+            post {
+                val name = call.receive<TagName>().name;
+                val controller = TagController(conn)
+
+                try {
+                    val newTags = controller.createNewTag(name)
+                    call.respond(newTags)
+                } catch (ex: Exception) {
+                    call.respond(mutableListOf<String>());
+                }
+            }
+
+            delete {
+                val name = call.receive<TagName>().name;
+                val controller = TagController(conn)
+
+                try {
+                    val newTags = controller.deleteTag(name)
+                    call.respond(newTags)
+                } catch (ex: Exception) {
+                    println(ex.message)
+                    call.respond(DeleteTagResponse(false, listOf()))
                 }
             }
         }

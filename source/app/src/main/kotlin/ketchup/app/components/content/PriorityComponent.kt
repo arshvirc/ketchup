@@ -1,6 +1,6 @@
 package ketchup.app.components.content
 
-import Model
+import ketchup.app.Model
 import javafx.scene.control.ComboBox
 import javafx.scene.control.Label
 import javafx.scene.layout.HBox
@@ -20,6 +20,8 @@ class PriorityComponent: HBox {
         this.padding = javafx.geometry.Insets(0.0,0.0,0.0,10.0)
         toDoItemId = item.id.toString()
         this.model = m
+
+        this.spacing = 10.0
 
         this.children.add(label)
         this.children.add(options)
