@@ -10,6 +10,9 @@ import ketchup.console.TodoItem
 import ketchup.console.TodoList
 import kotlinx.coroutines.runBlocking
 import java.util.*
+import kotlin.collections.ArrayDeque
+import ketchup.app.State
+import ketchup.app.Action
 
 
 class Model() {
@@ -29,12 +32,44 @@ class Model() {
     // Other Information
     val listOfPriorities: List<String> = listOf<String>("None", "Low", "Medium", "High")
 
+    // For undo/redo
+    var undoStack : ArrayDeque<State> = ArrayDeque<State>()
+    var redoStack : ArrayDeque<State> = ArrayDeque<State>()
 
-    //
     var dragInitiated = false
     lateinit var draggedItemId : String
     var dragTop = false
     var dragBottom = false
+
+    fun undo() {
+        if (undoStack.isEmpty()) return
+        val lastState = undoStack.removeLast()
+        redoStack.addLast(lastState)
+        if (lastState.action == Action.ADD) {
+            deleteItemFromList(lastState.item.id.toString(), false)
+        } else if (lastState.action == Action.EDIT) {
+            println("Not implemented yet!")
+        } else if (lastState.action == Action.DELETE) {
+            addItemToList(lastState.item, false)
+        } else { // lastState.action == Action.COMPLETE
+            println("Not implemented yet!")
+        }
+    }
+
+    fun redo() {
+        if (redoStack.isEmpty()) return
+        val nextState = redoStack.removeLast()
+        undoStack.addLast(nextState)
+        if (nextState.action == Action.ADD) {
+            addItemToList(nextState.item, false)
+        } else if (nextState.action == Action.EDIT) {
+            println("Not implemented yet!")
+        } else if (nextState.action == Action.DELETE) {
+            deleteItemFromList(nextState.item.id.toString(), false)
+        } else { // nextState.action == Action.COMPLETE
+            println("Not implemented yet!")
+        }
+    }
 
     constructor(list: ObservableList<Node>) : this() {
         val mainList = runBlocking { api.getListById(0)?.list ?: mutableListOf<TodoItemResponse>() }
@@ -58,7 +93,7 @@ class Model() {
         this.listOfGroups = mutableListOf("List 1", "List 2", "List 3")
     }
 
-    fun addItemToList(dbItem: TodoItem) {
+    fun addItemToList(dbItem : TodoItem, changeState : Boolean = true) {
         // Add item to Api
         val itemId = runBlocking { api.createTodoItem(0, dbItem) }
         if(itemId == -1) {
@@ -70,6 +105,33 @@ class Model() {
             var itemUI = ItemComponent(dbItem, this)  //Convert to UI Component
             itemUI.isExpanded = false
             this.uiListOfAllItems.add(itemUI)              //Update UI List
+            if (changeState) {
+                undoStack.addLast(State(Action.ADD, dbItem))
+                redoStack.clear()
+            }
+        }
+    }
+
+    fun deleteItemFromList(id : String, changeState : Boolean = true) {
+        // Remove from database
+        val deleteSuccess = runBlocking { api.deleteTodoItem(id.toInt()) }
+        if (!deleteSuccess) {
+            println("Deleting item with ID ${id} failed.")
+            return
+        }
+        var idx = 0
+        var item = TodoItem()
+        for (i in 0..uiListOfAllItems.size) {
+            if (uiListOfAllItems[i].id == id) {
+                idx = i
+                item = (uiListOfAllItems[i] as ItemComponent).item
+                break
+            }
+        }
+        uiListOfAllItems.removeAt(idx)
+        if (changeState) {
+            undoStack.addLast(State(Action.DELETE, item))
+            redoStack.clear()
         }
     }
 

@@ -58,6 +58,16 @@ class MainController: Initializable {
             displayView.children.addAll(model.uiListOfAllItems)
         }
     }
+    @FXML
+    private fun undoButton() {
+        model.undo()
+    }
+
+    @FXML
+    private fun redoButton() {
+        model.redo()
+    }
+
 
     @FXML
     private fun onButtonClicked(e:ActionEvent) {

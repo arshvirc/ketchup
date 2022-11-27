@@ -27,26 +27,11 @@ class TrashComponent: ButtonBar {
             run {
                 println("Deleting the item with the following item: ${this.toDoItemId}")
                 // Re-Add Functionality
-                removeDeletedItem(toDoItemId)
+                model.deleteItemFromList(toDoItemId)
             }
         }
 
         this.buttons.add(trashButton)
     }
 
-    private fun removeDeletedItem( completedID: String) {
-        val tempList = FXCollections.observableArrayList<Node>()
-        for (item in this.model.uiListOfAllItems) {
-            if ( item.id == completedID ) {
-                println(completedID.toInt())
-                val deleteSuccess = runBlocking { api.deleteTodoItem(completedID.toInt()) }
-                if(!deleteSuccess) {
-                    println("Deleting item with ID $completedID failed.")
-                }
-                tempList.add(item)
-                println()
-            }
-        }
-        this.model.uiListOfAllItems.removeAll(tempList)
-    }
 }
