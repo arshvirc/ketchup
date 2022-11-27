@@ -1,6 +1,7 @@
 package ketchup.app.components.content
 
 import javafx.event.ActionEvent
+import javafx.geometry.Insets
 import javafx.scene.control.Button
 import ketchup.app.Model
 import javafx.scene.control.Label
@@ -29,6 +30,8 @@ class TagsComponent: HBox {
         this.options.checkModelProperty().addListener{ e, o, n ->
             println("checked something off")
         }
+
+        this.spacing = 10.0
 
         toDoItemId = item.id.toString()
         this.children.add(label)

@@ -28,7 +28,7 @@ class DeadlineComponent: HBox {
         this.prefHeight = 100.0
         this.prefWidth = 200.0
         this.padding = javafx.geometry.Insets(0.0,0.0,0.0,10.0)
-
+        this.spacing = 10.0
         // Initializing
         this.model = m
         this.api = m.api

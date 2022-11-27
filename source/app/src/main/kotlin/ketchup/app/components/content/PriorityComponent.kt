@@ -21,6 +21,8 @@ class PriorityComponent: HBox {
         toDoItemId = item.id.toString()
         this.model = m
 
+        this.spacing = 10.0
+
         this.children.add(label)
         this.children.add(options)
     }
