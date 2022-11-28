@@ -39,6 +39,14 @@ class ItemComponent: TitledPane {
             border = (Border(BorderStroke(null, null, null, null)))
             padding = Insets(0.0)
         }
+
+        this.setOnMousePressed{
+            this.model.chooseSelectedItem(item.id)
+            border = (Border(BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii(10.0), null)))
+            println("Mouse Pressed on ${item.id}")
+        }
+
+
         this.setOnMouseDragReleased {
             val gestureSource = it.gestureSource as DragComponent
             val sourceId = gestureSource.parent.parent.parent.id
@@ -100,9 +108,12 @@ class GraphicComponent: HBox {
         var title = TitleComponent(dbItem, m)
         title.minWidth = 400.0
         var complete = CompleteComponent(dbItem, m)
-        children.addAll(dragButton, title, complete)
+        children.addAll(dragButton, complete, title)
     }
+
+
 }
+
 
 class ContentComponent: VBox {
     constructor(dbItem: TodoItem, m: Model) {
