@@ -4,6 +4,7 @@ import ketchup.app.Model
 import javafx.collections.FXCollections
 import javafx.scene.Node
 import javafx.scene.control.ComboBox
+import ketchup.app.Action
 import ketchup.app.components.ItemComponent
 import ketchup.app.ktorclient.Client
 import ketchup.console.TodoItem
@@ -30,7 +31,7 @@ class PriorityOptionsComponent: ComboBox<String> {
                 if (!new) {
                     val newValue = convertPriorityToNum(this.value);
                     println("Proceeding to Update Priority to be $newValue")
-                    model.editToDoItem(toDoItemId, "priority", newValue.toString())
+                    model.editToDoItem(toDoItemId, Action.EDIT_PRIORITY, newValue.toString())
                 }
             }
         }

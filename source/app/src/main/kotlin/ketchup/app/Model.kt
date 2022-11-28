@@ -18,6 +18,12 @@ import ketchup.app.Action
 
 
 class Model() {
+    enum class URFlag {
+        UNDO,
+        REDO,
+        NEITHER
+    }
+
     // Api Fields
     private val apiUrl = "http://127.0.0.1:3000"
     val api = Client(apiUrl)
@@ -44,37 +50,46 @@ class Model() {
     var dragTop = false
     var dragBottom = false
 
+    private fun undoRedoEdit(action : Action, item : TodoItem, flag: URFlag) {
+        val id = item.id.toString()
+        when (action) {
+            Action.EDIT_TITLE -> editToDoItem(id, action, item.title, flag)
+            Action.EDIT_DESC -> editToDoItem(id, action, item.description, flag)
+            Action.EDIT_TAGS -> editToDoItem(id, action, item.tags, flag)
+            Action.EDIT_PRIORITY -> editToDoItem(id, action, item.priority, flag)
+            // Issue: deadline can go from being non-null to being null and vice versa through undos/redos. How do we account for
+            // this? As a temporary solution I've changed the parameter type for editToDoItem from Any to Any?, but this is
+            // probably not ideal in general.
+            Action.EDIT_DEADLINE ->  editToDoItem(id, action, item.deadline, flag)
+            else -> println("Not implemented yet!")
+        }
+    }
     fun undo() {
         if (undoStack.isEmpty()) return
         val lastState = undoStack.removeLast()
-        redoStack.addLast(lastState)
-        if (lastState.action == Action.ADD) {
-            deleteItemFromList(lastState.item.id.toString(), false)
-        } else if (lastState.action == Action.EDIT) {
-            println("Not implemented yet!")
-        } else if (lastState.action == Action.DELETE) {
-            addItemToList(lastState.item, false)
-        } else { // lastState.action == Action.COMPLETE
-            println("Not implemented yet!")
+        val action = lastState.action
+        val lastItem = lastState.item
+
+        when (action) {
+            Action.ADD -> deleteItemFromList(lastItem.id.toString(), URFlag.UNDO)
+            Action.DELETE -> addItemToList(lastItem, URFlag.UNDO)
+            else -> undoRedoEdit(action, lastItem, URFlag.UNDO)
         }
     }
 
     fun redo() {
         if (redoStack.isEmpty()) return
         val nextState = redoStack.removeLast()
-        undoStack.addLast(nextState)
-        if (nextState.action == Action.ADD) {
-            addItemToList(nextState.item, false)
-        } else if (nextState.action == Action.EDIT) {
-            println("Not implemented yet!")
-        } else if (nextState.action == Action.DELETE) {
-            deleteItemFromList(nextState.item.id.toString(), false)
-        } else { // nextState.action == Action.COMPLETE
-            println("Not implemented yet!")
+        val action = nextState.action
+        val nextItem = nextState.item
+
+        when (action) {
+            Action.ADD -> addItemToList(nextItem, URFlag.REDO)
+            Action.DELETE -> deleteItemFromList(nextItem.id.toString(), URFlag.REDO)
+            else -> undoRedoEdit(action, nextItem, URFlag.REDO)
         }
     }
 
-    constructor(list: ObservableList<Node>) : this() {}
     constructor(list: ObservableList<Node>, c: MainController) : this() {
         previousController = c
         displayList = list
@@ -128,23 +143,57 @@ class Model() {
      *      dbItem -> the item that is converted into an ItemComponent
      *  Used by: Constructor and Add Controller
      */
-    fun addItemToList(dbItem: TodoItem, changeState : Boolean = true) {
+    fun addItemToList(dbItem: TodoItem, flag : URFlag = URFlag.NEITHER) {
         val itemId = runBlocking { api.createTodoItem(0, dbItem) }
         if (itemId == -1) {
             println("Adding TodoItem failed.")
         } else {
             dbItem.id = itemId
             println("New item id: ${dbItem.id}")
-            this.dbListOfAllItems.addItem(dbItem)       // Update model list
-            var itemUI = ItemComponent(dbItem, this)  //Convert to UI Component
+            this.dbListOfAllItems.addItem(dbItem.copy())       // Update model list
+            var itemUI = ItemComponent(dbItem.copy(), this)  //Convert to UI Component
             itemUI.isExpanded = false
             this.uiListOfAllItems.add(itemUI)              //Update UI List
             refreshDisplayedList()
-            if (changeState) {
-                undoStack.addLast(State(Action.ADD, dbItem))
+
+            if (flag == URFlag.UNDO) {
+                redoStack.addLast(State(Action.DELETE, dbItem.copy()))
+            } else if (flag == URFlag.REDO) {
+                undoStack.addLast(State(Action.ADD, dbItem.copy()))
+            } else {
+                undoStack.addLast(State(Action.ADD, dbItem.copy()))
                 redoStack.clear()
             }
         }
+    }
+
+    fun deleteItemFromList(id : String, flag : URFlag = URFlag.NEITHER) {
+        // Remove from database
+        val deleteSuccess = runBlocking { api.deleteTodoItem(id.toInt()) }
+        if (!deleteSuccess) {
+            println("Deleting item with ID ${id} failed.")
+            return
+        }
+        var idx = 0
+        var item = TodoItem()
+        for (i in 0..uiListOfAllItems.size) {
+            if (uiListOfAllItems[i].id == id) {
+                idx = i
+                item = (uiListOfAllItems[i] as ItemComponent).item
+                break
+            }
+        }
+
+        if (flag == URFlag.UNDO) {
+            redoStack.addLast(State(Action.ADD, item.copy()))
+        } else if (flag == URFlag.REDO) {
+            undoStack.addLast(State(Action.DELETE, item.copy()))
+        } else {
+            undoStack.addLast(State(Action.DELETE, item.copy()))
+            redoStack.clear()
+        }
+        uiListOfAllItems.removeAt(idx)
+        refreshDisplayedList()
     }
 
     /*  Critical Function: todoListConverter(dbList)
@@ -200,62 +249,30 @@ class Model() {
         displayList.addAll(list3)
     }
 
-    fun deleteItemFromList(id : String, changeState : Boolean = true) {
-        // Remove from database
-        val deleteSuccess = runBlocking { api.deleteTodoItem(id.toInt()) }
-        if (!deleteSuccess) {
-            println("Deleting item with ID ${id} failed.")
-            return
-        }
-        var idx = 0
-        var item = TodoItem()
-        for (i in 0..uiListOfAllItems.size) {
-            if (uiListOfAllItems[i].id == id) {
-                idx = i
-                item = (uiListOfAllItems[i] as ItemComponent).item
-                break
-            }
-        }
-        uiListOfAllItems.removeAt(idx)
-        if (changeState) {
-            undoStack.addLast(State(Action.DELETE, item))
-            redoStack.clear()
-        }
-    }
-
-
-
     /*  Critical Function: editToDoItem(id, field, change)
      *      id -> the id of the item to be edited
      *      field -> the item's field that needs to be changed
      *      newVal -> the updated value
      *  used by event listeners
      */
-    fun editToDoItem(id: String, field: String, newVal: Any, changeState : Boolean = true) {
+    fun editToDoItem(id: String, action : Action, newVal: Any?, flag : URFlag = URFlag.NEITHER) {
         var item = TodoItem()
+        var index = 0
         for (i in 0.. dbListOfAllItems.list.lastIndex) {
-            item = dbListOfAllItems.list[i]
-            if (item.id == id.toInt()) {
+            if (dbListOfAllItems.list[i].id == id.toInt()) {
+                index = i
+                item = dbListOfAllItems.list[i]
                 break
             }
         }
+        val oldItem = item.copy()
 
-        if (changeState) {
-            if (field == "delete") {
-                undoStack.addLast(State(Action.DELETE, item))
-                redoStack.clear()
-            } else {
-                undoStack.addLast(State(Action.EDIT, item))
-                redoStack.clear()
-            }
-        }
-
-        when (field) {
-            "title" -> {
+        when (action) {
+            Action.EDIT_TITLE -> {
                 var title = newVal as String
                 item.title = title
             }
-            "desc" -> {
+            Action.EDIT_DESC -> {
                 var desc = newVal as String
                 if (desc.trim() == "") {
                     item.description = " "
@@ -263,49 +280,58 @@ class Model() {
                     item.description = desc
                 }
             }
-            "tags" -> {
+            Action.EDIT_TAGS -> {
                 var mutableTags = mutableListOf<String>()
-                var tags = newVal as ObservableList<String>
-                for (item in tags) mutableTags.add(item)
+                var tags = newVal as MutableList<String>
+                for (t in tags) mutableTags.add(t)
                 item.tags = mutableTags
             }
-            "priority" -> {
-                var priority = newVal as String
-                item.priority = priority.toInt()
-            }
-            "deadline" -> {
-                var deadline = newVal as LocalDate?
-                if(deadline != null) {
-                    val instant = Instant.from(deadline.atStartOfDay(ZoneId.systemDefault()))
-                    val date = Date.from(instant)
-                    item.deadline = date
+            Action.EDIT_PRIORITY -> {
+                if (newVal is String) {
+                    item.priority = newVal.toInt()
                 } else {
-                    item.deadline = null;
+                    item.priority = newVal as Int
                 }
             }
-            "delete" -> {}
-            else -> return error("Wrong Field Value")
+            Action.EDIT_DEADLINE -> {
+                if (newVal is Date) {
+                    item.deadline = newVal
+                } else {
+                    var deadline = newVal as LocalDate?
+                    if (deadline != null) {
+                        val instant = Instant.from(deadline.atStartOfDay(ZoneId.systemDefault()))
+                        val date = Date.from(instant)
+                        item.deadline = date
+                    } else {
+                        item.deadline = null;
+                    }
+                }
+            }
+            else -> {
+                return error("Wrong Field Value")
+            }
         }
-        if (field != "delete") {
-            val editSuccess = runBlocking { api.editTodoItem(id.toInt(), item) }
-            if (!editSuccess) {
-                println("Editing tags for item with ID $id failed")
-            }
+        if (flag == URFlag.UNDO) {
+            redoStack.addLast(State(action, oldItem))
+        } else if (flag == URFlag.REDO) {
+            undoStack.addLast(State(action, oldItem))
         } else {
-            val deleteSuccess = runBlocking { api.deleteTodoItem(id.toInt()) }
-            if(!deleteSuccess) {
-                println("Deleting item with ID $id failed.")
-            }
+            undoStack.addLast(State(action, oldItem))
+            redoStack.clear()
+        }
+
+        val editSuccess = runBlocking { api.editTodoItem(id.toInt(), item) }
+        if (!editSuccess) {
+            println("Editing tags for item with ID $id failed")
         }
         // UPDATE UI Part Now
-        val index = findUiIndexById(id)
         val list1 = uiListOfAllItems.slice(0 until index)
         val list2 = uiListOfAllItems.slice(index+1 .. uiListOfAllItems.lastIndex)
         val uiItem = ItemComponent(item, this)
 
         uiListOfAllItems.clear()
         uiListOfAllItems.addAll(list1)
-        if (field != "delete") uiListOfAllItems.add(uiItem)
+        uiListOfAllItems.add(uiItem)
         uiListOfAllItems.addAll(list2)
         refreshDisplayedList()
     }

@@ -78,6 +78,14 @@ class TodoItem() {
                 priority == otherItem.priority &&
                 completion == otherItem.completion)
     }
+
+    fun copy(): TodoItem {
+        val copy_tags = mutableListOf<String>()
+        for (tag in tags) {
+            copy_tags.add(tag)
+        }
+        return TodoItem(title, description, deadline, priority, id, copy_tags, timestamp)
+    }
 }
 
 @OptIn(ExperimentalSerializationApi::class)

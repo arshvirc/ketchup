@@ -4,6 +4,7 @@ import javafx.collections.FXCollections
 import javafx.geometry.Insets
 import javafx.scene.Node
 import javafx.scene.control.TextField
+import ketchup.app.Action
 import ketchup.app.components.ItemComponent
 import ketchup.app.ktorclient.Client
 import ketchup.console.TodoItem
@@ -33,7 +34,7 @@ class DescriptionComponent: TextField {
             run {
                 if (!new) {
                     println("Proceeding to Update Description to be ${this.text}")
-                    model.editToDoItem(toDoItemId, "desc", this.text)
+                    model.editToDoItem(toDoItemId, Action.EDIT_DESC, this.text)
                 }
             }
         }

@@ -25,7 +25,7 @@ class TrashComponent: ButtonBar {
         trashButton.setOnAction {
             run {
                 println("Deleting the item with the following item: ${this.toDoItemId}")
-                model.editToDoItem(toDoItemId, "delete", 0)
+                model.deleteItemFromList(toDoItemId)
             }
         }
 

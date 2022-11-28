@@ -3,6 +3,7 @@ import ketchup.app.Model
 import javafx.collections.FXCollections
 import javafx.scene.Node
 import javafx.scene.control.TextField
+import ketchup.app.Action
 import ketchup.app.components.ItemComponent
 import ketchup.app.ktorclient.Client
 import ketchup.console.TodoItem
@@ -31,7 +32,7 @@ class TitleComponent: TextField {
             run {
                 if (!new) {
                     println("Proceeding to Update Title Field to have the following title: ${this.text}")
-                    model.editToDoItem(toDoItemId, "title", this.text)
+                    model.editToDoItem(toDoItemId, Action.EDIT_TITLE, this.text)
                 }
             }
         }
