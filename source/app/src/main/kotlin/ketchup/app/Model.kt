@@ -216,15 +216,21 @@ class Model() {
             }
         }
         // UPDATE UI Part Now
-        val index = findUiIndexById(id)
-        val list1 = uiListOfAllItems.slice(0 until index)
-        val list2 = uiListOfAllItems.slice(index+1 .. uiListOfAllItems.lastIndex)
-        val uiItem = ItemComponent(item, this)
+        val uiItem = uiListOfAllItems.find { (it as ItemComponent).item.id == id.toInt() }
+        val index = uiListOfAllItems.indexOf(uiItem)
+        if (field != "delete") {
+            uiListOfAllItems[index] = ItemComponent(item, this)
+        } else {
+            uiListOfAllItems.removeAt(index)
+        }
+//        val list1 = uiListOfAllItems.slice(0 until index)
+//        val list2 = uiListOfAllItems.slice(index+1 .. uiListOfAllItems.lastIndex)
+//        val uiItem = ItemComponent(item, this)
 
-        uiListOfAllItems.clear()
-        uiListOfAllItems.addAll(list1)
-        if (field != "delete") uiListOfAllItems.add(uiItem)
-        uiListOfAllItems.addAll(list2)
+//        uiListOfAllItems.clear()
+//        uiListOfAllItems.addAll(list1)
+//        if (field != "delete") uiListOfAllItems.add(uiItem)
+//        uiListOfAllItems.addAll(list2)
         refreshDisplayedList()
     }
 
