@@ -29,6 +29,8 @@ class Model() {
     var dbListOfAllItems =  TodoList()
     var listOfTags: MutableList<String> = mutableListOf<String>()
 
+    var selectedItemId = -1;
+
     // Fixed Information
     val listOfPriorities: List<String> = listOf<String>("None", "Low", "Medium", "High")
 
@@ -241,6 +243,15 @@ class Model() {
     private fun findUiIndexById(id: String): Int {
         val item = displayList.find { (it as ItemComponent).item.id == id.toInt() }
         return displayList.indexOf(item)
+    }
+
+    fun chooseSelectedItem(id: Int) {
+        selectedItemId = id
+        for(item in displayList) {
+            if(item.id.toInt() == id) {
+                item.style += "-fx-border-color: primary-color; " + " -fx-border-radius: 10; "
+            }
+        }
     }
 }
 
