@@ -26,10 +26,10 @@ class CompleteComponent: Button  {
         this.prefWidth = 25.0
         this.model = m
 
-        image = if(!item.completion) {
-            Image("images/progress.png")
-        } else {
+        image = if(item.completion) {
             Image("images/completed.png")
+        } else {
+            Image("images/progress.png")
         }
 
         imageView.fitHeight = 15.0
@@ -39,47 +39,45 @@ class CompleteComponent: Button  {
         imageView.image = image
         this.graphic = imageView
 
-        this.setOnAction { obs ->
+        this.setOnAction {
             run {
-                val source = obs.source as Button
                 if (item.completion) {
                     // Setting completion to "false"
-                    println("Moving the item ${item.id} to 'In Progress'.")
-                    image = Image("images/progress.png")
-                    imageView.image = image
-                    graphic = imageView
-                    graphic.id = "0"
-
-                    item.completion = false
-                    item.printItem()
-                    val editSuccess = runBlocking { m.api.editTodoItem(item.id, item) }
-                    if(!editSuccess) {
-                        println("Uncompleting item with ID ${item.id} failed")
-                    }
-
-                    // TODO: remember to change this to this.moveToBottomUnCompleted once the code has been refactored
-                    
-                    this.moveToBottom(item.id.toString())
+                    println("Proceeding to Update ${item.id} as uncompleted")
+                    model.editToDoItem(item.id.toString(), "completion", false)
+//                    println("Moving the item ${item.id} to 'In Progress'.")
+//                    image = Image("images/progress.png")
+//                    imageView.image = image
+//                    graphic = imageView
+//
+//                    item.completion = false
+//                    val editSuccess = runBlocking { m.api.editTodoItem(item.id, item) }
+//                    if(!editSuccess) {
+//                        println("Uncompleting item with ID ${item.id} failed")
+//                    }
+//
+//                    // TODO: remember to change this to this.moveToBottomUnCompleted once the code has been refactored
+//
+//                    this.moveToBottom(item.id.toString())
                 } else {
                     // Setting completion to "true"
-
-                    println("Moving the item ${item.id} to 'Completed'.")
-                    println("COMPLETED TASK")
-
-                    item.completeTask()
-                    item.printItem()
-                    val editSuccess = runBlocking { m.api.editTodoItem(item.id, item) }
-                    if(!editSuccess) {
-                        println("Uncompleting item with ID ${item.id} failed")
-                    }
-
-                    image = Image("images/completed.png")
-                    imageView.image = image
-                    graphic = imageView
-                    graphic.id = "1"
-                    println("Parent Id:  + ${this.parent.parent.parent.id}")
-                    val itemId = this.parent.parent.parent.id
-                    this.moveToBottom(itemId.toString())
+                    println("Proceeding to Update ${item.id} as completed")
+                    model.editToDoItem(item.id.toString(), "completion", true)
+//
+//                    item.completeTask()
+//                    item.printItem()
+//                    val editSuccess = runBlocking { m.api.editTodoItem(item.id, item) }
+//                    if(!editSuccess) {
+//                        println("Uncompleting item with ID ${item.id} failed")
+//                    }
+//
+//                    image = Image("images/completed.png")
+//                    imageView.image = image
+//                    graphic = imageView
+//                    graphic.id = "1"
+//                    println("Parent Id:  + ${this.parent.parent.parent.id}")
+//                    val itemId = this.parent.parent.parent.id
+//                    this.moveToBottom(itemId.toString())
                 }
             }
         }
