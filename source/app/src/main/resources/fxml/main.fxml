@@ -61,7 +61,7 @@
       </MenuBar>
       <BorderPane id="container" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="550.0" minWidth="-Infinity" prefHeight="583.0" prefWidth="900.0" stylesheets="@../css/main.css" VBox.vgrow="always">
          <left>
-            <VBox id="sidebar-container" fx:id="sidebar" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="184.0" prefHeight="550.0" prefWidth="184.0" spacing="5.0" BorderPane.alignment="CENTER">
+            <VBox id="sidebar-container" fx:id="sidebar" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="184.0" prefHeight="498.0" prefWidth="184.0" spacing="5.0" BorderPane.alignment="CENTER">
                <children>
                   <Button fx:id="allTasksListButton" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="175.0" mnemonicParsing="false" onAction="#sideBarButton" prefHeight="27.0" prefWidth="175.0" style="-fx-font-size: 14;" styleClass="option" text=" All Tasks">
                      <graphic>
@@ -89,6 +89,24 @@
                         <ImageView fitHeight="39.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../images/calendar.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="allTasksListButton22" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="175.0" mnemonicParsing="false" onAction="#sideBarButton" prefHeight="0.0" prefWidth="175.0" style="-fx-font-size: 14;" styleClass="option" text="  Completed">
+                     <graphic>
+                        <ImageView fitHeight="39.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/completed%20items.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="allTasksListButton21" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="175.0" mnemonicParsing="false" onAction="#sideBarButton" prefHeight="0.0" prefWidth="175.0" style="-fx-font-size: 14;" styleClass="option" text="  Trash">
+                     <graphic>
+                        <ImageView fitHeight="39.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/trash.png" />
                            </image>
                         </ImageView>
                      </graphic>
