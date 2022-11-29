@@ -63,6 +63,7 @@ class Model() {
             // this? As a temporary solution I've changed the parameter type for editToDoItem from Any to Any?, but this is
             // probably not ideal in general.
             Action.EDIT_DEADLINE ->  editToDoItem(id, action, item.deadline, flag)
+            Action.EDIT_COMPLETE -> editToDoItem(id, action, item.completion, flag)
             else -> println("Not implemented yet!")
         }
     }

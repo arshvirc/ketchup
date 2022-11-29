@@ -84,7 +84,7 @@ class TodoItem() {
         for (tag in tags) {
             copy_tags.add(tag)
         }
-        return TodoItem(title, description, deadline, priority, id, copy_tags, timestamp)
+        return TodoItem(title, description, deadline, priority, id, copy_tags, timestamp, completion)
     }
 }
 
