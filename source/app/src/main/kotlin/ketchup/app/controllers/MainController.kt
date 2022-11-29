@@ -64,26 +64,17 @@ class MainController : Initializable {
         }
 
         undo.setOnAction { actionEvent ->
-            // model.undo()
+            model.undo()
         }
 
         redo.setOnAction { actionEvent ->
-            // model.redo()
+            model.redo()
         }
 
         quitButton.setOnAction { actionEvent ->
             val stage: Stage = title.scene.window as Stage
             stage.fireEvent(WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST))
         }
-    }
-    @FXML
-    private fun undoButton() {
-        model.undo()
-    }
-
-    @FXML
-    private fun redoButton() {
-        model.redo()
     }
 
 
