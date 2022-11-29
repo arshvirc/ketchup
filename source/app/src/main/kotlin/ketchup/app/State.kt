@@ -5,7 +5,7 @@ import ketchup.console.TodoItem
 enum class Action {
     ADD,
     DELETE,
-    COMPLETE,
+    EDIT_COMPLETE,
     EDIT_TITLE,
     EDIT_DESC,
     EDIT_TAGS,

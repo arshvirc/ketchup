@@ -8,14 +8,16 @@ import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
+import ketchup.app.Action
 import ketchup.console.TodoItem
 import kotlinx.coroutines.runBlocking
 
-class CompleteComponent: Button  {
+class CompleteComponent: Button {
     var model: Model
     var imageView = ImageView()
     var image: Image
-    constructor(item: TodoItem, m : Model) {
+
+    constructor(item: TodoItem, m: Model) {
         this.alignment = Pos.CENTER
         this.maxHeight = 25.0
         this.maxHeight = 25.0
@@ -26,10 +28,10 @@ class CompleteComponent: Button  {
         this.prefWidth = 25.0
         this.model = m
 
-        image = if(!item.completion) {
-            Image("images/progress.png")
-        } else {
+        image = if (item.completion) {
             Image("images/completed.png")
+        } else {
+            Image("images/progress.png")
         }
 
         imageView.fitHeight = 15.0
@@ -39,58 +41,19 @@ class CompleteComponent: Button  {
         imageView.image = image
         this.graphic = imageView
 
-        this.setOnAction { obs ->
+        this.setOnAction {
             run {
-                val source = obs.source as Button
                 if (item.completion) {
                     // Setting completion to "false"
-                    println("Moving the item ${item.id} to 'In Progress'.")
-                    image = Image("images/progress.png")
-                    imageView.image = image
-                    graphic = imageView
-                    graphic.id = "0"
+                    println("Proceeding to Update ${item.id} as uncompleted")
+                    model.editToDoItem(item.id.toString(), Action.EDIT_COMPLETE, false)
 
-                    item.completion = false
-                    item.printItem()
-                    val editSuccess = runBlocking { m.api.editTodoItem(item.id, item) }
-                    if(!editSuccess) {
-                        println("Uncompleting item with ID ${item.id} failed")
-                    }
-
-                    this.moveToBottom(item.id.toString())
                 } else {
                     // Setting completion to "true"
-
-                    println("Moving the item ${item.id} to 'Completed'.")
-                    println("COMPLETED TASK")
-
-                    item.completeTask()
-                    item.printItem()
-                    val editSuccess = runBlocking { m.api.editTodoItem(item.id, item) }
-                    if(!editSuccess) {
-                        println("Uncompleting item with ID ${item.id} failed")
-                    }
-
-                    image = Image("images/completed.png")
-                    imageView.image = image
-                    graphic = imageView
-                    graphic.id = "1"
-                    println("Parent Id:  + ${this.parent.parent.parent.id}")
-                    val itemId = this.parent.parent.parent.id
-                    this.moveToBottom(itemId.toString())
+                    println("Proceeding to Update ${item.id} as completed")
+                    model.editToDoItem(item.id.toString(), Action.EDIT_COMPLETE, true)
                 }
             }
         }
-    }
-    private fun moveToBottom( completedID: String) {
-        val tempList = FXCollections.observableArrayList<Node>()
-        for (item in model.uiListOfAllItems) {
-            if ( item.id == completedID ) {
-                tempList.add(item)
-            }
-        }
-        model.uiListOfAllItems.removeAll(tempList)
-        model.uiListOfAllItems.addAll(tempList)
-//        print(model.uiListOfAllItems.lastIndex)
     }
 }

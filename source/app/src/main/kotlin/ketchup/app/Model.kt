@@ -119,26 +119,34 @@ class Model() {
         val itemComponents = uiListOfAllItems.map { it as ItemComponent }
         var temp = Date(System.currentTimeMillis())
         val today = atStartOfDay(temp)
+        var filteredList: List<ItemComponent>
         displayList.clear()
         when (displayState) {
-            "All Tasks" -> displayList.addAll(uiListOfAllItems)
+            "All Tasks" -> {
+                filteredList = itemComponents.filter {
+                    it.item.id > 0
+                }
+            }
             "Today" -> {
-                val filteredList = itemComponents.filter {
+                filteredList = itemComponents.filter {
                     it.item.deadline?.equals(today) ?: false
                 }
-                displayList.addAll(filteredList)
             }
             "Upcoming" -> {
-                val filteredList = itemComponents.filter {
+                filteredList = itemComponents.filter {
                     it.item.deadline?.after(today) ?: false
                 }
-                displayList.addAll(filteredList)
             }
             else -> {
-                val filteredList = itemComponents.filter { it.item.tags.contains(displayState) }
-                displayList.addAll(filteredList)
+                filteredList = itemComponents.filter { it.item.tags.contains(displayState) }
             }
         }
+
+        val completedItems = filteredList.filter { it.item.completion }
+        val unCompletedItems = filteredList.filter { !it.item.completion }
+
+        displayList.addAll(unCompletedItems)
+        displayList.addAll(completedItems)
     }
 
     /*  Critical Function: addItemToList(dbItem)
@@ -309,6 +317,12 @@ class Model() {
                     }
                 }
             }
+
+            Action.EDIT_COMPLETE -> {
+                var status = newVal as Boolean
+                item.completion = status
+            }
+
             else -> {
                 return error("Wrong Field Value")
             }
@@ -328,20 +342,7 @@ class Model() {
         }
         // UPDATE UI Part Now
         val uiItem = uiListOfAllItems.find { (it as ItemComponent).item.id == id.toInt() }
-        val index = uiListOfAllItems.indexOf(uiItem)
-        if (field != "delete") {
-            uiListOfAllItems[index] = ItemComponent(item, this)
-        } else {
-            uiListOfAllItems.removeAt(index)
-        }
-//        val list1 = uiListOfAllItems.slice(0 until index)
-//        val list2 = uiListOfAllItems.slice(index+1 .. uiListOfAllItems.lastIndex)
-//        val uiItem = ItemComponent(item, this)
-
-//        uiListOfAllItems.clear()
-//        uiListOfAllItems.addAll(list1)
-//        if (field != "delete") uiListOfAllItems.add(uiItem)
-//        uiListOfAllItems.addAll(list2)
+        uiListOfAllItems[index] = ItemComponent(item, this)
         refreshDisplayedList()
     }
 
