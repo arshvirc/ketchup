@@ -29,7 +29,6 @@ class App : Application() {
         primaryStage.width = windowSize.w
         primaryStage.x = windowSize.x
         primaryStage.y = windowSize.y
-        println("thismac: $windowSize.max")
         primaryStage.isFullScreen = windowSize.max == 1.0
         primaryStage.title = "Ketchup 1.0"
         primaryStage.show()
