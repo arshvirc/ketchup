@@ -57,6 +57,8 @@ class CompleteComponent: Button  {
                         println("Uncompleting item with ID ${item.id} failed")
                     }
 
+                    // TODO: remember to change this to this.moveToBottomUnCompleted once the code has been refactored
+                    
                     this.moveToBottom(item.id.toString())
                 } else {
                     // Setting completion to "true"
@@ -93,4 +95,19 @@ class CompleteComponent: Button  {
         model.uiListOfAllItems.addAll(tempList)
 //        print(model.uiListOfAllItems.lastIndex)
     }
+
+    /* TODO: this is the code for repositioning the item upon "uncompleting" it
+
+    private fun moveToBottomUnCompleted( completedID: String) {
+        val completed = FXCollections.observableArrayList<Node>()
+        for (item in model.uiListOfAllItems) {
+            if ( (item as ItemComponent).item.completion && item.id != completedID) {
+                completed.add(item)
+            }
+        }
+        model.uiListOfAllItems.removeAll(completed)
+        model.uiListOfAllItems.addAll(completed)
+
+
+     */
 }
