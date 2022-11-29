@@ -6,6 +6,7 @@ import javafx.scene.Node
 import javafx.scene.control.DatePicker
 import javafx.scene.control.Label
 import javafx.scene.layout.HBox
+import ketchup.app.Action
 import ketchup.app.components.ItemComponent
 import ketchup.app.ktorclient.Client
 import ketchup.console.TodoItem
@@ -52,7 +53,7 @@ class DeadlineComponent: HBox {
             run {
                 if (!new) {
                     println("Proceeding to Update Deadline to be ${this.options.value}")
-                    model.editToDoItem(toDoItemId, "deadline", this.options.value)
+                    model.editToDoItem(toDoItemId, Action.EDIT_DEADLINE, this.options.value)
                 }
             }
         }

@@ -50,6 +50,16 @@ class MainController : Initializable {
             updateSideBar(tag)
         }
     }
+    @FXML
+    private fun undoButton() {
+        model.undo()
+    }
+
+    @FXML
+    private fun redoButton() {
+        model.redo()
+    }
+
 
     @FXML
     private fun sideBarButton(e: ActionEvent) {

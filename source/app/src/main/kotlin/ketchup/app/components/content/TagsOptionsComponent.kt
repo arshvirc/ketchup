@@ -5,6 +5,7 @@ import javafx.collections.FXCollections
 import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
 import javafx.scene.Node
+import ketchup.app.Action
 import ketchup.app.components.ItemComponent
 import ketchup.app.ktorclient.Client
 import ketchup.console.TodoItem
@@ -37,7 +38,7 @@ class TagsOptionsComponent: CheckComboBox<String> {
         this.checkModel.checkedItems.addListener(ListChangeListener<String?> { c ->
             val newValue : ObservableList<String> = this.checkModel.checkedItems
             println("Proceeding to Update Tags to be ${newValue.toString()}")
-            model.editToDoItem(toDoItemId, "tags", newValue)
+            model.editToDoItem(toDoItemId, Action.EDIT_TAGS, newValue)
         })
     }
 }
