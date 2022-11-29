@@ -14,6 +14,7 @@ import javafx.scene.control.*
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import javafx.stage.StageStyle
+import javafx.stage.WindowEvent
 import ketchup.app.Model
 import ketchup.app.components.ContentComponent
 import ketchup.app.components.ItemComponent
@@ -38,6 +39,14 @@ class MainController : Initializable {
 
     @FXML private lateinit var displayView: VBox
 
+    @FXML private lateinit var new_item: MenuItem
+
+    @FXML private lateinit var undo: MenuItem
+
+    @FXML private lateinit var redo: MenuItem
+
+    @FXML private lateinit var quitButton: MenuItem
+
     override fun initialize(arg0: URL?, arg1: ResourceBundle?) {
         model = Model(displayView.children, this)
         filterButton.items.addAll(
@@ -49,15 +58,23 @@ class MainController : Initializable {
         for (tag in model.listOfTags) {
             updateSideBar(tag)
         }
-    }
-    @FXML
-    private fun undoButton() {
-        model.undo()
-    }
 
-    @FXML
-    private fun redoButton() {
-        model.redo()
+        new_item.setOnAction { actionEvent ->
+            showDialog("addItemUI")
+        }
+
+        undo.setOnAction { actionEvent ->
+            model.undo()
+        }
+
+        redo.setOnAction { actionEvent ->
+            model.redo()
+        }
+
+        quitButton.setOnAction { actionEvent ->
+            val stage: Stage = title.scene.window as Stage
+            stage.fireEvent(WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST))
+        }
     }
 
 

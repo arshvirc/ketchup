@@ -358,11 +358,6 @@ class Model() {
 
     fun chooseSelectedItem(id: Int) {
         selectedItemId = id
-        for(item in displayList) {
-            if(item.id.toInt() == id) {
-                item.style += "-fx-border-color: primary-color; " + " -fx-border-radius: 10; "
-            }
-        }
     }
 }
 

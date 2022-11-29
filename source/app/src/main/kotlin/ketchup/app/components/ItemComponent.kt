@@ -42,8 +42,6 @@ class ItemComponent: TitledPane {
 
         this.setOnMousePressed{
             this.model.chooseSelectedItem(item.id)
-            border = (Border(BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii(10.0), null)))
-            println("Mouse Pressed on ${item.id}")
         }
 
 

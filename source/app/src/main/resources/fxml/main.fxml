@@ -24,7 +24,7 @@
          <menus>
             <Menu mnemonicParsing="false" text="File">
                <items>
-                  <MenuItem accelerator="Shortcut+N" mnemonicParsing="false" text="New" />
+                  <MenuItem fx:id="new_item" accelerator="Shortcut+N" mnemonicParsing="false" text="New" />
                   <MenuItem mnemonicParsing="false" text="Open…" />
                   <Menu mnemonicParsing="false" text="Open Recent" />
                   <SeparatorMenuItem mnemonicParsing="false" />
@@ -35,13 +35,13 @@
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" text="Preferences…" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Quit" />
+                  <MenuItem fx:id="quitButton" mnemonicParsing="false" accelerator="Shortcut+Q" text="Quit" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Edit">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#undoButton" text="Undo" />
-                  <MenuItem mnemonicParsing="false" onAction="#redoButton" text="Redo" />
+                  <MenuItem fx:id="undo" accelerator="Shortcut+U" mnemonicParsing="false" text="Undo" />
+                  <MenuItem fx:id="redo" accelerator="Shortcut+Shift+U" mnemonicParsing="false" text="Redo" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" text="Cut" />
                   <MenuItem mnemonicParsing="false" text="Copy" />
