@@ -65,7 +65,7 @@ class MainController : Initializable {
     private fun sideBarButton(e: ActionEvent) {
         val source = e.source as Button
         title.text = source.text
-        model.displayState = source.text
+        model.displayState = source.text.trim()
         model.refreshDisplayedList()
     }
 
