@@ -23,16 +23,21 @@ class Window {
     }
 
     fun getWindowSize(): WindowSize {
-        file.forEachLine { it ->
-            val str = it.split(":")
-            when(str[0]) {
-                "Height" -> windowHeight = str[1].toDouble()
-                "Width" -> windowWidth = str[1].toDouble()
-                "X" -> windowPosX = str[1].toDouble()
-                "Y" -> windowPosY = str[1].toDouble()
+        if(file.exists()) {
+            file.forEachLine { it ->
+                val str = it.split(":")
+                when(str[0]) {
+                    "Height" -> windowHeight = str[1].toDouble()
+                    "Width" -> windowWidth = str[1].toDouble()
+                    "X" -> windowPosX = str[1].toDouble()
+                    "Y" -> windowPosY = str[1].toDouble()
+                }
             }
-        }
 
-        return WindowSize(windowHeight, windowWidth, windowPosX, windowPosY)
+            return WindowSize(windowHeight, windowWidth, windowPosX, windowPosY)
+        } else {
+            saveWindowSize(550.0, 900.0, 0.0, 0.0)
+            return WindowSize(550.0 ,900.0, 0.0, 0.0)
+        }
     }
 }
