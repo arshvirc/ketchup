@@ -38,6 +38,8 @@ class Model() {
     var dbListOfAllItems =  TodoList()
     var listOfTags: MutableList<String> = mutableListOf<String>()
 
+    var selectedItemId = -1;
+
     // Fixed Information
     val listOfPriorities: List<String> = listOf<String>("None", "Low", "Medium", "High")
 
@@ -325,14 +327,21 @@ class Model() {
             println("Editing tags for item with ID $id failed")
         }
         // UPDATE UI Part Now
-        val list1 = uiListOfAllItems.slice(0 until index)
-        val list2 = uiListOfAllItems.slice(index+1 .. uiListOfAllItems.lastIndex)
-        val uiItem = ItemComponent(item, this)
+        val uiItem = uiListOfAllItems.find { (it as ItemComponent).item.id == id.toInt() }
+        val index = uiListOfAllItems.indexOf(uiItem)
+        if (field != "delete") {
+            uiListOfAllItems[index] = ItemComponent(item, this)
+        } else {
+            uiListOfAllItems.removeAt(index)
+        }
+//        val list1 = uiListOfAllItems.slice(0 until index)
+//        val list2 = uiListOfAllItems.slice(index+1 .. uiListOfAllItems.lastIndex)
+//        val uiItem = ItemComponent(item, this)
 
-        uiListOfAllItems.clear()
-        uiListOfAllItems.addAll(list1)
-        uiListOfAllItems.add(uiItem)
-        uiListOfAllItems.addAll(list2)
+//        uiListOfAllItems.clear()
+//        uiListOfAllItems.addAll(list1)
+//        if (field != "delete") uiListOfAllItems.add(uiItem)
+//        uiListOfAllItems.addAll(list2)
         refreshDisplayedList()
     }
 
@@ -343,6 +352,15 @@ class Model() {
     private fun findUiIndexById(id: String): Int {
         val item = displayList.find { (it as ItemComponent).item.id == id.toInt() }
         return displayList.indexOf(item)
+    }
+
+    fun chooseSelectedItem(id: Int) {
+        selectedItemId = id
+        for(item in displayList) {
+            if(item.id.toInt() == id) {
+                item.style += "-fx-border-color: primary-color; " + " -fx-border-radius: 10; "
+            }
+        }
     }
 }
 

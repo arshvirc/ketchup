@@ -5,9 +5,13 @@
     light-grey-color: #d1d1d1;
 }
 
+.option {
+    -fx-font-size: 12px;
+}
 
 #container {
     -fx-font-size: 32px;
+    -fx-padding: 0 0 0 0;
 }
 
 #sidebar-container {

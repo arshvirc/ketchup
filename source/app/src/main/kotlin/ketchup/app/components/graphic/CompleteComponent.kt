@@ -1,107 +1,87 @@
 package ketchup.app.components.graphic
 
-import ketchup.app.Model
 import javafx.collections.FXCollections
+import javafx.geometry.Bounds
+import ketchup.app.Model
 import javafx.geometry.Pos
 import javafx.scene.Node
 import javafx.scene.control.Button
-import javafx.scene.control.ButtonBar
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
-import ketchup.app.ktorclient.Client
 import ketchup.console.TodoItem
 import kotlinx.coroutines.runBlocking
 
-class CompleteComponent: ButtonBar {
-    var toDoItemId : String
-    var completeButton: Button
+class CompleteComponent: Button  {
     var model: Model
-    val api: Client
-
-    constructor(item: TodoItem, m: Model) {
-        this.toDoItemId = item.id.toString()
-        this.model = m
-        this.api = m.api
-
-
-        this.buttonMinWidth = 30.0
-        this.maxHeight = Double.NEGATIVE_INFINITY
-        this.maxWidth = Double.NEGATIVE_INFINITY
+    var imageView = ImageView()
+    var image: Image
+    constructor(item: TodoItem, m : Model) {
+        this.alignment = Pos.CENTER
+        this.maxHeight = 25.0
+        this.maxHeight = 25.0
         this.minHeight = 25.0
-        this.minWidth = Double.NEGATIVE_INFINITY
-        this.prefHeight = 30.0
-        this.prefWidth = 200.0
+        this.minWidth = 25.0
+        this.isMnemonicParsing = false
+        this.prefHeight = 25.0
+        this.prefWidth = 25.0
+        this.model = m
 
-
-        completeButton = Button("Trash")
-        completeButton.alignment = Pos.CENTER
-        completeButton.maxHeight = 25.0
-        completeButton.maxHeight = 25.0
-        completeButton.minHeight = 25.0
-        completeButton.minWidth = 25.0
-        completeButton.isMnemonicParsing = false
-        completeButton.prefHeight = 25.0
-        completeButton.prefWidth = 25.0
-        var completeImageView = ImageView()
-        completeImageView.fitHeight = 15.0
-        completeImageView.fitWidth = 40.0
-        completeImageView.isPickOnBounds = true
-        completeImageView.isPreserveRatio = true
-        var completeImage : Image
-        if(!item.completion) {
-            completeImage = Image("images/progress.png")
+        image = if(!item.completion) {
+            Image("images/progress.png")
         } else {
-            completeImage = Image("images/completed.png")
+            Image("images/completed.png")
         }
-        completeImageView.image = completeImage
-        completeButton.graphic = completeImageView
-        completeButton.graphic.id = "0"
 
-        completeButton.setOnAction { obs ->
+        imageView.fitHeight = 15.0
+        imageView.fitWidth = 40.0
+        imageView.isPickOnBounds = true
+        imageView.isPreserveRatio = true
+        imageView.image = image
+        this.graphic = imageView
+
+        this.setOnAction { obs ->
             run {
                 val source = obs.source as Button
-                if (source.graphic.id.toInt() == 1) {
+                if (item.completion) {
                     // Setting completion to "false"
-                    println("Moving the item ${this.toDoItemId} to 'In Progress'.")
-                    var completedImage = Image("images/progress.png")
-                    completeImageView.image = completedImage
-                    completeButton.graphic = completeImageView
-                    completeButton.graphic.id = "0"
+                    println("Moving the item ${item.id} to 'In Progress'.")
+                    image = Image("images/progress.png")
+                    imageView.image = image
+                    graphic = imageView
+                    graphic.id = "0"
 
                     item.completion = false
                     item.printItem()
-                    val editSuccess = runBlocking { api.editTodoItem(item.id, item) }
+                    val editSuccess = runBlocking { m.api.editTodoItem(item.id, item) }
                     if(!editSuccess) {
                         println("Uncompleting item with ID ${item.id} failed")
                     }
 
-                    this.moveToBottom(toDoItemId)
+                    this.moveToBottom(item.id.toString())
                 } else {
                     // Setting completion to "true"
 
-                    println("Moving the item ${this.toDoItemId} to 'Completed'.")
+                    println("Moving the item ${item.id} to 'Completed'.")
                     println("COMPLETED TASK")
 
                     item.completeTask()
                     item.printItem()
-                    val editSuccess = runBlocking { api.editTodoItem(item.id, item) }
+                    val editSuccess = runBlocking { m.api.editTodoItem(item.id, item) }
                     if(!editSuccess) {
                         println("Uncompleting item with ID ${item.id} failed")
                     }
 
-                    var completedImage = Image("images/completed.png")
-                    completeImageView.image = completedImage
-                    completeButton.graphic = completeImageView
-                    completeButton.graphic.id = "1"
-                    println("Parent Id:  + ${completeButton.parent.parent.parent.id}")
-                    val itemId = completeButton.parent.parent.parent.id
-                    this.moveToBottom(toDoItemId)
+                    image = Image("images/completed.png")
+                    imageView.image = image
+                    graphic = imageView
+                    graphic.id = "1"
+                    println("Parent Id:  + ${this.parent.parent.parent.id}")
+                    val itemId = this.parent.parent.parent.id
+                    this.moveToBottom(itemId.toString())
                 }
             }
         }
-        this.buttons.add(completeButton)
     }
-
     private fun moveToBottom( completedID: String) {
         val tempList = FXCollections.observableArrayList<Node>()
         for (item in model.uiListOfAllItems) {

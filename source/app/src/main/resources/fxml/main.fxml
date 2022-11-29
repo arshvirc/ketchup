@@ -62,9 +62,9 @@
       </MenuBar>
       <BorderPane id="container" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="550.0" minWidth="-Infinity" prefHeight="583.0" prefWidth="900.0" stylesheets="@../css/main.css" VBox.vgrow="always">
          <left>
-            <VBox id="sidebar-container" fx:id="sidebar" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="184.0" prefHeight="550.0" prefWidth="184.0" spacing="10.0" BorderPane.alignment="CENTER">
+            <VBox id="sidebar-container" fx:id="sidebar" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="184.0" prefHeight="550.0" prefWidth="184.0" spacing="5.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="allTasksListButton" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="175.0" mnemonicParsing="false" onAction="#sideBarButton" prefHeight="40.0" prefWidth="175.0" styleClass="option" text="All Tasks">
+                  <Button fx:id="allTasksListButton" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="175.0" mnemonicParsing="false" onAction="#sideBarButton" prefHeight="0.0" prefWidth="175.0" styleClass="option" text="All Tasks">
                      <graphic>
                         <ImageView fitHeight="23.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -73,7 +73,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="allTasksListButton1" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="175.0" mnemonicParsing="false" onAction="#sideBarButton" prefHeight="40.0" prefWidth="175.0" styleClass="option" text="Today">
+                  <Button fx:id="allTasksListButton1" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="175.0" mnemonicParsing="false" onAction="#sideBarButton" prefHeight="0.0" prefWidth="175.0" styleClass="option" text="Today">
                      <graphic>
                         <ImageView fitHeight="23.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -82,7 +82,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="allTasksListButton2" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="175.0" mnemonicParsing="false" onAction="#sideBarButton" prefHeight="40.0" prefWidth="175.0" styleClass="option" text="Upcoming">
+                  <Button fx:id="allTasksListButton2" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="175.0" mnemonicParsing="false" onAction="#sideBarButton" prefHeight="0.0" prefWidth="175.0" styleClass="option" text="Upcoming">
                      <graphic>
                         <ImageView fitHeight="23.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -108,12 +108,12 @@
                               <Font name="Avenir Book" size="23.0" />
                            </font>
                         </Label>
-                        <Button fx:id="addItemButton" maxHeight="33.0" maxWidth="107.0" minHeight="7.0" minWidth="75.0" mnemonicParsing="false" onAction="#onButtonClicked" prefHeight="20.0" prefWidth="107.0" text="Add Item">
+                        <Button fx:id="addItemButton" maxHeight="33.0" maxWidth="107.0" minHeight="7.0" minWidth="75.0" mnemonicParsing="false" onAction="#onButtonClicked" prefHeight="20.0" prefWidth="107.0" text="Add Item" HBox.hgrow="NEVER">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Button>
-                        <ComboBox fx:id="filterButton" maxHeight="34.0" maxWidth="-Infinity" minHeight="26.0" minWidth="75.0" onAction="#onButtonClicked" prefHeight="26.0" prefWidth="107.0" promptText="Filter Text" style="-fx-background-color: primary-color; -fx-border-color: primary-color; -fx-font-size: 14;">
+                        <ComboBox fx:id="filterButton" maxHeight="34.0" maxWidth="-Infinity" minHeight="26.0" minWidth="75.0" onAction="#onButtonClicked" prefHeight="26.0" prefWidth="107.0" promptText="Filter Text" style="-fx-background-color: primary-color; -fx-border-color: primary-color; -fx-font-size: 14;" HBox.hgrow="NEVER">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
@@ -121,7 +121,7 @@
                               <Insets left="34.0" />
                            </padding>
                         </ComboBox>
-                        <TextArea id="hi" fx:id="searchBarField" maxHeight="26.0" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="65.0" prefHeight="28.0" prefWidth="100.0" promptText="Search by title" HBox.hgrow="ALWAYS" />
+                        <TextArea id="hi" fx:id="searchBarField" maxHeight="28.0" maxWidth="290.0" minHeight="-Infinity" minWidth="65.0" prefHeight="28.0" prefWidth="290.0" promptText="Search by title" HBox.hgrow="NEVER" />
                      </children>
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

@@ -122,6 +122,9 @@ class MainController : Initializable {
                 val uiItem = item as ItemComponent
                 uiItem.content = ContentComponent(uiItem.item, model)
             }
+            title.text = "All Tasks"
+            model.displayState = "All Tasks"
+            model.refreshDisplayedList()
         }
         bar.buttons.addAll(tagButton, delButton)
         sidebar.children.add(bar)
