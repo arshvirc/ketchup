@@ -77,16 +77,16 @@
                   </Button>
                   <Button fx:id="allTasksListButton1" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="175.0" mnemonicParsing="false" onAction="#sideBarButton" prefHeight="0.0" prefWidth="175.0" style="-fx-font-size: 14;" styleClass="option" text=" Today">
                      <graphic>
-                        <ImageView fitHeight="21.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../images/all%20tasks.png" />
+                              <Image url="@../images/today.png" />
                            </image>
                         </ImageView>
                      </graphic>
                   </Button>
                   <Button fx:id="allTasksListButton2" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="175.0" mnemonicParsing="false" onAction="#sideBarButton" prefHeight="0.0" prefWidth="175.0" style="-fx-font-size: 14;" styleClass="option" text="  Upcoming">
                      <graphic>
-                        <ImageView fitHeight="19.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="39.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../images/calendar.png" />
                            </image>
@@ -110,12 +110,12 @@
                               <Font name="Avenir Book" size="23.0" />
                            </font>
                         </Label>
-                        <Button fx:id="addItemButton" maxHeight="33.0" maxWidth="75.0" minHeight="7.0" minWidth="75.0" mnemonicParsing="false" onAction="#onButtonClicked" prefHeight="20.0" prefWidth="75.0" text="Add Item" HBox.hgrow="ALWAYS">
+                        <Button fx:id="addItemButton" maxHeight="33.0" maxWidth="75.0" minHeight="7.0" minWidth="75.0" mnemonicParsing="false" onAction="#onButtonClicked" prefHeight="20.0" prefWidth="75.0" text="Add Item" HBox.hgrow="NEVER">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Button>
-                        <ComboBox fx:id="filterButton" maxHeight="34.0" maxWidth="187.0" minHeight="26.0" minWidth="24.0" onAction="#onButtonClicked" prefHeight="34.0" prefWidth="24.0" promptText="Filter" style="-fx-background-color: primary-color; -fx-border-color: primary-color; -fx-font-size: 14;" HBox.hgrow="ALWAYS">
+                        <ComboBox fx:id="filterButton" maxHeight="34.0" maxWidth="187.0" minHeight="26.0" minWidth="24.0" onAction="#onButtonClicked" prefHeight="34.0" prefWidth="24.0" promptText="Filter" style="-fx-background-color: primary-color; -fx-border-color: primary-color; -fx-font-size: 14;" HBox.hgrow="NEVER">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
