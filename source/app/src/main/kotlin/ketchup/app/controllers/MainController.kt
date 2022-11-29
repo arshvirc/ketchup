@@ -76,6 +76,16 @@ class MainController : Initializable {
             stage.fireEvent(WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST))
         }
     }
+    @FXML
+    private fun undoButton() {
+        model.undo()
+    }
+
+    @FXML
+    private fun redoButton() {
+        model.redo()
+    }
+
 
     @FXML
     private fun sideBarButton(e: ActionEvent) {

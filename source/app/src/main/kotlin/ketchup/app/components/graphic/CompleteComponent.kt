@@ -8,6 +8,7 @@ import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
+import ketchup.app.Action
 import ketchup.console.TodoItem
 import kotlinx.coroutines.runBlocking
 
@@ -45,12 +46,12 @@ class CompleteComponent: Button {
                 if (item.completion) {
                     // Setting completion to "false"
                     println("Proceeding to Update ${item.id} as uncompleted")
-                    model.editToDoItem(item.id.toString(), "completion", false)
+                    model.editToDoItem(item.id.toString(), Action.EDIT_COMPLETE, false)
 
                 } else {
                     // Setting completion to "true"
                     println("Proceeding to Update ${item.id} as completed")
-                    model.editToDoItem(item.id.toString(), "completion", true)
+                    model.editToDoItem(item.id.toString(), Action.EDIT_COMPLETE, true)
                 }
             }
         }
