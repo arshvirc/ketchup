@@ -255,14 +255,14 @@ internal class ItemControllerTest : AbstractTest() {
             if(listController != null) {
                 val list = listController.getAllLists()
                 assertEquals(list.size, 1)
-                assertEquals(list[0].list[0].id, 2)
+                assertEquals(list[0].list[0].id, 1)
             }
 
             controller.deleteItem(2)
 
             if(listController != null) {
                 val list = listController.getAllLists()
-                assertEquals(list.size, 0)
+                assertEquals(list.size, 1)
             }
         }
         prog.close()

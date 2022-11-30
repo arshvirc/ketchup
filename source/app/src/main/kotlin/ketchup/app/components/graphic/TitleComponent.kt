@@ -14,7 +14,7 @@ class TitleComponent: TextField {
     private var toDoItemId : String
     private var model: Model
     private var api: Client
-    constructor(item: TodoItem, model: Model) {
+    constructor(item: TodoItem, model: Model, archive: Boolean) {
         this.maxHeight = 30.0
         this.maxWidth = 1.7976931348623157E308
         this.minHeight = 30.0
@@ -27,6 +27,9 @@ class TitleComponent: TextField {
         this.model = model
         this.api = model.api
 
+        if(archive) {
+            this.isDisable = true;
+        }
 
         this.focusedProperty().addListener{ _, _, new ->
             run {

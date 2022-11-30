@@ -141,7 +141,7 @@ class MainController : Initializable {
             val apiTag = runBlocking { model.api.deleteTag(tagButton.text) }
             for ( item in model.uiListOfAllItems) {
                 val uiItem = item as ItemComponent
-                uiItem.content = ContentComponent(uiItem.item, model)
+                uiItem.content = ContentComponent(uiItem.item, model, false)
             }
             title.text = "All Tasks"
             model.displayState = "All Tasks"

@@ -19,7 +19,7 @@ class TagsComponent: HBox {
     var options : CheckComboBox<String>
     var model : Model
 
-    constructor(item: TodoItem, m: Model) {
+    constructor(item: TodoItem, m: Model, archive: Boolean) {
         this.prefHeight = 100.0
         this.prefWidth = 200.0
         this.spacing = 10.0
@@ -35,7 +35,12 @@ class TagsComponent: HBox {
 
         this.children.add(label)
         this.children.add(options)
-        this.children.add(addTag)
+
+        if(!archive) {
+            this.children.add(addTag)
+        } else {
+            this.options.isDisable = true;
+        }
     }
     private fun newTagOptions(event: ActionEvent) {
         val source = event.source as Button
@@ -80,7 +85,7 @@ class TagsComponent: HBox {
         model.listOfTags.add(tag)
         for ( item in model.uiListOfAllItems) {
             val uiItem = item as ItemComponent
-            uiItem.content = ContentComponent(uiItem.item, model)
+            uiItem.content = ContentComponent(uiItem.item, model, false)
         }
         model.previousController.updateSideBar(tag)
         model.refreshDisplayedList()

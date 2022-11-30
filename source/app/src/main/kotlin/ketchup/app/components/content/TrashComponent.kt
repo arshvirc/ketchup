@@ -14,7 +14,7 @@ class TrashComponent: ButtonBar {
     var model: Model
     var api: Client
 
-    constructor(item: TodoItem, m: Model) {
+    constructor(item: TodoItem, m: Model, archive: Boolean) {
         this.toDoItemId = item.id.toString()
         this.model = m
         this.api = m.api
@@ -29,6 +29,30 @@ class TrashComponent: ButtonBar {
             }
         }
 
-        this.buttons.add(trashButton)
+        var unarchive = Button("Restore Item")
+        var delete = Button("Delete")
+
+        unarchive.setOnAction {
+            run {
+                val success = runBlocking {
+                    api.unarchiveItem(toDoItemId.toInt())
+                }
+                model.refreshDisplayedList()
+            }
+        }
+
+        delete.setOnAction {
+            run {
+                val success = runBlocking { api.deleteTodoItem(toDoItemId.toInt()) }
+                model.refreshDisplayedList()
+            }
+        }
+
+        if(archive) {
+            this.buttons.addAll(unarchive, delete)
+        } else {
+            this.buttons.add(trashButton)
+
+        }
     }
 }
