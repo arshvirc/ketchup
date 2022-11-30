@@ -33,6 +33,9 @@ class TitleComponent: TextField {
                 if (!new) {
                     println("Proceeding to Update Title Field to have the following title: ${this.text}")
                     model.editToDoItem(toDoItemId, Action.EDIT_TITLE, this.text)
+                    model.onEditableField = false;
+                } else {
+                    model.onEditableField = true;
                 }
             }
         }

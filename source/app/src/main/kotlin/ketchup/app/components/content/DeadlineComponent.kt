@@ -54,6 +54,9 @@ class DeadlineComponent: HBox {
                 if (!new) {
                     println("Proceeding to Update Deadline to be ${this.options.value}")
                     model.editToDoItem(toDoItemId, Action.EDIT_DEADLINE, this.options.value)
+                    model.onEditableField = false;
+                } else {
+                    model.onEditableField = true;
                 }
             }
         }

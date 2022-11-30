@@ -13,8 +13,6 @@ import kotlinx.coroutines.runBlocking
 import java.time.*
 import java.util.*
 import kotlin.collections.ArrayDeque
-import ketchup.app.State
-import ketchup.app.Action
 
 
 class Model() {
@@ -28,6 +26,8 @@ class Model() {
     private val apiUrl = "http://127.0.0.1:3000"
     val api = Client(apiUrl)
     lateinit var previousController: MainController
+
+    var onEditableField = false;
 
     // Ui Fields
     lateinit var displayList: ObservableList<Node>                                                    // Displayed List

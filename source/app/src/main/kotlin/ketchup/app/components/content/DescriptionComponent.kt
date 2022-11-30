@@ -35,6 +35,9 @@ class DescriptionComponent: TextField {
                 if (!new) {
                     println("Proceeding to Update Description to be ${this.text}")
                     model.editToDoItem(toDoItemId, Action.EDIT_DESC, this.text)
+                    model.onEditableField = false;
+                } else {
+                    model.onEditableField = true;
                 }
             }
         }

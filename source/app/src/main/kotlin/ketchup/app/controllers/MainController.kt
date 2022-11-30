@@ -64,11 +64,15 @@ class MainController : Initializable {
         }
 
         undo.setOnAction { actionEvent ->
-            model.undo()
+            if(!model.onEditableField) {
+                model.undo()
+            }
         }
 
         redo.setOnAction { actionEvent ->
-            model.redo()
+            if(!model.onEditableField) {
+                model.redo()
+            }
         }
 
         quitButton.setOnAction { actionEvent ->
