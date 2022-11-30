@@ -40,8 +40,8 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Edit">
                <items>
-                  <MenuItem fx:id="undo" accelerator="Shortcut+U" mnemonicParsing="false" text="Undo" />
-                  <MenuItem fx:id="redo" accelerator="Shortcut+Shift+U" mnemonicParsing="false" text="Redo" />
+                  <MenuItem fx:id="undo" accelerator="Shortcut+Z" mnemonicParsing="false" text="Undo" />
+                  <MenuItem fx:id="redo" accelerator="Shortcut+Shift+Z" mnemonicParsing="false" text="Redo" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" text="Cut" />
                   <MenuItem mnemonicParsing="false" text="Copy" />
