@@ -30,7 +30,7 @@ class TagsComponent: HBox {
         this.options = TagsOptionsComponent(item, m)
         this.toDoItemId = item.id.toString()
 
-        var addTag = Button("Add Tag")
+        var addTag = Button("Create Tag")
         addTag.setOnAction { e-> newTagOptions(e)}
 
         this.children.add(label)
@@ -46,7 +46,7 @@ class TagsComponent: HBox {
         val source = event.source as Button
         val id = source.id
         when (source.text) {
-            "Add Tag" -> {
+            "Create Tag" -> {
                 this.children.remove(1,3)
                 val field = TextField()
                 this.children.add(field)
@@ -67,7 +67,7 @@ class TagsComponent: HBox {
                 options.checkModel.check(newTag)
                 this.children.add(options)                  // add checkcombobox
 
-                val add = Button("Add Tag")           // add add box
+                val add = Button("Create Tag")           // add add box
                 add.setOnAction { e-> newTagOptions(e) }
                 this.children.addAll(add)
             }
@@ -75,7 +75,7 @@ class TagsComponent: HBox {
                 this.children.remove(1,4)
                 this.children.add(options)
 
-                val add = Button("Add Tag")
+                val add = Button("Create Tag")
                 add.setOnAction { e-> newTagOptions(e) }
                 this.children.addAll(add)
             }

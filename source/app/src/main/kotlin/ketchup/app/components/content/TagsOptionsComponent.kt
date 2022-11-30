@@ -28,10 +28,10 @@ class TagsOptionsComponent: CheckComboBox<String> {
         this.items.addAll(m.listOfTags)
 
         for (tag in this.items) {
-            println("${item.tags} hello")
+            //println("${item.tags} hello")
             if (item.tags.contains(tag)) {
                 this.checkModel.check(tag)
-                println("has the following tag $tag")
+                //println("has the following tag $tag")
             }
         }
 
