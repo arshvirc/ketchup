@@ -95,41 +95,11 @@ class Model() {
             else -> undoRedoEdit(action, nextItem, URFlag.REDO)
         }
     }
-
-    constructor(list: ObservableList<Node>, c: MainController) : this() {
-        previousController = c
-        displayList = list
-        displayState = "All Tasks"
-
-        val mainList = runBlocking { api.getListById(0)?.list ?: mutableListOf<TodoItemResponse>() }
-        val archive = runBlocking { api.getArchive()?.list ?: mutableListOf<TodoItemResponse>() }
-        for(item in mainList) {
-            val date = item.deadline?.let { Date(it.toLong()) }
-            val tags = item.tags ?: mutableListOf()
-            val newItem = TodoItem(id = item.id, title = item.title, description = item.description,
-                priority = item.priority, completion = item.completion, deadline = date, tags = tags)
-            dbListOfAllItems.addItem(newItem)
-        }
-
-        for(item in archive) {
-            val date = item.deadline?.let { Date(it.toLong()) }
-            val tags = item.tags ?: mutableListOf()
-            val newItem = TodoItem(id = item.id, title = item.title, description = item.description,
-                priority = item.priority, completion = item.completion, deadline = date, tags = tags)
-            dbArchiveList.addItem(newItem)
-        }
-
-        val apiTags = runBlocking { api.getAllTags() }
-        for( tag in apiTags) listOfTags.add(tag)
-        uiListOfAllItems.addAll(todoListConverter(this.dbListOfAllItems, false))
-        archiveList.addAll(todoListConverter(this.dbArchiveList, true))
-        refreshDisplayedList()
-    }
-
-    /*  Critical Function: refreshDisplayedList()
-     *  Used by:
+    /*
+    Critical Function: loadState()
+    - makes the api calls and populates uiListOfAllitems and archiveList
      */
-    fun refreshDisplayedList() {
+    private fun loadState() {
         val mainList = runBlocking { api.getListById(0)?.list ?: mutableListOf<TodoItemResponse>() }
         val archive = runBlocking { api.getArchive()?.list ?: mutableListOf<TodoItemResponse>() }
         uiListOfAllItems.clear()
@@ -137,7 +107,7 @@ class Model() {
         dbListOfAllItems = TodoList()
         dbArchiveList = TodoList()
 
-        for(item in mainList) {
+        mainList.forEach { item ->
             val date = item.deadline?.let { Date(it.toLong()) }
             val tags = item.tags ?: mutableListOf()
             val newItem = TodoItem(id = item.id, title = item.title, description = item.description,
@@ -145,7 +115,7 @@ class Model() {
             dbListOfAllItems.addItem(newItem)
         }
 
-        for(item in archive) {
+        archive.forEach{item ->
             val date = item.deadline?.let { Date(it.toLong()) }
             val tags = item.tags ?: mutableListOf()
             val newItem = TodoItem(id = item.id, title = item.title, description = item.description,
@@ -159,8 +129,22 @@ class Model() {
         for( tag in apiTags) listOfTags.add(tag)
         uiListOfAllItems.addAll(todoListConverter(this.dbListOfAllItems, false))
         archiveList.addAll(todoListConverter(this.dbArchiveList, true))
+    }
 
+    constructor(list: ObservableList<Node>, c: MainController) : this() {
+        previousController = c
+        displayList = list
+        displayState = "All Tasks"
 
+        loadState()
+        refreshDisplayedList()
+    }
+
+    /*  Critical Function: refreshDisplayedList()
+     *  Used by:
+     */
+    fun refreshDisplayedList() {
+        loadState()
 
         val itemComponents = uiListOfAllItems.map { it as ItemComponent }
         val archiveComponents = archiveList.map{ it as ItemComponent }
