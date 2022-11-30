@@ -21,7 +21,7 @@ class ItemComponent: TitledPane {
         this.id = dbItem.id.toString()
         this.model = model
         this.item = dbItem
-        this.graphic = GraphicComponent(dbItem, model)
+        this.graphic = GraphicComponent(dbItem, model, archive)
         this.content = ContentComponent(dbItem, model, archive)
         this.userData = dbItem
         this.isExpanded = false
@@ -100,10 +100,10 @@ class ItemComponent: TitledPane {
 }
 
 class GraphicComponent: HBox {
-    constructor(dbItem: TodoItem, m: Model) {
+    constructor(dbItem: TodoItem, m: Model, archive: Boolean) {
         id = dbItem.id.toString()
         var dragButton = DragComponent(m)
-        var title = TitleComponent(dbItem, m)
+        var title = TitleComponent(dbItem, m, archive)
         title.minWidth = 400.0
         var complete = CompleteComponent(dbItem, m)
         children.addAll(dragButton, complete, title)
@@ -119,10 +119,10 @@ class ContentComponent: VBox {
         prefHeight = 200.0
         prefWidth = 100.0
         this.spacing = 10.0
-        var description = DescriptionComponent(dbItem, m)
+        var description = DescriptionComponent(dbItem, m, archive)
         var tags = TagsComponent(dbItem, m, archive)
-        var deadline = DeadlineComponent(dbItem, m)
-        var priority = PriorityComponent(dbItem, m)
+        var deadline = DeadlineComponent(dbItem, m, archive)
+        var priority = PriorityComponent(dbItem, m, archive)
         var trash = TrashComponent(dbItem, m, archive)
         children.addAll(description, tags, deadline, priority, trash)
     }

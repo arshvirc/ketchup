@@ -38,6 +38,8 @@ class TagsComponent: HBox {
 
         if(!archive) {
             this.children.add(addTag)
+        } else {
+            this.options.isDisable = true;
         }
     }
     private fun newTagOptions(event: ActionEvent) {

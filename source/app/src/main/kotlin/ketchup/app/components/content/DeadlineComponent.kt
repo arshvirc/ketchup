@@ -24,7 +24,7 @@ class DeadlineComponent: HBox {
     var model: Model
     private val api: Client
 
-    constructor(item: TodoItem, m: Model) {
+    constructor(item: TodoItem, m: Model, archive: Boolean) {
         // Styling
         this.prefHeight = 100.0
         this.prefWidth = 200.0
@@ -45,6 +45,10 @@ class DeadlineComponent: HBox {
             val instant = date?.toInstant()
             val local = instant?.atZone(ZoneId.systemDefault())?.toLocalDate();
             this.options.value = local
+        }
+
+        if(archive) {
+            this.options.isDisable = true;
         }
 
         this.children.add(label)
