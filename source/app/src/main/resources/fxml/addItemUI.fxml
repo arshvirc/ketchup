@@ -21,7 +21,7 @@
          <children>
             <Label prefHeight="26.0" prefWidth="65.0" text="Tags:" />
             <CheckComboBox fx:id="inputTags" prefHeight="27.0" prefWidth="138.0" />
-            <Button fx:id="addTag" mnemonicParsing="false" onAction="#newTagOptions" text="Add Tag" />
+            <Button fx:id="addTag" mnemonicParsing="false" onAction="#newTagOptions" text="Create Tag" />
          </children>
       </HBox>
       <HBox prefHeight="10.0" prefWidth="500.0" spacing="10.0">

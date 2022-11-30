@@ -60,7 +60,7 @@ class AddController {
         val source = event.source as Button
         val id = source.id
         when (source.text) {
-            "Add Tag" -> {
+            "Create Tag" -> {
                 tagContainer.children.remove(1,3)
                 val field = TextField()
                 tagContainer.children.add(field)
@@ -81,7 +81,7 @@ class AddController {
                 tagContainer.children.add(inputTags)
                 updateAllTags(newTag)
 
-                val add = Button("Add Tag")
+                val add = Button("Create Tag")
                 add.setOnAction { e-> newTagOptions(e) }
                 tagContainer.children.addAll(add)
             }
@@ -89,7 +89,7 @@ class AddController {
                 tagContainer.children.remove(1,4)
                 tagContainer.children.add(inputTags)
 
-                val add = Button("Add Tag")
+                val add = Button(" Create Tag")
                 add.setOnAction { e-> newTagOptions(e) }
                 tagContainer.children.addAll(add)
             }

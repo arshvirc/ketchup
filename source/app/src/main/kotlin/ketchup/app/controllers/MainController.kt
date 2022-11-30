@@ -8,10 +8,13 @@ import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.fxml.Initializable
+import javafx.geometry.Insets
+import javafx.geometry.Pos
 import javafx.scene.Node
 import javafx.scene.Scene
 import javafx.scene.control.*
 import javafx.scene.layout.VBox
+import javafx.scene.text.Font
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import javafx.stage.WindowEvent
@@ -129,6 +132,9 @@ class MainController : Initializable {
     fun updateSideBar(tag: String) {
         val bar = ButtonBar()
         val tagButton = Button(tag)
+        tagButton.font = Font(14.0)
+        tagButton.padding = Insets(0.0)
+        tagButton.alignment = Pos.CENTER_LEFT
         tagButton.setOnAction {
             title.text = tagButton.text
             model.displayState = tagButton.text
