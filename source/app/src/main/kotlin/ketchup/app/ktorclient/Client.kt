@@ -249,6 +249,30 @@ class Client(url: String) {
         }
     }
 
+    suspend fun unarchiveItem(id: Int): Boolean {
+        return try {
+            val url = "$host/api/archive/$id"
+            val response: Boolean = client.post(url).body();
+
+            response
+        } catch(ex: Exception) {
+            print(ex.message)
+            false
+        }
+    }
+
+    suspend fun getArchive(): SingleListResponse? {
+        return try {
+            val url = "$host/api/archive"
+            val response: HttpResponse = client.get(url)
+
+            response.body<SingleListResponse>()
+        } catch(ex: Exception) {
+            println(ex.message)
+            null
+        }
+    }
+
     fun close() {
         client.close()
     }

@@ -29,34 +29,48 @@ class ListController(connection: Connection) {
 
     fun getList(id: Int): TodoList {
         val list = TodoList()
+
+        val listOfArchivedID = mutableListOf<Int>()
+
         try {
+            // FIRST POPULATE LIST OF ARCHIVE ID
+            val archiveQuery = conn!!.createStatement()
+            val archiveString = "SELECT * FROM Archive"
+            val archiveResult = archiveQuery.executeQuery(archiveString);
+
+            while(archiveResult.next()) {
+                listOfArchivedID.add(archiveResult.getInt("item_id"));
+            }
             val query = conn!!.createStatement()
             val queryString = "SELECT * FROM TodoItems WHERE list_id=\"$id\""
             val result = query.executeQuery(queryString)
             while(result.next()) {
                 val tags = mutableListOf<String>()
                 val id = result.getInt("item_id")
-                val tagConn = conn!!.createStatement()
-                val tagsQuery = "SELECT tag FROM ItemTags WHERE item_id=\"$id\""
-                val tagResult = tagConn.executeQuery(tagsQuery)
-                while(tagResult.next()) {
-                    tags.add(tagResult.getString("tag"))
+
+                if(!listOfArchivedID.contains(id)) {
+                    val tagConn = conn!!.createStatement()
+                    val tagsQuery = "SELECT tag FROM ItemTags WHERE item_id=\"$id\""
+                    val tagResult = tagConn.executeQuery(tagsQuery)
+                    while(tagResult.next()) {
+                        tags.add(tagResult.getString("tag"))
+                    }
+
+                    val deadlineStr = result.getString("deadline")
+                    val timestampStr = result.getString("timestamp")
+
+                    val item = TodoItem(
+                        result.getString("title"),
+                        result.getString("description"),
+                        if (deadlineStr != "NULL") df.parse(deadlineStr) else null,
+                        result.getInt("priority"),
+                        result.getInt("item_id"),
+                        tags,
+                        // ADD BACK TIMESTAMP
+                        completion = result.getString("completion").toBooleanStrict()
+                    )
+                    list.addItem(item)
                 }
-
-                val deadlineStr = result.getString("deadline")
-                val timestampStr = result.getString("timestamp")
-
-                val item = TodoItem(
-                    result.getString("title"),
-                    result.getString("description"),
-                    if (deadlineStr != "NULL") df.parse(deadlineStr) else null,
-                    result.getInt("priority"),
-                    result.getInt("item_id"),
-                    tags,
-                    // ADD BACK TIMESTAMP
-                    completion = result.getString("completion").toBooleanStrict()
-                )
-                list.addItem(item)
             }
 
             val newQuery = conn!!.createStatement()
@@ -170,6 +184,63 @@ class ListController(connection: Connection) {
             println(ex.message)
             return false
         }
+    }
 
+    fun getArchivedItems(): TodoList {
+        val list = TodoList()
+
+        val listOfArchivedID = mutableListOf<Int>()
+
+        try {
+            // FIRST POPULATE LIST OF ARCHIVE ID
+            val archiveQuery = conn!!.createStatement()
+            val archiveString = "SELECT * FROM Archive"
+            val archiveResult = archiveQuery.executeQuery(archiveString);
+
+            while (archiveResult.next()) {
+                listOfArchivedID.add(archiveResult.getInt("item_id"));
+            }
+            val query = conn!!.createStatement()
+            val queryString = "SELECT * FROM TodoItems WHERE list_id=\"0\""
+            val result = query.executeQuery(queryString)
+            while (result.next()) {
+                val tags = mutableListOf<String>()
+                val id = result.getInt("item_id")
+
+                if (listOfArchivedID.contains(id)) {
+                    val tagConn = conn!!.createStatement()
+                    val tagsQuery = "SELECT tag FROM ItemTags WHERE item_id=\"$id\""
+                    val tagResult = tagConn.executeQuery(tagsQuery)
+                    while (tagResult.next()) {
+                        tags.add(tagResult.getString("tag"))
+                    }
+
+                    val deadlineStr = result.getString("deadline")
+                    val timestampStr = result.getString("timestamp")
+
+                    val item = TodoItem(
+                        result.getString("title"),
+                        result.getString("description"),
+                        if (deadlineStr != "NULL") df.parse(deadlineStr) else null,
+                        result.getInt("priority"),
+                        result.getInt("item_id"),
+                        tags,
+                        // ADD BACK TIMESTAMP
+                        completion = result.getString("completion").toBooleanStrict()
+                    )
+                    list.addItem(item)
+                }
+            }
+
+            list.name = "Archive"
+
+            return list
+        } catch (ex: SQLException) {
+            println(ex.message)
+            return list
+        } catch (ex: Exception) {
+            println(ex.message)
+            return list
+        }
     }
 }

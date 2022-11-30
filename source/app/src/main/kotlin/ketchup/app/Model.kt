@@ -34,8 +34,11 @@ class Model() {
     lateinit var displayState: String                                                                 // displayState
     var uiListOfAllItems: ObservableList<Node> = FXCollections.observableArrayList<Node>()            // Master List
 
+    var archiveList: ObservableList<Node> = FXCollections.observableArrayList<Node>()
+
     // Item Versions
     var dbListOfAllItems =  TodoList()
+    var dbArchiveList = TodoList()
     var listOfTags: MutableList<String> = mutableListOf<String>()
 
     var selectedItemId = -1;
@@ -99,6 +102,7 @@ class Model() {
         displayState = "All Tasks"
 
         val mainList = runBlocking { api.getListById(0)?.list ?: mutableListOf<TodoItemResponse>() }
+        val archive = runBlocking { api.getArchive()?.list ?: mutableListOf<TodoItemResponse>() }
         for(item in mainList) {
             val date = item.deadline?.let { Date(it.toLong()) }
             val tags = item.tags ?: mutableListOf()
@@ -107,9 +111,18 @@ class Model() {
             dbListOfAllItems.addItem(newItem)
         }
 
+        for(item in archive) {
+            val date = item.deadline?.let { Date(it.toLong()) }
+            val tags = item.tags ?: mutableListOf()
+            val newItem = TodoItem(id = item.id, title = item.title, description = item.description,
+                priority = item.priority, completion = item.completion, deadline = date, tags = tags)
+            dbArchiveList.addItem(newItem)
+        }
+
         val apiTags = runBlocking { api.getAllTags() }
         for( tag in apiTags) listOfTags.add(tag)
-        uiListOfAllItems.addAll(todoListConverter(this.dbListOfAllItems))
+        uiListOfAllItems.addAll(todoListConverter(this.dbListOfAllItems, false))
+        archiveList.addAll(todoListConverter(this.dbArchiveList, true))
         refreshDisplayedList()
     }
 
@@ -117,7 +130,40 @@ class Model() {
      *  Used by:
      */
     fun refreshDisplayedList() {
+        val mainList = runBlocking { api.getListById(0)?.list ?: mutableListOf<TodoItemResponse>() }
+        val archive = runBlocking { api.getArchive()?.list ?: mutableListOf<TodoItemResponse>() }
+        uiListOfAllItems.clear()
+        archiveList.clear()
+        dbListOfAllItems = TodoList()
+        dbArchiveList = TodoList()
+
+        for(item in mainList) {
+            val date = item.deadline?.let { Date(it.toLong()) }
+            val tags = item.tags ?: mutableListOf()
+            val newItem = TodoItem(id = item.id, title = item.title, description = item.description,
+                priority = item.priority, completion = item.completion, deadline = date, tags = tags)
+            dbListOfAllItems.addItem(newItem)
+        }
+
+        for(item in archive) {
+            val date = item.deadline?.let { Date(it.toLong()) }
+            val tags = item.tags ?: mutableListOf()
+            val newItem = TodoItem(id = item.id, title = item.title, description = item.description,
+                priority = item.priority, completion = item.completion, deadline = date, tags = tags)
+            dbArchiveList.addItem(newItem)
+        }
+
+        listOfTags.clear()
+
+        val apiTags = runBlocking { api.getAllTags() }
+        for( tag in apiTags) listOfTags.add(tag)
+        uiListOfAllItems.addAll(todoListConverter(this.dbListOfAllItems, false))
+        archiveList.addAll(todoListConverter(this.dbArchiveList, true))
+
+
+
         val itemComponents = uiListOfAllItems.map { it as ItemComponent }
+        val archiveComponents = archiveList.map{ it as ItemComponent }
         var temp = Date(System.currentTimeMillis())
         val today = atStartOfDay(temp)
         var filteredList: List<ItemComponent>
@@ -137,6 +183,9 @@ class Model() {
                 filteredList = itemComponents.filter {
                     it.item.deadline?.after(today) ?: false
                 }
+            }
+            "Trash" -> {
+                filteredList = archiveComponents
             }
             else -> {
                 filteredList = itemComponents.filter { it.item.tags.contains(displayState) }
@@ -162,7 +211,7 @@ class Model() {
             dbItem.id = itemId
             println("New item id: ${dbItem.id}")
             this.dbListOfAllItems.addItem(dbItem.copy())       // Update model list
-            var itemUI = ItemComponent(dbItem.copy(), this)  //Convert to UI Component
+            var itemUI = ItemComponent(dbItem.copy(), this, false)  //Convert to UI Component
             itemUI.isExpanded = false
             this.uiListOfAllItems.add(itemUI)              //Update UI List
             refreshDisplayedList()
@@ -211,10 +260,10 @@ class Model() {
      *      dbList -> the list that is converted into a uiList
      *  Used by: Constructor
      */
-    private fun todoListConverter(dbList: TodoList): ObservableList<Node> {
+    private fun todoListConverter(dbList: TodoList, archive: Boolean): ObservableList<Node> {
         val uiList = FXCollections.observableArrayList<Node>()
         for (dbItem in dbList.list) {
-            var uiItem = ItemComponent(dbItem, this)
+            var uiItem = ItemComponent(dbItem, this, archive)
             uiList.add(uiItem)
         }
         return uiList
@@ -337,14 +386,16 @@ class Model() {
             redoStack.clear()
         }
 
-        val editSuccess = runBlocking { api.editTodoItem(id.toInt(), item) }
-        if (!editSuccess) {
-            println("Editing tags for item with ID $id failed")
+        if(displayState != "Trash") {
+            val editSuccess = runBlocking { api.editTodoItem(id.toInt(), item) }
+            if (!editSuccess) {
+                println("Editing tags for item with ID $id failed")
+            }
+            // UPDATE UI Part Now
+            val uiItem = uiListOfAllItems.find { (it as ItemComponent).item.id == id.toInt() }
+            uiListOfAllItems[index] = ItemComponent(item, this, false)
+            refreshDisplayedList()
         }
-        // UPDATE UI Part Now
-        val uiItem = uiListOfAllItems.find { (it as ItemComponent).item.id == id.toInt() }
-        uiListOfAllItems[index] = ItemComponent(item, this)
-        refreshDisplayedList()
     }
 
     /*  Helper Function: findUiIndexById(id)

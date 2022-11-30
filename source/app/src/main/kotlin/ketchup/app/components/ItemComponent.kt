@@ -17,12 +17,12 @@ class ItemComponent: TitledPane {
     var model : Model
     var item : TodoItem
 
-    constructor(dbItem: TodoItem, model: Model) {
+    constructor(dbItem: TodoItem, model: Model, archive: Boolean) {
         this.id = dbItem.id.toString()
         this.model = model
         this.item = dbItem
         this.graphic = GraphicComponent(dbItem, model)
-        this.content = ContentComponent(dbItem, model)
+        this.content = ContentComponent(dbItem, model, archive)
         this.userData = dbItem
         this.isExpanded = false
 
@@ -114,16 +114,16 @@ class GraphicComponent: HBox {
 
 
 class ContentComponent: VBox {
-    constructor(dbItem: TodoItem, m: Model) {
+    constructor(dbItem: TodoItem, m: Model, archive: Boolean) {
         id = dbItem.id.toString()
         prefHeight = 200.0
         prefWidth = 100.0
         this.spacing = 10.0
         var description = DescriptionComponent(dbItem, m)
-        var tags = TagsComponent(dbItem, m)
+        var tags = TagsComponent(dbItem, m, archive)
         var deadline = DeadlineComponent(dbItem, m)
         var priority = PriorityComponent(dbItem, m)
-        var trash = TrashComponent(dbItem, m)
+        var trash = TrashComponent(dbItem, m, archive)
         children.addAll(description, tags, deadline, priority, trash)
     }
 }

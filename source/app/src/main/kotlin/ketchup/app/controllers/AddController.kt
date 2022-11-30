@@ -99,7 +99,7 @@ class AddController {
     private fun updateAllTags(tag: String) {
         for ( item in model.uiListOfAllItems) {
             val uiItem = item as ItemComponent
-            uiItem.content = ContentComponent(uiItem.item, model)
+            uiItem.content = ContentComponent(uiItem.item, model ,false)
         }
         previousController.updateSideBar(tag)
         model.refreshDisplayedList()

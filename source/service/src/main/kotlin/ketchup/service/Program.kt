@@ -63,6 +63,9 @@ class Program(private var dbURL: String = "jdbc:sqlite:data.db") {
                     "FOREIGN KEY(item_id) REFERENCES TodoItems(item_id)" +
                     "FOREIGN KEY(tag) REFERENCES Tags(name)" +
                     ");",
+            "CREATE TABLE Archive(" +
+                    "item_id int" +
+                    ");",
             "INSERT INTO TodoLists(list_id, title) VALUES (\"0\", \"Main List\")",
             "INSERT INTO Program(list_id) VALUES (\"0\")"
         )

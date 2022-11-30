@@ -34,17 +34,42 @@ class ItemController(connection: Connection) {
             return false
         }
 
+        // 1. Check if in archives
+
+        // 2. If in archives, delete completely
+
+        // 3. Otherwise, add item_id to archives
+
         try {
             return if (conn != null) {
-                val query = conn!!.createStatement()
-                val deleteItemQuery = "DELETE FROM TodoItems WHERE item_id=\"$itemId\""
-                query.executeUpdate(deleteItemQuery)
+                val archivedQuery = conn!!.createStatement();
+                val getArchive = "SELECT * FROM Archive WHERE item_id=\"$itemId\""
+                val archiveResult = archivedQuery.executeQuery(getArchive)
 
-                val tagQuery = conn!!.createStatement()
-                val deleteTagsQuery = "DELETE FROM ItemTags WHERE item_id=\"$itemId\""
-                tagQuery.executeUpdate(deleteTagsQuery)
+                if(archiveResult.next() == false) {
+                    // item is NOT archived, archive it
+                    val editQuery = conn!!.createStatement()
+                    val archiveQuery = "INSERT INTO Archive(item_id) " + "VALUES(" + "\"$itemId\"" + ");"
 
-                true
+                    editQuery.executeUpdate(archiveQuery)
+
+                    true
+                } else {
+                    // item IS archived, delete it from TodoItems and Archive
+                    val query = conn!!.createStatement()
+                    val deleteItemQuery = "DELETE FROM TodoItems WHERE item_id=\"$itemId\""
+                    query.executeUpdate(deleteItemQuery)
+
+                    val tagQuery = conn!!.createStatement()
+                    val deleteTagsQuery = "DELETE FROM ItemTags WHERE item_id=\"$itemId\""
+                    tagQuery.executeUpdate(deleteTagsQuery)
+
+                    val deleteFromArchive = conn!!.createStatement()
+                    val deleteArchiveQuery = "DELETE FROM Archive WHERE item_id=\"$itemId\""
+                    deleteFromArchive.executeUpdate(deleteArchiveQuery)
+
+                    true
+                }
             } else {
                 false
             }
@@ -207,6 +232,21 @@ class ItemController(connection: Connection) {
         } catch (ex: Exception) {
             println(ex.message)
             return null
+        }
+    }
+
+    fun unarchive(id: Int): Boolean {
+        return try {
+            if(conn != null) {
+                val query = conn!!.createStatement()
+                val deleteQuery = "DELETE FROM Archive WHERE item_id=\"$id\";"
+                query.executeUpdate(deleteQuery)
+                true
+            } else {
+                false
+            }
+        } catch (ex: Exception) {
+            false
         }
     }
 }
