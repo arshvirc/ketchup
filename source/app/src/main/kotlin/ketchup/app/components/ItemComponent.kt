@@ -106,6 +106,12 @@ class GraphicComponent: HBox {
         var title = TitleComponent(dbItem, m, archive)
         title.minWidth = 400.0
         var complete = CompleteComponent(dbItem, m)
+
+        // THIS IS HOW TO SAVE ON ENTER
+        title.setOnAction { _ ->
+            this.requestFocus()
+        }
+
         children.addAll(dragButton, complete, title)
     }
 
@@ -124,6 +130,11 @@ class ContentComponent: VBox {
         var deadline = DeadlineComponent(dbItem, m, archive)
         var priority = PriorityComponent(dbItem, m, archive)
         var trash = TrashComponent(dbItem, m, archive)
+
+        description.setOnAction { _ ->
+            this.requestFocus()
+        }
+
         children.addAll(description, tags, deadline, priority, trash)
     }
 }
