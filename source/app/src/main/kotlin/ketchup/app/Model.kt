@@ -15,6 +15,7 @@ import java.util.*
 import kotlin.collections.ArrayDeque
 import ketchup.app.State
 import ketchup.app.Action
+import java.io.File
 
 
 class Model() {
@@ -51,6 +52,16 @@ class Model() {
     lateinit var draggedItemId : String
     var dragTop = false
     var dragBottom = false
+    private var theme : String = "default"
+    private var saveFileName = "model.json"
+    private val saveFile = File(saveFileName)
+
+    fun getTheme() : String { return theme }
+    fun setTheme(name : String) {
+        this.theme = name
+        saveFile.writeText(theme)
+        // this is quite bug-prone, so be sure to fix!
+    }
 
     private fun undoRedoEdit(action : Action, item : TodoItem, flag: URFlag) {
         val id = item.id.toString()
@@ -97,6 +108,11 @@ class Model() {
         previousController = c
         displayList = list
         displayState = "All Tasks"
+        if (saveFile.exists()) {
+            theme = saveFile.readText()
+        } else {
+            theme = "default"
+        }
 
         val mainList = runBlocking { api.getListById(0)?.list ?: mutableListOf<TodoItemResponse>() }
         for(item in mainList) {

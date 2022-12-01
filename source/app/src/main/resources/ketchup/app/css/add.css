@@ -1,0 +1,125 @@
+* {
+    primary-color: #DB8A8A; /* Reduce Opacity */
+    secondary-color: #F7C3C3;
+    /*secondary-color: #03DAC6;*/
+    /*secondary-color: #0073ff;*/
+    contrast-color: #5B2525;
+    light-grey-color: #d1d1d1;
+    -fx-font-family: Helvetica;
+    -fx-focus-color: -fx-secondary-color;
+}
+
+.container {
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    /*-fx-background-color: #18191a;*/
+    -fx-background-color: white;
+    -fx-text-fill: secondary-color;
+}
+
+.VBox {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+.text-area {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-background-color: secondary-color;
+    -fx-prompt-text-fill: black;
+}
+
+.text-area .scroll-pane {
+    -fx-background-color: transparent;
+}
+.text-area .scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+.text-area .scroll-pane .content{
+    -fx-background-color: transparent;
+}
+
+.label {
+    -fx-text-fill: black;
+}
+
+.combo-box {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-background-color: secondary-color;
+    -fx-border-color: secondary-color;
+    -fx-arrow-fill: black;
+}
+.combo-box .arrow {
+    -fx-background-color: black;
+}
+
+.date-picker {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-background-color: secondary-color;
+}
+.date-picker .arrow-button {
+    -fx-background-color: secondary-color;
+    -fx-background-radius: 10;
+}
+.date-picker .arrow-button:hover {
+    -fx-background-color: -fx-secondary-color;
+    -fx-background-radius: 10;
+}
+.date-picker .arrow-button .arrow {
+    -fx-background-color: black;
+}
+
+.date-picker .text-field {
+    -fx-background-color: secondary-color;
+    -fx-background-radius: 10;
+}
+.date-picker .cell {
+    -fx-background-color: whtie;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+.date-picker .cell:hover {
+    -fx-background-color: secondary-color;
+}
+.date-picker .cell:focused {
+    -fx-background-color: secondary-color;
+}
+.date-picker .selected {
+    -fx-background-color: secondary-color;
+    -fx-text-fill: black;
+}
+.date-picker .selected:focused {
+    -fx-background-color: primary-color;
+    -fx-text-fill: black;
+}
+.date-picker-popup  {
+    -fx-border-color: transparent;
+}
+.date-picker-popup .month-year-pane {
+    -fx-background-color: secondary-color;
+}
+.date-picker-popup .month-year-pane .label {
+    -fx-text-fill: black;
+}
+.date-picker-popup .week-number-cell {
+    -fx-text-fill: -fx-secondary-color;
+    -fx-background-radius: 10;
+}
+.date-picker-popup .spinner .button .left-arrow,
+.date-picker-popup .spinner .button .right-arrow {
+    -fx-background-color: black;
+}
+
+.separator .line{
+    -fx-background-color: secondary-color;
+    -fx-border-color: secondary-color;
+}
+
+.button {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-background-color: secondary-color;
+    -fx-border-color: secondary-color;
+    -fx-text-fill: black;
+}

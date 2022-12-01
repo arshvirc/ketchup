@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.CheckComboBox?>
 
-<VBox spacing="5.0" styleClass="container" stylesheets="@../css/add.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ketchup.app.controllers.AddController">
+<VBox fx:id = "unique_container" spacing="5.0" styleClass="container" stylesheets="@../css/default/add.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ketchup.app.controllers.AddController">
    <children>
       <TextArea fx:id="inputTitle" maxHeight="50.0" maxWidth="500.0" minHeight="27.0" minWidth="450.0" prefHeight="27.0" prefWidth="500.0" promptText="Enter Title..." />
       <Separator prefHeight="7.0" prefWidth="463.0" />

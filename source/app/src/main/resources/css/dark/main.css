@@ -1,0 +1,250 @@
+* {
+    primary-color: #c23e3c; /* Reduce Opacity */
+    secondary-color: #F7C3C3;
+    tertiary-color: #F7C3C3;
+    quaternary-color: #F7C3C3;
+    dark-color: #212121;
+    contrast-color: white;
+    light-grey-color: #d1d1d1;
+}
+
+.option {
+    -fx-font-size: 12px;
+}
+
+#container {
+    -fx-font-size: 32px;
+    -fx-padding: 0 0 0 0;
+}
+
+#sidebar-container {
+    -fx-background-color: primary-color;
+    -fx-font-size: 18px;
+}
+
+#sidebar-container .button {
+    -fx-background-color: primary-color;
+}
+
+#sidebar-container .button:hover {
+    -fx-background-color: transparent;
+}
+
+#center-container .separator {
+    -fx-background-color: dark-color;
+}
+
+#center-container .scroll-pane .content {
+    -fx-background-color: dark-color;
+}
+
+#center-container .scroll-pane .vbox {
+    -fx-background-color: dark-color;
+}
+
+#center-container
+{
+    -fx-background-color: dark-color;
+    -fx-font-size: 0.5em;
+}
+
+#center-container .label {
+    -fx-pref-width: 100.0;
+    -fx-text-fill: primary-color;
+}
+#center-container .button {
+    -fx-background-color: primary-color;
+    -fx-background-radius: 10;
+}
+
+#center-container .vbox {
+    -fx-background-color: dark-color;
+}
+
+#center-container .content {
+    -fx-background-color: dark-color;
+}
+
+#center-container .combo-box {
+    -fx-pref-width: 150.0;
+    -fx-pref-height: 30;
+    -fx-min-width: 150.0;
+    -fx-min-height: 30;
+    -fx-background-color: secondary-color;
+    -fx-border-color: secondary-color;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-font-size: 14;
+}
+
+.titled-pane .text-field {
+    /*-fx-background-radius: 10;
+    -fx-border-radius: 10;*/
+    -fx-background-color: secondary-color;
+}
+
+titled-pane .scroll-pane {
+    -fx-background-color: dark-color;
+}
+
+titled-pane .text-field .scroll-pane {
+    -fx-background-color: transparent;
+}
+titled-pane .text-field .scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+titled-pane .text-field .scroll-pane .content{
+    -fx-background-color: transparent;
+}
+titled-pane . text-field .button {
+    -fx-background-color: secondary-color;
+}
+
+
+.item {
+    -fx-background-color: primary-color;
+}
+
+.titled-pane {
+    /*-fx-font-size: 0.75em;*/
+    -fx-font-size: 16px;
+}
+
+.titled-pane *.content {
+    -fx-background-color: dark-color;
+}
+
+.titled-pane .label {
+    -fx-border-color: dark-color;
+    -fx-background-color: dark-color;
+    /*-fx-font-weight: bold;*/
+    /*-fx-font-style: oblique;*/
+    -fx-font-family: Arial;
+    -fx-text-fill: white;
+}
+
+.titled-pane .title
+{
+    -fx-background-color: primary-color;
+}
+
+.titled-pane:collapsed .title
+{
+    -fx-background-color: primary-color;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: primary-color;
+    -fx-font-size: 16px;
+    -fx-padding: 5 5 5 5;
+}
+
+
+.titled-pane:expanded .title
+{
+    -fx-border-radius: 10 10 0 0;
+    -fx-background-radius: 10 10 0 0;
+    -fx-padding: 6 6 6 6;
+    -fx-font-size: 16px;
+}
+
+.titled-pane:expanded .content
+{
+    -fx-background-radius: 10;
+    -fx-border-radius: 0 0 10 10;
+    -fx-font-size: 16px;
+}
+
+.titled-pane .title .arrow-button .arrow
+{
+    -fx-background-color: black; /* hides the arrow*/
+    -fx-effect: none;
+}
+
+.combo-box {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-background-color: secondary-color;
+    -fx-border-color: secondary-color;
+    -fx-arrow-fill: black;
+}
+.combo-box .arrow {
+    -fx-background-color: black;
+}
+
+.date-picker {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-background-color: secondary-color;
+    -fx-pref-width: 150.0;
+}
+.date-picker .arrow-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 10;
+}
+.date-picker .arrow-button:hover {
+    -fx-background-radius: 10;
+}
+.date-picker .arrow-button .arrow {
+    -fx-background-color: black;
+}
+
+.date-picker .text-field {
+    -fx-background-color: secondary-color;
+    -fx-background-radius: 10;
+    -fx-font-size: 14;
+    -fx-pref-width: 150.0;
+    -fx-pref-height: 30;
+    -fx-min-width: 150.0;
+    -fx-min-height: 30;
+}
+.date-picker .cell {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+.date-picker .cell:hover {
+    -fx-background-color: secondary-color;
+}
+.date-picker .cell:focused {
+    -fx-background-color: secondary-color;
+}
+.date-picker .selected {
+    -fx-background-color: secondary-color;
+    -fx-text-fill: black;
+}
+.date-picker .selected:focused {
+    -fx-background-color: primary-color;
+    -fx-text-fill: black;
+}
+.date-picker-popup  {
+    -fx-border-color: transparent;
+    -fx-background-color: dark-color;
+}
+.date-picker-popup .month-year-pane {
+    -fx-background-color: primary-color;
+}
+.date-picker-popup .month-year-pane .label {
+    -fx-text-fill: black;
+    -fx-background-color: primary-color;
+    -fx-border-color: primary-color;
+}
+.date-picker-popup .week-number-cell {
+    -fx-text-fill: -fx-secondary-color;
+    -fx-background-radius: 10;
+}
+
+.date-picker-popup .spinner {
+    -fx-background-color: primary-color;
+}
+
+.date-picker-popup .spinner .button .left-arrow,
+.date-picker-popup .spinner .button .right-arrow {
+    -fx-background-color: black;
+    -fx-border-color: transparent;
+}
+
+.separator .line{
+    -fx-background-color: black;
+    -fx-border-color: black;
+}
+
