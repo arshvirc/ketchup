@@ -190,6 +190,11 @@ class Model() {
             "Trash" -> {
                 filteredList = archiveComponents
             }
+            "Completed" -> {
+                filteredList = itemComponents.filter {
+                    it.item.completion
+                }
+            }
             else -> {
                 filteredList = itemComponents.filter { it.item.tags.contains(displayState) }
             }
