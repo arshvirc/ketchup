@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckMenuItem?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
@@ -70,7 +69,7 @@
             </Menu>
          </menus>
       </MenuBar>
-      <BorderPane fx:id="unique_container" id="container" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="550.0" minWidth="-Infinity" prefHeight="583.0" prefWidth="900.0" stylesheets="@../css/default/main.css" VBox.vgrow="always">
+      <BorderPane id="container" fx:id="unique_container" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="550.0" minWidth="-Infinity" prefHeight="583.0" prefWidth="900.0" stylesheets="@../css/default/main.css" VBox.vgrow="always">
          <left>
             <VBox id="sidebar-container" fx:id="sidebar" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="184.0" prefHeight="498.0" prefWidth="184.0" spacing="5.0" BorderPane.alignment="CENTER">
                <children>
@@ -134,21 +133,31 @@
                <children>
                   <HBox alignment="BOTTOM_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="100.0" prefHeight="100.0" spacing="10.0" styleClass="top-center-container">
                      <children>
-                        <Label fx:id="title" maxHeight="-Infinity" maxWidth="350.0" minWidth="350.0" prefHeight="35.0" prefWidth="350.0" text="ALL" textFill="#5b2525">
+                        <Label fx:id="title" maxHeight="-Infinity" maxWidth="350.0" minWidth="265.0" prefHeight="35.0" prefWidth="265.0" text="ALL" textFill="#5b2525">
                            <font>
                               <Font name="Avenir Book" size="23.0" />
                            </font>
                         </Label>
-                        <Button fx:id="addItemButton" maxHeight="33.0" maxWidth="75.0" minHeight="7.0" minWidth="75.0" mnemonicParsing="false" onAction="#onButtonClicked" prefHeight="20.0" prefWidth="75.0" text="Add Item" HBox.hgrow="NEVER">
+                        <Button fx:id="addItemButton" maxHeight="34.0" maxWidth="75.0" minHeight="34.0" minWidth="75.0" mnemonicParsing="false" onAction="#onButtonClicked" prefHeight="34.0" prefWidth="75.0" text="Add Item" HBox.hgrow="NEVER">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Button>
-                        <ComboBox fx:id="filterButton" maxHeight="34.0" maxWidth="187.0" minHeight="26.0" minWidth="24.0" onAction="#onButtonClicked" prefHeight="34.0" prefWidth="24.0" promptText="Filter" style="-fx-background-color: primary-color; -fx-border-color: primary-color; -fx-font-size: 14;" HBox.hgrow="NEVER">
+                        <ComboBox fx:id="filterButton" maxHeight="34.0" maxWidth="40.0" minHeight="26.0" minWidth="40.0" onAction="#onButtonClicked" prefHeight="34.0" prefWidth="40.0" promptText="Filter" style="-fx-background-color: primary-color; -fx-border-color: primary-color; -fx-font-size: 14;" HBox.hgrow="NEVER">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                         </ComboBox>
+                        <ComboBox fx:id="sortButton" maxHeight="34.0" maxWidth="40.0" minHeight="26.0" minWidth="40.0" onAction="#onButtonClicked" prefHeight="34.0" prefWidth="40.0" promptText="Sort" style="-fx-background-color: primary-color; -fx-border-color: primary-color; -fx-font-size: 14;" />
+                        <Button fx:id="clearFilter" maxHeight="34.0" minHeight="-Infinity" minWidth="0.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="34.0">
+                           <graphic>
+                              <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/clearfilter.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
                      </children>
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -164,7 +173,7 @@
                   </Separator>
                   <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minViewportHeight="300.0" minViewportWidth="300.0" prefHeight="393.0" prefWidth="380.0" style="-fx-background-radius: 0; -fx-background-color: white; -fx-border-color: white;" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                      <content>
-                        <VBox fx:id="displayView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" spacing="10.0" style="-fx-background-color: white; -fx-border-color: white;"/>
+                        <VBox fx:id="displayView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" spacing="10.0" style="-fx-background-color: white; -fx-border-color: white;" />
                      </content>
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" />
