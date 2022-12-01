@@ -16,7 +16,7 @@ class DescriptionComponent: TextField {
     private var model: Model
     private val api: Client
 
-    constructor(item: TodoItem, m : Model) {
+    constructor(item: TodoItem, m : Model, archive: Boolean) {
         this.prefHeight = 20.0
         this.prefWidth = 331.0
         this.padding = Insets(5.0)
@@ -30,11 +30,17 @@ class DescriptionComponent: TextField {
         this.toDoItemId = item.id.toString()
         this.model = m
         this.api = m.api
+        if(archive) {
+            this.isDisable = true;
+        }
         this.focusedProperty().addListener{ _, _, new ->
             run {
                 if (!new) {
                     println("Proceeding to Update Description to be ${this.text}")
                     model.editToDoItem(toDoItemId, Action.EDIT_DESC, this.text)
+                    model.onEditableField = false;
+                } else {
+                    model.onEditableField = true;
                 }
             }
         }

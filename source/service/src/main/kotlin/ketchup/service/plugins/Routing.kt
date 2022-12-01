@@ -224,6 +224,30 @@ fun Application.configureRouting(conn: Connection) {
                 }
             }
         }
+
+        route("/api/archive") {
+            post("{id?}") {
+                val itemId = call.parameters["id"]?.toInt() ?: -1
+                val controller = ItemController(conn)
+
+                try {
+                    controller.unarchive(itemId);
+                    call.respondText { "success" }
+                } catch (ex: Exception) {
+                    call.respondText { "failure"}
+                }
+
+            }
+
+            get {
+                val controller = ListController(conn)
+
+                val list = controller.getArchivedItems()
+                val response = ListResponse(10, list.size, list.list, "Archive")
+
+                call.respond(HttpStatusCode.Accepted, response)
+            }
+        }
     }
 }
 

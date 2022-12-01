@@ -19,7 +19,7 @@ class TagsComponent: HBox {
     var options : CheckComboBox<String>
     var model : Model
 
-    constructor(item: TodoItem, m: Model) {
+    constructor(item: TodoItem, m: Model, archive: Boolean) {
         this.prefHeight = 100.0
         this.prefWidth = 200.0
         this.spacing = 10.0
@@ -30,18 +30,23 @@ class TagsComponent: HBox {
         this.options = TagsOptionsComponent(item, m)
         this.toDoItemId = item.id.toString()
 
-        var addTag = Button("Add Tag")
+        var addTag = Button("Create Tag")
         addTag.setOnAction { e-> newTagOptions(e)}
 
         this.children.add(label)
         this.children.add(options)
-        this.children.add(addTag)
+
+        if(!archive) {
+            this.children.add(addTag)
+        } else {
+            this.options.isDisable = true;
+        }
     }
     private fun newTagOptions(event: ActionEvent) {
         val source = event.source as Button
         val id = source.id
         when (source.text) {
-            "Add Tag" -> {
+            "Create Tag" -> {
                 this.children.remove(1,3)
                 val field = TextField()
                 this.children.add(field)
@@ -62,7 +67,7 @@ class TagsComponent: HBox {
                 options.checkModel.check(newTag)
                 this.children.add(options)                  // add checkcombobox
 
-                val add = Button("Add Tag")           // add add box
+                val add = Button("Create Tag")           // add add box
                 add.setOnAction { e-> newTagOptions(e) }
                 this.children.addAll(add)
             }
@@ -70,7 +75,7 @@ class TagsComponent: HBox {
                 this.children.remove(1,4)
                 this.children.add(options)
 
-                val add = Button("Add Tag")
+                val add = Button("Create Tag")
                 add.setOnAction { e-> newTagOptions(e) }
                 this.children.addAll(add)
             }
@@ -80,7 +85,7 @@ class TagsComponent: HBox {
         model.listOfTags.add(tag)
         for ( item in model.uiListOfAllItems) {
             val uiItem = item as ItemComponent
-            uiItem.content = ContentComponent(uiItem.item, model)
+            uiItem.content = ContentComponent(uiItem.item, model, false)
         }
         model.previousController.updateSideBar(tag)
         model.refreshDisplayedList()

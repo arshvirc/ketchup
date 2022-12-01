@@ -7,6 +7,7 @@ import javafx.fxml.FXML
 import javafx.scene.Node
 import javafx.scene.control.*
 import javafx.scene.layout.BorderPane
+import javafx.scene.input.KeyCode
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
@@ -68,6 +69,30 @@ class AddController {
         previousController = c
         inputTags.items.addAll(m.listOfTags)
         inputPriority.items.addAll(m.listOfPriorities)
+
+        inputTitle.setOnKeyPressed {e ->
+            if(e.code == KeyCode.ENTER) {
+                overrideButtonClick()
+            }
+        }
+
+        inputDesc.setOnKeyPressed { e ->
+            if(e.code == KeyCode.ENTER) {
+                overrideButtonClick()
+            }
+        }
+
+        inputDeadline.setOnKeyPressed { e ->
+            if(e.code == KeyCode.ENTER) {
+                overrideButtonClick()
+            }
+        }
+
+        inputPriority.setOnKeyPressed { e ->
+            if(e.code == KeyCode.ENTER) {
+                overrideButtonClick()
+            }
+        }
     }
 
     @FXML
@@ -75,7 +100,7 @@ class AddController {
         val source = event.source as Button
         val id = source.id
         when (source.text) {
-            "Add Tag" -> {
+            "Create Tag" -> {
                 tagContainer.children.remove(1,3)
                 val field = TextField()
                 tagContainer.children.add(field)
@@ -96,7 +121,7 @@ class AddController {
                 tagContainer.children.add(inputTags)
                 updateAllTags(newTag)
 
-                val add = Button("Add Tag")
+                val add = Button("Create Tag")
                 add.setOnAction { e-> newTagOptions(e) }
                 tagContainer.children.addAll(add)
             }
@@ -104,7 +129,7 @@ class AddController {
                 tagContainer.children.remove(1,4)
                 tagContainer.children.add(inputTags)
 
-                val add = Button("Add Tag")
+                val add = Button(" Create Tag")
                 add.setOnAction { e-> newTagOptions(e) }
                 tagContainer.children.addAll(add)
             }
@@ -114,7 +139,7 @@ class AddController {
     private fun updateAllTags(tag: String) {
         for ( item in model.uiListOfAllItems) {
             val uiItem = item as ItemComponent
-            uiItem.content = ContentComponent(uiItem.item, model)
+            uiItem.content = ContentComponent(uiItem.item, model ,false)
         }
         previousController.updateSideBar(tag)
         model.refreshDisplayedList()
@@ -122,11 +147,11 @@ class AddController {
 
     @FXML
     private fun onButtonClicked(event: ActionEvent) {
-        val source = event.source as Node
+        val source = event?.source as Node
         val id = source.id
         if (id == "createButton") {
 
-            if (inputTitle.text == null || inputTitle.text == "" || inputTitle.text == " " ) {
+            if (inputTitle.text == null || inputTitle.text.trim() == "") {
                 println("You must have a title!")
                 return
             }
@@ -163,6 +188,47 @@ class AddController {
         var stage = createButton.scene.window as Stage
         stage.close()
     }
+
+    fun overrideButtonClick() {
+        if (inputTitle.text == null || inputTitle.text.trim() == "" ) {
+            println("You must have a title!")
+            inputTitle.text = ""
+            return
+        }
+        var date: Date? = null;
+
+        if(inputDeadline.value != null) {
+            val local = inputDeadline.value
+            val instant = Instant.from(local.atStartOfDay(ZoneId.systemDefault()))
+            date = Date.from(instant)
+        }
+
+        var tagsList = mutableListOf<String>()
+        val observableTags : ObservableList<String> = inputTags.checkModel.checkedItems
+
+        for (item in observableTags) tagsList.add(item)
+        println(tagsList)
+        if (inputDesc.text == null || inputDesc.text == "") inputDesc.text = " ";
+        if (inputPriority.value == null) { inputPriority.value = "0"}
+
+        // TODO: Convert deadline from LocalDate to Date
+
+        val item = TodoItem(
+            title = inputTitle.text,
+            description = inputDesc.text,
+            priority = convertPriorityToNum(inputPriority.value),
+            completion = false,
+            timestamp = Date(System.currentTimeMillis()),
+            deadline = date,
+            tags = tagsList
+        )
+
+        model.addItemToList(item)
+
+        var stage = createButton.scene.window as Stage
+        stage.close()
+    }
+
 
     private fun convertPriorityToNum(priority: String): Int {
         return when(priority) {

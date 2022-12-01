@@ -12,7 +12,7 @@ class PriorityComponent: HBox {
     var options : ComboBox<String>
     var model: Model
 
-    constructor(item: TodoItem, m: Model) {
+    constructor(item: TodoItem, m: Model, archive: Boolean) {
         this.prefHeight = 100.0
         this.prefWidth = 200.0
         this.label = LabelComponent("Priority: ")
@@ -23,6 +23,9 @@ class PriorityComponent: HBox {
 
         this.spacing = 10.0
 
+        if(archive) {
+            this.options.isDisable = true;
+        }
         this.children.add(label)
         this.children.add(options)
     }

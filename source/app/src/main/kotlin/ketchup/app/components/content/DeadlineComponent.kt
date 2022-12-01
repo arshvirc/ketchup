@@ -24,7 +24,7 @@ class DeadlineComponent: HBox {
     var model: Model
     private val api: Client
 
-    constructor(item: TodoItem, m: Model) {
+    constructor(item: TodoItem, m: Model, archive: Boolean) {
         // Styling
         this.prefHeight = 100.0
         this.prefWidth = 200.0
@@ -47,6 +47,10 @@ class DeadlineComponent: HBox {
             this.options.value = local
         }
 
+        if(archive) {
+            this.options.isDisable = true;
+        }
+
         this.children.add(label)
         this.children.add(options)
         this.options.focusedProperty().addListener{ _, _, new ->
@@ -54,6 +58,9 @@ class DeadlineComponent: HBox {
                 if (!new) {
                     println("Proceeding to Update Deadline to be ${this.options.value}")
                     model.editToDoItem(toDoItemId, Action.EDIT_DEADLINE, this.options.value)
+                    model.onEditableField = false;
+                } else {
+                    model.onEditableField = true;
                 }
             }
         }
