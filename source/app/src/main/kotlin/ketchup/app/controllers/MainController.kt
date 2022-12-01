@@ -13,6 +13,7 @@ import javafx.geometry.Pos
 import javafx.scene.Node
 import javafx.scene.Scene
 import javafx.scene.control.*
+import javafx.scene.layout.BorderPane
 import javafx.scene.layout.VBox
 import javafx.scene.text.Font
 import javafx.stage.Stage
@@ -50,8 +51,27 @@ class MainController : Initializable {
 
     @FXML private lateinit var quitButton: MenuItem
 
+    @FXML private lateinit var defaultThemeButton : MenuItem
+
+    //@FXML private lateinit var darkThemeButton : MenuItem
+
+    @FXML private lateinit var frostThemeButton : MenuItem
+
+    @FXML private lateinit var melonThemeButton : MenuItem
+
+    @FXML private lateinit var bubblegumThemeButton : MenuItem
+
+    @FXML private lateinit var pumpkinThemeButton : MenuItem
+
+    @FXML private lateinit var lilacThemeButton : MenuItem
+
+    @FXML private lateinit var lemonThemeButton : MenuItem
+
+    @FXML private lateinit var unique_container: BorderPane
+
     override fun initialize(arg0: URL?, arg1: ResourceBundle?) {
         model = Model(displayView.children, this)
+        setTheme(model.getTheme())
         filterButton.items.addAll(
                 "Increase Priority",
                 "Decreasing Priority",
@@ -82,8 +102,50 @@ class MainController : Initializable {
             val stage: Stage = title.scene.window as Stage
             stage.fireEvent(WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST))
         }
+
+        defaultThemeButton.setOnAction { actionEvent ->
+            setTheme("default")
+        }
+
+//        darkThemeButton.setOnAction { actionEvent ->
+//            setTheme("dark")
+//        }
+
+        frostThemeButton.setOnAction { actionEvent ->
+            setTheme("frost")
+        }
+
+        melonThemeButton.setOnAction { actionEvent ->
+            setTheme("melon")
+        }
+
+        bubblegumThemeButton.setOnAction { actionEvent ->
+            setTheme("bubblegum")
+        }
+
+        pumpkinThemeButton.setOnAction { actionEvent ->
+            setTheme("pumpkin")
+        }
+
+        lilacThemeButton.setOnAction { actionEvent ->
+            setTheme("lilac")
+        }
+
+        lemonThemeButton.setOnAction { actionEvent ->
+            setTheme("lemon")
+        }
     }
 
+    @FXML
+    private fun setTheme(name : String) {
+        model.setTheme(name)
+        val url = "css/${name}/main.css"
+        unique_container.stylesheets.clear()
+        unique_container.stylesheets.add(url)
+//        val scene : Scene = title.scene
+//        scene.stylesheets.clear()
+//        scene.stylesheets.add(url)
+    }
 
     @FXML
     private fun sideBarButton(e: ActionEvent) {

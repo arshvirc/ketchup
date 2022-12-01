@@ -16,7 +16,6 @@ Click accept. API requests are asynchronous, so we need this suspend keyword to 
 
 class App : Application() {
 
-
     override fun start(primaryStage: Stage) {
         val fxmlLoader = FXMLLoader(App::class.java.getResource("fxml/main.fxml"))
         val scene = Scene(fxmlLoader.load())

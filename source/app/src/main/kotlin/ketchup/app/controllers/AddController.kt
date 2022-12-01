@@ -6,8 +6,10 @@ import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.Node
 import javafx.scene.control.*
+import javafx.scene.layout.BorderPane
 import javafx.scene.input.KeyCode
 import javafx.scene.layout.HBox
+import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import ketchup.app.components.ContentComponent
 import ketchup.app.components.ItemComponent
@@ -48,8 +50,22 @@ class AddController {
 
     @FXML
     private lateinit var createButton: Button
+
+    @FXML private lateinit var unique_container: VBox
+
+    @FXML
+    private fun setTheme(name : String) {
+        val url = "css/${name}/add.css"
+        unique_container.stylesheets.clear()
+        unique_container.stylesheets.add(url)
+//        val scene : Scene = title.scene
+//        scene.stylesheets.clear()
+//        scene.stylesheets.add(url)
+    }
+
     fun setModel(m: Model, c: MainController) {
         model = m
+        setTheme(m.getTheme())
         previousController = c
         inputTags.items.addAll(m.listOfTags)
         inputPriority.items.addAll(m.listOfPriorities)

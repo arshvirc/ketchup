@@ -1,0 +1,15 @@
+.container {
+    -fx-background-color:  #DB8A8A;
+    -fx-background-radius: 10;
+}
+
+.title {
+    -fx-background-color:  #DB8A8A;
+    -fx-background-radius: 10;
+    -fx-font-size: 14px;
+    -fx-font-family: Helvetica;
+}
+.button {
+    -fx-background-color:  #DB8A8A;
+    -fx-background-radius: 10;
+}
