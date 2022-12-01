@@ -1,6 +1,7 @@
 package ketchup.app.controllers
 
 import App
+import javafx.collections.transformation.FilteredList
 import java.io.IOException
 import java.net.URL
 import java.util.ResourceBundle
@@ -40,6 +41,8 @@ class MainController : Initializable {
     @FXML private lateinit var addItemButton: Button
 
     @FXML private lateinit var filterButton: ComboBox<String>
+
+    @FXML private lateinit var searchField: TextField
 
     @FXML private lateinit var displayView: VBox
 
@@ -133,6 +136,10 @@ class MainController : Initializable {
 
         lemonThemeButton.setOnAction { actionEvent ->
             setTheme("lemon")
+        }
+
+        searchField.textProperty().addListener{ e, o, n ->
+            model.filterByText(n)
         }
     }
 

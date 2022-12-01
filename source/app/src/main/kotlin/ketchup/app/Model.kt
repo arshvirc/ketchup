@@ -418,6 +418,20 @@ class Model() {
     fun chooseSelectedItem(id: Int) {
         selectedItemId = id
     }
+
+
+    fun filterByText(text: String) {
+        refreshDisplayedList()
+        if (text.isEmpty()|| text.isBlank() || text  == null) {
+        } else {
+            println("text")
+            val newList = displayList.filter {
+                ((it as ItemComponent).item.title.lowercase()).contains(text.lowercase())
+            }
+            displayList.clear()
+            displayList.addAll(newList)
+        }
+    }
 }
 
 
