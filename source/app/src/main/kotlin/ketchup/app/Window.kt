@@ -7,8 +7,8 @@ data class WindowSize(val h: Double, val w: Double, val x: Double, val y: Double
 class Window {
     private var windowHeight: Double = 0.0
     private var windowWidth: Double = 0.0
-    private var windowPosX: Double = 0.0
-    private var windowPosY: Double = 0.0
+    private var windowPosX: Double = 30.0
+    private var windowPosY: Double = 30.0
     private var isMaximized: Double = 0.0
     private val fileName = "window.json"
 

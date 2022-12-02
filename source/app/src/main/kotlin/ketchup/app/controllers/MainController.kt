@@ -23,6 +23,8 @@ import ketchup.app.Model
 import ketchup.app.components.ContentComponent
 import ketchup.app.components.ItemComponent
 import kotlinx.coroutines.runBlocking
+import ketchup.app.Window
+import ketchup.app.WindowSize
 
 class MainController : Initializable {
     private lateinit var model: Model
@@ -221,6 +223,10 @@ class MainController : Initializable {
             inputStage.scene = scene
             inputStage.initStyle(StageStyle.UNDECORATED)
             inputStage.isResizable = false
+            var window: Window = Window()
+            var windowSize : WindowSize = window.getWindowSize()
+            inputStage.x = windowSize.x + (windowSize.w - 540)/2
+            inputStage.y = windowSize.y + (windowSize.h - 273)/2
             inputStage.show()
         } catch (e: IOException) {
             e.printStackTrace()

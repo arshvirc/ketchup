@@ -32,6 +32,33 @@ class App : Application() {
         primaryStage.title = "Ketchup 1.0"
         primaryStage.show()
 
+        primaryStage.xProperty().addListener{ e, o, n ->
+            if ( o != n ) {
+                window.saveWindowSize(primaryStage.height, primaryStage.width, primaryStage.x, primaryStage.y, windowSize.max)
+            }
+        }
+
+        primaryStage.yProperty().addListener{ e, o, n ->
+            if ( o != n ) {
+                window.saveWindowSize(primaryStage.height, primaryStage.width, primaryStage.x, primaryStage.y, windowSize.max)
+            }
+
+        }
+
+        primaryStage.heightProperty().addListener{ e, o, n ->
+            if ( o != n ) {
+                window.saveWindowSize(primaryStage.height, primaryStage.width, primaryStage.x, primaryStage.y, windowSize.max)
+            }
+
+        }
+
+        primaryStage.widthProperty().addListener{ e, o, n ->
+            if ( o != n ) {
+                window.saveWindowSize(primaryStage.height, primaryStage.width, primaryStage.x, primaryStage.y, windowSize.max)
+            }
+
+        }
+
         primaryStage.setOnCloseRequest {
             if (primaryStage.isFullScreen) {
                 windowSize.max = 1.0
