@@ -13,8 +13,6 @@ import kotlinx.coroutines.runBlocking
 import java.time.*
 import java.util.*
 import kotlin.collections.ArrayDeque
-import ketchup.app.State
-import ketchup.app.Action
 import java.io.File
 
 
@@ -88,10 +86,13 @@ class Model() {
         val lastState = undoStack.removeLast()
         val action = lastState.action
         val lastItem = lastState.item
+        val id = lastItem.id.toString()
 
         when (action) {
-            Action.ADD -> deleteItemFromList(lastItem.id.toString(), URFlag.UNDO)
-            Action.DELETE -> addItemToList(lastItem, URFlag.UNDO)
+            Action.ADD -> permaDeleteItem(id, URFlag.UNDO)
+            Action.TRASH -> unarchiveItem(id, URFlag.UNDO)
+            Action.UNARCHIVE -> trashItem(id, URFlag.UNDO)
+            Action.PERMA_DELETE -> addItemToList(lastItem, URFlag.UNDO)
             else -> undoRedoEdit(action, lastItem, URFlag.UNDO)
         }
     }
@@ -101,10 +102,13 @@ class Model() {
         val nextState = redoStack.removeLast()
         val action = nextState.action
         val nextItem = nextState.item
+        val id = nextItem.id.toString()
 
         when (action) {
             Action.ADD -> addItemToList(nextItem, URFlag.REDO)
-            Action.DELETE -> deleteItemFromList(nextItem.id.toString(), URFlag.REDO)
+            Action.TRASH -> trashItem(id, URFlag.REDO)
+            Action.UNARCHIVE -> unarchiveItem(id, URFlag.REDO)
+            Action.PERMA_DELETE -> permaDeleteItem(id, URFlag.REDO)
             else -> undoRedoEdit(action, nextItem, URFlag.REDO)
         }
     }
@@ -225,7 +229,7 @@ class Model() {
             refreshDisplayedList()
 
             if (flag == URFlag.UNDO) {
-                redoStack.addLast(State(Action.DELETE, dbItem.copy()))
+                redoStack.addLast(State(Action.PERMA_DELETE, dbItem.copy()))
             } else if (flag == URFlag.REDO) {
                 undoStack.addLast(State(Action.ADD, dbItem.copy()))
             } else {
@@ -235,7 +239,7 @@ class Model() {
         }
     }
 
-    fun deleteItemFromList(id : String, flag : URFlag = URFlag.NEITHER) {
+    fun trashItem(id : String, flag : URFlag = URFlag.NEITHER) {
         // Remove from database
         val deleteSuccess = runBlocking { api.deleteTodoItem(id.toInt()) }
         if (!deleteSuccess) {
@@ -253,11 +257,11 @@ class Model() {
         }
 
         if (flag == URFlag.UNDO) {
-            redoStack.addLast(State(Action.ADD, item.copy()))
+            redoStack.addLast(State(Action.UNARCHIVE, item.copy()))
         } else if (flag == URFlag.REDO) {
-            undoStack.addLast(State(Action.DELETE, item.copy()))
+            undoStack.addLast(State(Action.TRASH, item.copy()))
         } else {
-            undoStack.addLast(State(Action.DELETE, item.copy()))
+            undoStack.addLast(State(Action.TRASH, item.copy()))
             redoStack.clear()
         }
         uiListOfAllItems.removeAt(idx)
@@ -429,6 +433,54 @@ class Model() {
             uiListOfAllItems[index] = ItemComponent(item, this, false)
             refreshDisplayedList()
         }
+    }
+
+    fun unarchiveItem(id: String, flag: URFlag = URFlag.NEITHER) {
+        val success = runBlocking {
+            api.unarchiveItem(id.toInt())
+        }
+        refreshDisplayedList()
+        var idx = 0
+        var item = TodoItem()
+        for (i in 0..uiListOfAllItems.size) {
+            if (uiListOfAllItems[i].id == id) {
+                idx = i
+                item = (uiListOfAllItems[i] as ItemComponent).item
+                break
+            }
+        }
+
+        if (flag == URFlag.UNDO) {
+            redoStack.addLast(State(Action.TRASH, item.copy()))
+        } else if (flag == URFlag.REDO) {
+            undoStack.addLast(State(Action.UNARCHIVE, item.copy()))
+        } else {
+            undoStack.addLast(State(Action.UNARCHIVE, item.copy()))
+            redoStack.clear()
+        }
+    }
+
+    fun permaDeleteItem(id: String, flag: URFlag = URFlag.NEITHER) {
+
+        var idx = 0
+        var item = TodoItem()
+        for (i in 0..uiListOfAllItems.size) {
+            if (uiListOfAllItems[i].id == id) {
+                idx = i
+                item = (uiListOfAllItems[i] as ItemComponent).item
+                break
+            }
+        }
+
+        val success = runBlocking { api.deleteTodoItem(id.toInt()) }
+        val success2 = runBlocking { api.deleteTodoItem(id.toInt()) }
+        refreshDisplayedList()
+
+        if (flag == URFlag.UNDO) {
+            redoStack.add(State(Action.ADD, item.copy()))
+        } else if (flag == URFlag.REDO) {
+            undoStack.add(State(Action.PERMA_DELETE, item.copy()))
+        } // else, do nothing! perma-deleting items should not be undoable
     }
 
     /*  Helper Function: findUiIndexById(id)

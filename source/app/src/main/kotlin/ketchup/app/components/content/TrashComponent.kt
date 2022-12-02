@@ -1,8 +1,6 @@
 package ketchup.app.components.content
 
 import ketchup.app.Model
-import javafx.collections.FXCollections
-import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.control.ButtonBar
 import ketchup.app.ktorclient.Client
@@ -25,7 +23,7 @@ class TrashComponent: ButtonBar {
         trashButton.setOnAction {
             run {
                 println("Deleting the item with the following item: ${this.toDoItemId}")
-                model.deleteItemFromList(toDoItemId)
+                model.trashItem(toDoItemId)
             }
         }
 
@@ -34,10 +32,7 @@ class TrashComponent: ButtonBar {
 
         unarchive.setOnAction {
             run {
-                val success = runBlocking {
-                    api.unarchiveItem(toDoItemId.toInt())
-                }
-                model.refreshDisplayedList()
+                model.unarchiveItem(toDoItemId)
             }
         }
 
@@ -48,7 +43,7 @@ class TrashComponent: ButtonBar {
             }
         }
 
-        if(archive) {
+        if (archive) {
             this.buttons.addAll(unarchive, delete)
         } else {
             this.buttons.add(trashButton)

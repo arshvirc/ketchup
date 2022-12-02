@@ -4,13 +4,15 @@ import ketchup.console.TodoItem
 
 enum class Action {
     ADD,
-    DELETE,
+    TRASH,
     EDIT_COMPLETE,
     EDIT_TITLE,
     EDIT_DESC,
     EDIT_TAGS,
     EDIT_PRIORITY,
-    EDIT_DEADLINE
+    EDIT_DEADLINE,
+    PERMA_DELETE,
+    UNARCHIVE
 }
 class State (_action : Action, _item : TodoItem) {
     val action = _action
