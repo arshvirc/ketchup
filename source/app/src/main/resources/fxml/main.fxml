@@ -10,7 +10,6 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -134,22 +133,31 @@
                <children>
                   <HBox alignment="BOTTOM_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="100.0" prefHeight="100.0" spacing="10.0" styleClass="top-center-container">
                      <children>
-                        <Label fx:id="title" maxHeight="-Infinity" maxWidth="350.0" minWidth="255.0" prefHeight="35.0" prefWidth="255.0" text="ALL" textFill="#5b2525">
+                        <Label fx:id="title" maxHeight="-Infinity" maxWidth="350.0" minWidth="265.0" prefHeight="35.0" prefWidth="265.0" text="ALL" textFill="#5b2525">
                            <font>
                               <Font name="Avenir Book" size="23.0" />
                            </font>
                         </Label>
-                        <Button fx:id="addItemButton" maxHeight="33.0" maxWidth="75.0" minHeight="7.0" minWidth="75.0" mnemonicParsing="false" onAction="#onButtonClicked" prefHeight="20.0" prefWidth="75.0" text="Add Item" HBox.hgrow="NEVER">
+                        <Button fx:id="addItemButton" maxHeight="34.0" maxWidth="75.0" minHeight="34.0" minWidth="75.0" mnemonicParsing="false" onAction="#onButtonClicked" prefHeight="34.0" prefWidth="75.0" text="Add Item" HBox.hgrow="NEVER">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Button>
-                        <ComboBox fx:id="filterButton" maxHeight="34.0" maxWidth="187.0" minHeight="26.0" minWidth="24.0" onAction="#onButtonClicked" prefHeight="34.0" prefWidth="24.0" promptText="Filter" style="-fx-background-color: primary-color; -fx-border-color: primary-color; -fx-font-size: 14;" HBox.hgrow="NEVER">
+                        <ComboBox fx:id="filterButton" maxHeight="34.0" maxWidth="40.0" minHeight="26.0" minWidth="40.0" onAction="#onButtonClicked" prefHeight="34.0" prefWidth="40.0" promptText="Filter" style="-fx-background-color: primary-color; -fx-border-color: primary-color; -fx-font-size: 14;" HBox.hgrow="NEVER">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                         </ComboBox>
-                        <TextField fx:id="searchField" HBox.hgrow="ALWAYS" />
+                        <ComboBox fx:id="sortButton" maxHeight="34.0" maxWidth="40.0" minHeight="26.0" minWidth="40.0" onAction="#onButtonClicked" prefHeight="34.0" prefWidth="40.0" promptText="Sort" style="-fx-background-color: primary-color; -fx-border-color: primary-color; -fx-font-size: 14;" />
+                        <Button fx:id="clearFilter" maxHeight="34.0" minHeight="-Infinity" minWidth="0.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="34.0">
+                           <graphic>
+                              <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/clearfilter.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
                      </children>
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

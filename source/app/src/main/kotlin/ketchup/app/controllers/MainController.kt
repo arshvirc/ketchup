@@ -1,7 +1,6 @@
 package ketchup.app.controllers
 
 import App
-import javafx.collections.transformation.FilteredList
 import java.io.IOException
 import java.net.URL
 import java.util.ResourceBundle
@@ -42,7 +41,9 @@ class MainController : Initializable {
 
     @FXML private lateinit var filterButton: ComboBox<String>
 
-    @FXML private lateinit var searchField: TextField
+    @FXML private lateinit var sortButton: ComboBox<String>
+
+    @FXML private lateinit var clearFilter: Button
 
     @FXML private lateinit var displayView: VBox
 
@@ -74,13 +75,27 @@ class MainController : Initializable {
 
     override fun initialize(arg0: URL?, arg1: ResourceBundle?) {
         model = Model(displayView.children, this)
+
         setTheme(model.getTheme())
+
         filterButton.items.addAll(
-                "Increase Priority",
-                "Decreasing Priority",
-                "Due Earliest",
-                "Due Latest"
+            "Filter",
+            "No Priority",
+            "Low Priority",
+            "Medium Priority",
+            "High Priority",
+            "No Deadline",
+            "With Deadline"
         )
+
+        sortButton.items.addAll(
+            "Sort",
+            "Increasing Priority",
+            "Decreasing Priority",
+            "Due Earliest",
+            "Due Latest"
+        )
+
         for (tag in model.listOfTags) {
             updateSideBar(tag)
         }
@@ -138,27 +153,13 @@ class MainController : Initializable {
             setTheme("lemon")
         }
 
-        searchField.textProperty().addListener{ e, o, n ->
-            if ( n.isNotEmpty() && !model.isSearchModeOn ) {
-                model.isSearchModeOn = true;    // filter on
-            }
-
-            if (n.isEmpty() && model.isSearchModeOn) {
-                model.isSearchModeOn = false;   // no filter
-            }
-            model.searchText = n
-            model.refreshDisplayedList(false)
-
+        clearFilter.setOnAction { _ ->
+            model.refreshDisplayedList()
+            filterButton.value = "Filter"
+            sortButton.value = "Sort"
+            filterButton.promptText = "Filter"
+            sortButton.promptText = "Sort"
         }
-
-//        fun filterByText(text: String) {
-//            refreshDisplayedList(false)
-//            val newList = displayList.filter {
-//                ((it as ItemComponent).item.title.lowercase()).contains(text.lowercase())
-//            }
-//            displayList.clear()
-//            displayList.addAll(newList)
-//        }
     }
 
     @FXML
@@ -176,7 +177,6 @@ class MainController : Initializable {
     private fun sideBarButton(e: ActionEvent) {
         val source = e.source as Button
         title.text = source.text
-        searchField.text = ""
         model.displayState = source.text.trim()
         model.refreshDisplayedList()
     }
@@ -188,11 +188,22 @@ class MainController : Initializable {
             "addItemButton" -> showDialog("addItemUI")
             "filterButton" -> {
                 when (filterButton.value) {
-                    "Increase Priority" -> sortPriority(true)
+                    "No Priority" -> filterPriority(0)
+                    "Low Priority" -> filterPriority(1)
+                    "Medium Priority" -> filterPriority(2)
+                    "High Priority" -> filterPriority(3)
+                    "No Deadline" -> filterDeadline(false)
+                    "With Deadline" -> filterDeadline(true)
+                    else -> model.refreshDisplayedList()
+                }
+            }
+            "sortButton" -> {
+                when(sortButton.value) {
+                    "Increasing Priority" -> sortPriority(true)
                     "Decreasing Priority" -> sortPriority(false)
                     "Due Earliest" -> sortDeadline(true)
                     "Due Latest" -> sortDeadline(false)
-                    else -> return error("FilterButton has some other function")
+                    else -> model.refreshDisplayedList()
                 }
             }
             else -> showDialog("addItemUI")
@@ -249,10 +260,10 @@ class MainController : Initializable {
         var itemComponents = model.displayList.map { it as ItemComponent }
 
         itemComponents = if (increasing) {
-            println("SORTING BY INCREASING DEADLINE")
+            println("SORTING BY INCREASING PRIORITY")
             itemComponents.sortedBy { it.item.priority }
         } else {
-            println("SORTING BY DECREASING DEADLINE")
+            println("SORTING BY DECREASING PRIORITY")
             itemComponents.sortedByDescending { it.item.priority }
         }
         model.displayList.clear()
@@ -274,5 +285,30 @@ class MainController : Initializable {
 
         model.displayList.addAll(notNullItems)
         model.displayList.addAll(nullItems)
+    }
+
+    private fun filterPriority(priority: Int) {
+        model.refreshDisplayedList()
+        val itemComponents = model.displayList.map{ it as ItemComponent }
+        val filtered = itemComponents.filter { it.item.priority == priority }
+
+        model.displayList.clear()
+
+        model.displayList.addAll(filtered)
+    }
+
+    private fun filterDeadline(deadline: Boolean) {
+        model.refreshDisplayedList()
+        val itemComponents = model.displayList.map{ it as ItemComponent}
+        var filtered: List<ItemComponent>
+
+        if(deadline) {
+            filtered = itemComponents.filter { it.item.deadline != null }
+        } else {
+            filtered = itemComponents.filter { it.item.deadline == null}
+        }
+
+        model.displayList.clear()
+        model.displayList.addAll(filtered)
     }
 }
