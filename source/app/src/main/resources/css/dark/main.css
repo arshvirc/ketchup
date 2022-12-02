@@ -66,9 +66,9 @@
 }
 
 #center-container .combo-box {
-    -fx-pref-width: 150.0;
+    -fx-pref-width: 100.0;
     -fx-pref-height: 30;
-    -fx-min-width: 150.0;
+    -fx-min-width: 100.0;
     -fx-min-height: 30;
     -fx-background-color: secondary-color;
     -fx-border-color: secondary-color;
