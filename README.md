@@ -1,5 +1,7 @@
 # CS346 Project
 
+Check out our Wiki at https://git.uwaterloo.ca/a23dhing/cs346-project/-/wikis/home for details!
+
 ## Name
 Ketchup
 
