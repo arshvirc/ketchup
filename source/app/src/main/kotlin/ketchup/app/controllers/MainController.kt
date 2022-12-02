@@ -175,6 +175,7 @@ class MainController : Initializable {
             sortButton.value = "Sort"
             filterButton.promptText = "Filter"
             sortButton.promptText = "Sort"
+            searchField.text = ""
         }
     }
 
