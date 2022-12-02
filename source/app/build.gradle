@@ -23,7 +23,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'ketchup.app.AppKt'
+    mainClass = 'ketchup.app.MainKt'
 }
 
 javafx {

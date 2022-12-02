@@ -42,7 +42,3 @@ class App : Application() {
         }
     }
 }
-
-fun main(args: Array<String>) {
-    Application.launch(App::class.java)
-}
