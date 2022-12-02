@@ -202,7 +202,7 @@ class Model() {
 
         if ( isSearchModeOn ) {
             filteredList = filteredList.filter {
-                ((it as ItemComponent).item.title.lowercase()).contains(searchText.lowercase())
+                (it.item.title.lowercase()).contains(searchText.lowercase())
             }
         }
 
@@ -433,7 +433,13 @@ class Model() {
 
             // UPDATE UI Part Now
             uiListOfAllItems[index] = ItemComponent(item, this, false)
-            refreshDisplayedList()
+            if (action == Action.EDIT_COMPLETE) {
+                refreshDisplayedList()
+            }
+//                ||
+//            } action == Action.EDIT_DEADLINE || action == Action.EDIT_PRIORITY
+//                || action == Action.EDIT_TAGS || action == Action.EDIT_DESC || action == Action.EDIT_TITLE) {
+//            }
         }
     }
 
