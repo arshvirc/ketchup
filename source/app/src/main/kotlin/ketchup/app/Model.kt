@@ -45,6 +45,8 @@ class Model() {
     var listOfTags: MutableList<String> = mutableListOf<String>()
 
     var selectedItemId = -1;
+    var isSearchModeOn = false;
+    var searchText = ""
 
     // Fixed Information
     val listOfPriorities: List<String> = listOf<String>("None", "Low", "Medium", "High")
@@ -53,10 +55,6 @@ class Model() {
     var undoStack : ArrayDeque<State> = ArrayDeque<State>()
     var redoStack : ArrayDeque<State> = ArrayDeque<State>()
 
-    var dragInitiated = false
-    lateinit var draggedItemId : String
-    var dragTop = false
-    var dragBottom = false
     private var theme : String = "default"
     private var saveFileName = "model.json"
     private val saveFile = File(saveFileName)
@@ -162,15 +160,13 @@ class Model() {
     /*  Critical Function: refreshDisplayedList()
      *  Used by:
      */
-    fun refreshDisplayedList() {
-        loadState()
-
+    fun refreshDisplayedList(reloadState: Boolean = true) {
+        if (reloadState) loadState()
         val itemComponents = uiListOfAllItems.map { it as ItemComponent }
         val archiveComponents = archiveList.map{ it as ItemComponent }
         var temp = Date(System.currentTimeMillis())
         val today = atStartOfDay(temp)
         var filteredList: List<ItemComponent>
-        displayList.clear()
         when (displayState) {
             "All Tasks" -> {
                 filteredList = itemComponents.filter {
@@ -200,9 +196,15 @@ class Model() {
             }
         }
 
+        if ( isSearchModeOn ) {
+            filteredList = filteredList.filter {
+                ((it as ItemComponent).item.title.lowercase()).contains(searchText.lowercase())
+            }
+        }
+
         val completedItems = filteredList.filter { it.item.completion }
         val unCompletedItems = filteredList.filter { !it.item.completion }
-
+        displayList.clear()
         displayList.addAll(unCompletedItems)
         displayList.addAll(completedItems)
     }
@@ -385,13 +387,17 @@ class Model() {
                 return error("Wrong Field Value")
             }
         }
-        if (flag == URFlag.UNDO) {
-            redoStack.addLast(State(action, oldItem))
-        } else if (flag == URFlag.REDO) {
-            undoStack.addLast(State(action, oldItem))
-        } else {
-            undoStack.addLast(State(action, oldItem))
-            redoStack.clear()
+        when (flag) {
+            URFlag.UNDO -> {
+                redoStack.addLast(State(action, oldItem))
+            }
+            URFlag.REDO -> {
+                undoStack.addLast(State(action, oldItem))
+            }
+            else -> {
+                undoStack.addLast(State(action, oldItem))
+                redoStack.clear()
+            }
         }
 
         if(displayState != "Trash") {
@@ -399,8 +405,8 @@ class Model() {
             if (!editSuccess) {
                 println("Editing tags for item with ID $id failed")
             }
+
             // UPDATE UI Part Now
-            val uiItem = uiListOfAllItems.find { (it as ItemComponent).item.id == id.toInt() }
             uiListOfAllItems[index] = ItemComponent(item, this, false)
             refreshDisplayedList()
         }
@@ -417,20 +423,6 @@ class Model() {
 
     fun chooseSelectedItem(id: Int) {
         selectedItemId = id
-    }
-
-
-    fun filterByText(text: String) {
-        refreshDisplayedList()
-        if (text.isEmpty()|| text.isBlank() || text  == null) {
-        } else {
-            println("text")
-            val newList = displayList.filter {
-                ((it as ItemComponent).item.title.lowercase()).contains(text.lowercase())
-            }
-            displayList.clear()
-            displayList.addAll(newList)
-        }
     }
 }
 

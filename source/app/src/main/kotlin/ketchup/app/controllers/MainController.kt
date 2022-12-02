@@ -139,8 +139,26 @@ class MainController : Initializable {
         }
 
         searchField.textProperty().addListener{ e, o, n ->
-            model.filterByText(n)
+            if ( n.isNotEmpty() && !model.isSearchModeOn ) {
+                model.isSearchModeOn = true;    // filter on
+            }
+
+            if (n.isEmpty() && model.isSearchModeOn) {
+                model.isSearchModeOn = false;   // no filter
+            }
+            model.searchText = n
+            model.refreshDisplayedList(false)
+
         }
+
+//        fun filterByText(text: String) {
+//            refreshDisplayedList(false)
+//            val newList = displayList.filter {
+//                ((it as ItemComponent).item.title.lowercase()).contains(text.lowercase())
+//            }
+//            displayList.clear()
+//            displayList.addAll(newList)
+//        }
     }
 
     @FXML
@@ -158,6 +176,7 @@ class MainController : Initializable {
     private fun sideBarButton(e: ActionEvent) {
         val source = e.source as Button
         title.text = source.text
+        searchField.text = ""
         model.displayState = source.text.trim()
         model.refreshDisplayedList()
     }
