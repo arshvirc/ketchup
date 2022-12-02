@@ -336,14 +336,21 @@ class Model() {
             }
         }
         val oldItem = item.copy()
+        var changed = false
 
         when (action) {
             Action.EDIT_TITLE -> {
                 var title = newVal as String
-                item.title = title
+                if (title != item.title) {
+                    item.title = title
+                    changed = true
+                }
             }
             Action.EDIT_DESC -> {
                 var desc = newVal as String
+                if (item.description != desc) {
+                    changed = true
+                }
                 if (desc.trim() == "") {
                     item.description = " "
                 } else {
@@ -353,17 +360,28 @@ class Model() {
             Action.EDIT_TAGS -> {
                 var mutableTags = mutableListOf<String>()
                 var tags = newVal as MutableList<String>
-                for (t in tags) mutableTags.add(t)
+                for (t in tags) {
+                    mutableTags.add(t)
+                    if (!changed && item.tags.firstOrNull({it == t}) == null) {
+                        changed = true
+                    }
+                }
                 item.tags = mutableTags
             }
             Action.EDIT_PRIORITY -> {
+                var p = item.priority
                 if (newVal is String) {
                     item.priority = newVal.toInt()
                 } else {
                     item.priority = newVal as Int
                 }
+
+                if (p != item.priority) {
+                    changed = true
+                }
             }
             Action.EDIT_DEADLINE -> {
+                var d = item.deadline
                 if (newVal is Date) {
                     item.deadline = newVal
                 } else {
@@ -376,28 +394,31 @@ class Model() {
                         item.deadline = null;
                     }
                 }
+                if (item.deadline != d) {
+                    changed = true
+                }
             }
 
             Action.EDIT_COMPLETE -> {
                 var status = newVal as Boolean
                 item.completion = status
+                changed = true
             }
 
             else -> {
                 return error("Wrong Field Value")
             }
         }
-        when (flag) {
-            URFlag.UNDO -> {
-                redoStack.addLast(State(action, oldItem))
-            }
-            URFlag.REDO -> {
-                undoStack.addLast(State(action, oldItem))
-            }
-            else -> {
-                undoStack.addLast(State(action, oldItem))
-                redoStack.clear()
-            }
+        if (!changed) {
+            return
+        }
+        if (flag == URFlag.UNDO) {
+            redoStack.addLast(State(action, oldItem))
+        } else if (flag == URFlag.REDO) {
+            undoStack.addLast(State(action, oldItem))
+        } else {
+            undoStack.addLast(State(action, oldItem))
+            redoStack.clear()
         }
 
         if(displayState != "Trash") {
