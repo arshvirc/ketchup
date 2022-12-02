@@ -436,9 +436,8 @@ class Model() {
             uiListOfAllItems[index] = ItemComponent(item, this, false)
         }
 
-        if(action == Action.EDIT_COMPLETE || flag != URFlag.NEITHER) {
+        if(action == Action.EDIT_COMPLETE || flag != URFlag.NEITHER || action == Action.EDIT_TAGS) {
             refreshDisplayedList()
-
         }
     }
 

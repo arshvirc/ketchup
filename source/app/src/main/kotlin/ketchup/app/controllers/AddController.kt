@@ -74,23 +74,22 @@ class AddController {
             if(e.code == KeyCode.ENTER) {
                 overrideButtonClick()
             }
+
+            if(e.code == KeyCode.ESCAPE) {
+                var stage = cancelButton.scene.window as Stage
+                stage.close()
+            }
+
         }
 
         inputDesc.setOnKeyPressed { e ->
             if(e.code == KeyCode.ENTER) {
                 overrideButtonClick()
             }
-        }
 
-        inputDeadline.setOnKeyPressed { e ->
-            if(e.code == KeyCode.ENTER) {
-                overrideButtonClick()
-            }
-        }
-
-        inputPriority.setOnKeyPressed { e ->
-            if(e.code == KeyCode.ENTER) {
-                overrideButtonClick()
+            if(e.code == KeyCode.ESCAPE) {
+                var stage = cancelButton.scene.window as Stage
+                stage.close()
             }
         }
     }

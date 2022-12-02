@@ -1,9 +1,6 @@
 package ketchup.app.controllers
 
 import App
-import java.io.IOException
-import java.net.URL
-import java.util.ResourceBundle
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -25,6 +22,10 @@ import ketchup.app.components.ItemComponent
 import kotlinx.coroutines.runBlocking
 import ketchup.app.Window
 import ketchup.app.WindowSize
+import java.io.IOException
+import java.net.URI
+import java.net.URL
+import java.util.*
 
 class MainController : Initializable {
     private lateinit var model: Model
@@ -74,6 +75,8 @@ class MainController : Initializable {
     @FXML private lateinit var lilacThemeButton : MenuItem
 
     @FXML private lateinit var lemonThemeButton : MenuItem
+
+    @FXML private lateinit var about: MenuItem
 
     @FXML private lateinit var unique_container: BorderPane
 
@@ -178,6 +181,11 @@ class MainController : Initializable {
             filterButton.promptText = "Filter"
             sortButton.promptText = "Sort"
             searchField.text = ""
+        }
+
+
+        about.setOnAction {
+            java.awt.Desktop.getDesktop().browse(URI("https://git.uwaterloo.ca/a23dhing/cs346-project/-/wikis/home"));
         }
     }
 

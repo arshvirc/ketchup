@@ -26,13 +26,7 @@
             <Menu mnemonicParsing="false" text="File">
                <items>
                   <MenuItem fx:id="new_item" accelerator="Shortcut+N" mnemonicParsing="false" text="New" />
-                  <MenuItem mnemonicParsing="false" text="Open…" />
-                  <Menu mnemonicParsing="false" text="Open Recent" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Close" />
-                  <MenuItem mnemonicParsing="false" text="Save" />
-                  <MenuItem mnemonicParsing="false" text="Save As…" />
-                  <MenuItem mnemonicParsing="false" text="Revert" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <Menu mnemonicParsing="false" text="Themes">
                      <items>
@@ -54,18 +48,11 @@
                   <MenuItem fx:id="undo" accelerator="Shortcut+Z" mnemonicParsing="false" text="Undo" />
                   <MenuItem fx:id="redo" accelerator="Shortcut+Shift+Z" mnemonicParsing="false" text="Redo" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Cut" />
-                  <MenuItem mnemonicParsing="false" text="Copy" />
-                  <MenuItem mnemonicParsing="false" text="Paste" />
-                  <MenuItem mnemonicParsing="false" text="Delete" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Select All" />
-                  <MenuItem mnemonicParsing="false" text="Unselect All" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
                <items>
-                  <MenuItem mnemonicParsing="false" text="About Ketchup" />
+                  <MenuItem fx:id="about" mnemonicParsing="false" text="About Ketchup" />
                </items>
             </Menu>
          </menus>
