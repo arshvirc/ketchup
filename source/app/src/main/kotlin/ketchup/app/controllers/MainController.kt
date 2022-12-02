@@ -45,6 +45,8 @@ class MainController : Initializable {
 
     @FXML private lateinit var clearFilter: Button
 
+    @FXML private lateinit var searchField: TextField
+
     @FXML private lateinit var displayView: VBox
 
     @FXML private lateinit var new_item: MenuItem
@@ -153,12 +155,27 @@ class MainController : Initializable {
             setTheme("lemon")
         }
 
+        searchField.textProperty().addListener{ e, o, n ->
+            if ( n.isNotEmpty() && !model.isSearchModeOn ) {
+                model.isSearchModeOn = true;    // filter on
+            }
+
+            if (n.isEmpty() && model.isSearchModeOn) {
+                model.isSearchModeOn = false;   // no filter
+            }
+            model.searchText = n
+            model.refreshDisplayedList(false)
+
+        }
+
+
         clearFilter.setOnAction { _ ->
             model.refreshDisplayedList()
             filterButton.value = "Filter"
             sortButton.value = "Sort"
             filterButton.promptText = "Filter"
             sortButton.promptText = "Sort"
+            searchField.text = ""
         }
     }
 
@@ -177,6 +194,7 @@ class MainController : Initializable {
     private fun sideBarButton(e: ActionEvent) {
         val source = e.source as Button
         title.text = source.text
+        searchField.text = ""
         model.displayState = source.text.trim()
         model.refreshDisplayedList()
     }

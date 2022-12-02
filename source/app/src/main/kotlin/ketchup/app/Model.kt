@@ -202,7 +202,7 @@ class Model() {
 
         if ( isSearchModeOn ) {
             filteredList = filteredList.filter {
-                ((it as ItemComponent).item.title.lowercase()).contains(searchText.lowercase())
+                (it.item.title.lowercase()).contains(searchText.lowercase())
             }
         }
 
@@ -437,6 +437,7 @@ class Model() {
 
         if(action == Action.EDIT_COMPLETE || flag != URFlag.NEITHER) {
             refreshDisplayedList()
+
         }
     }
 

@@ -26,6 +26,10 @@ class ItemComponent: TitledPane {
         this.userData = dbItem
         this.isExpanded = false
 
+        this.setOnMousePressed {
+            println( it.toString() )
+        }
+
         this.setOnMouseEntered {
             border = (Border(BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii(10.0), null)))
         }
@@ -43,7 +47,6 @@ class ItemComponent: TitledPane {
         this.setOnMousePressed{
             this.model.chooseSelectedItem(item.id)
         }
-
 
         this.setOnMouseDragReleased {
             val gestureSource = it.gestureSource as DragComponent
