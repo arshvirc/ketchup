@@ -370,6 +370,7 @@ class Model() {
                         changed = true
                     }
                 }
+                if (!changed && tags.size != item.tags.size) { changed = true }
                 item.tags = mutableTags
             }
             Action.EDIT_PRIORITY -> {
