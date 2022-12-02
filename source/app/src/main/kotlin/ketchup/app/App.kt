@@ -1,6 +1,7 @@
 import javafx.application.Application
 import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
+import javafx.scene.image.Image
 import javafx.stage.Stage
 import ketchup.app.Window
 import ketchup.app.WindowSize
@@ -23,13 +24,15 @@ class App : Application() {
         primaryStage.scene = scene
         primaryStage.minHeight = 550.0
         primaryStage.minWidth = 900.0
+        val image = Image("images/ketchup_bottle.png")
         var windowSize : WindowSize = window.getWindowSize()
         primaryStage.height = windowSize.h
         primaryStage.width = windowSize.w
         primaryStage.x = windowSize.x
         primaryStage.y = windowSize.y
         primaryStage.isFullScreen = windowSize.max == 1.0
-        primaryStage.title = "Ketchup 1.0"
+        primaryStage.title = "Ketchup 0.4"
+        primaryStage.icons.add(image)
         primaryStage.show()
 
         primaryStage.xProperty().addListener{ e, o, n ->
