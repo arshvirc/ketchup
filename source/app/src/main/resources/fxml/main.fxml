@@ -50,6 +50,11 @@
                   <SeparatorMenuItem mnemonicParsing="false" />
                </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Window">
+               <items>
+                  <MenuItem fx:id="hide" accelerator="Shortcut+H" mnemonicParsing="false" text="Hide" />
+               </items>
+            </Menu>
             <Menu mnemonicParsing="false" text="Help">
                <items>
                   <MenuItem fx:id="about" mnemonicParsing="false" text="About Ketchup" />

@@ -78,6 +78,8 @@ class MainController : Initializable {
 
     @FXML private lateinit var about: MenuItem
 
+    @FXML private lateinit var hide: MenuItem
+
     @FXML private lateinit var unique_container: BorderPane
 
     override fun initialize(arg0: URL?, arg1: ResourceBundle?) {
@@ -126,6 +128,11 @@ class MainController : Initializable {
         quitButton.setOnAction { actionEvent ->
             val stage: Stage = title.scene.window as Stage
             stage.fireEvent(WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST))
+        }
+
+        hide.setOnAction { _ ->
+            val stage: Stage = title.scene.window as Stage
+            stage.isIconified = true
         }
 
         defaultThemeButton.setOnAction { actionEvent ->
