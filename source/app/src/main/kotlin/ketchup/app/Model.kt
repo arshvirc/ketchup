@@ -433,13 +433,8 @@ class Model() {
 
             // UPDATE UI Part Now
             uiListOfAllItems[index] = ItemComponent(item, this, false)
-            if (action == Action.EDIT_COMPLETE) {
-                refreshDisplayedList()
-            }
-//                ||
-//            } action == Action.EDIT_DEADLINE || action == Action.EDIT_PRIORITY
-//                || action == Action.EDIT_TAGS || action == Action.EDIT_DESC || action == Action.EDIT_TITLE) {
-//            }
+            refreshDisplayedList()
+
         }
     }
 
