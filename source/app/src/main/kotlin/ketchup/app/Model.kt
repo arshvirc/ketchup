@@ -433,6 +433,9 @@ class Model() {
 
             // UPDATE UI Part Now
             uiListOfAllItems[index] = ItemComponent(item, this, false)
+        }
+
+        if(action == Action.EDIT_COMPLETE || flag != URFlag.NEITHER) {
             refreshDisplayedList()
         }
     }
