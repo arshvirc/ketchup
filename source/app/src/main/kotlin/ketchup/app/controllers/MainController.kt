@@ -1,6 +1,7 @@
 package ketchup.app.controllers
 
 import App
+import javafx.collections.transformation.FilteredList
 import java.io.IOException
 import java.net.URL
 import java.util.ResourceBundle
@@ -40,6 +41,8 @@ class MainController : Initializable {
     @FXML private lateinit var addItemButton: Button
 
     @FXML private lateinit var filterButton: ComboBox<String>
+
+    @FXML private lateinit var searchField: TextField
 
     @FXML private lateinit var displayView: VBox
 
@@ -134,6 +137,28 @@ class MainController : Initializable {
         lemonThemeButton.setOnAction { actionEvent ->
             setTheme("lemon")
         }
+
+        searchField.textProperty().addListener{ e, o, n ->
+            if ( n.isNotEmpty() && !model.isSearchModeOn ) {
+                model.isSearchModeOn = true;    // filter on
+            }
+
+            if (n.isEmpty() && model.isSearchModeOn) {
+                model.isSearchModeOn = false;   // no filter
+            }
+            model.searchText = n
+            model.refreshDisplayedList(false)
+
+        }
+
+//        fun filterByText(text: String) {
+//            refreshDisplayedList(false)
+//            val newList = displayList.filter {
+//                ((it as ItemComponent).item.title.lowercase()).contains(text.lowercase())
+//            }
+//            displayList.clear()
+//            displayList.addAll(newList)
+//        }
     }
 
     @FXML
@@ -151,6 +176,7 @@ class MainController : Initializable {
     private fun sideBarButton(e: ActionEvent) {
         val source = e.source as Button
         title.text = source.text
+        searchField.text = ""
         model.displayState = source.text.trim()
         model.refreshDisplayedList()
     }
