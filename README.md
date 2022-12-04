@@ -1,12 +1,18 @@
-# CS346 Project
+## CS346 Project
 
-Check out our Wiki at https://git.uwaterloo.ca/a23dhing/cs346-project/-/wikis/home for details!
+Check out our project [Wiki](https://git.uwaterloo.ca/a23dhing/cs346-project/-/wikis/home) for more details!
 
-## Name
-Ketchup
+## Home
+Introducing Ketchup, a revolutionary desktop to-do app!
 
-## Description
-This is a TODO list application built in Kotlin, for CS346 Application Development
+![ALT](source/app/src/main/resources/images/Image 2022-12-02 at 3.15 PM.JPG)
+
+As the developers of this app, we wanted to create the best to-do app on the market, covering all essential features, and more!\
+The basics of the app include adding, editing, and deleting a task - create and add descriptions, deadlines, tags, and priorities for your todo items!\
+Completed a certain task? Good job! Mark tasks as "completed" and have them accessible in the "Completed" tasks section.\
+Deleted a task but changed your mind? No worries - head to the trash folder to restore a previously deleted item!\
+
+For an in depth <a href="https://git.uwaterloo.ca/a23dhing/cs346-project/-/wikis/App%20Tutorial" target="_blank">tutorial and walkthrough</a>, visit out project <a href="https://git.uwaterloo.ca/a23dhing/cs346-project/-/wikis/home" target="_blank">Wiki</a>
 
 ## Authors
 - Aryaman Dhingra
@@ -14,6 +20,14 @@ This is a TODO list application built in Kotlin, for CS346 Application Developme
 - Rishad Luthra
 - Ryan Bae
 
+## License
+
+This software is distributed under an MIT [license](https://git.uwaterloo.ca/a23dhing/cs346-project/-/blob/main/LICENSE.txt).
+
+## Third-party Libraries
+
+- [JavaFX Framework](https://openjfx.io/)
+
 ## Acknowledgment
-- Jeff Avery and the CS346 staff
+- Jeff Avery, Yiping Wang, and the CS346 course staff
 
