@@ -24,9 +24,13 @@ Check out our in depth user documentation by visiting our <a href="https://git.u
 
 This software is distributed under an MIT [license](https://git.uwaterloo.ca/a23dhing/cs346-project/-/blob/main/LICENSE.txt).
 
-## Third-party Libraries
+## Third-party Libraries & Tools
 
 - [JavaFX Framework](https://openjfx.io/)
+- [Ktor](https://ktor.io/)
+- [Kotlin Serialization](https://github.com/Kotlin/kotlinx.serialization)
+- [JUnit 5](https://junit.org/junit5/)
+
 
 ## Acknowledgment
 - Jeff Avery, Yiping Wang, and the CS346 course staff
