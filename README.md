@@ -1,4 +1,6 @@
-## CS346 Project
+## KetchUp
+This project is a to-do application that I and a team of 3 others built during CS 346 - Application Development Course. We built this application over 8 weeks.
+
 
 Check out our project [Wiki](https://git.uwaterloo.ca/a23dhing/cs346-project/-/wikis/home) for more details!
 
